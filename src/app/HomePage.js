@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import LandingPage from './components/LandingPage.js';
+import { SidebarLeft } from './SidebarLeft.js';
+import { SidebarRight } from './SidebarRight.js';
 import './../styles/landing.css';
 
 import Box from "3box";
@@ -187,8 +189,9 @@ export default class HomePage extends Component {
       }
 
       return (
-      <div className="bg-gray-200 h-full">
-        <div className="container mx-auto h-screen">
+      <div className="bg-gray-200 h-full flex flex-row">
+        <SidebarLeft />
+        <div className="w-full">
           <div class="flex justify-center ">
             <div class="text-gray-700 text-center px-4 py-2 m-2">
               <LandingPage
@@ -210,6 +213,7 @@ export default class HomePage extends Component {
             </div>
           </div>
         </div>
+        <SidebarRight />
       </div>
     );
   }
