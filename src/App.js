@@ -11,7 +11,7 @@ import { ProfilePage } from './features/profile/ProfilePage';
 function App() {
   return (
     <Router>
-      <NavBar />
+      {/*<NavBar />*/}
       <Switch>
         <Route exact path="/" render={() => <HomePage />} />
         <Route exact path="/popular" render={() => <PopularBookmarksPage />} />

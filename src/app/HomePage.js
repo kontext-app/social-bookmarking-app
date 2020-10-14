@@ -189,11 +189,11 @@ export default class HomePage extends Component {
       }
 
       return (
-      <div className="bg-gray-200 h-full flex flex-row">
+      <div className="bg-gray-100 h-full flex flex-row">
         <SidebarLeft />
         <div className="w-full">
           <div class="flex justify-center ">
-            <div class="text-gray-700 text-center px-4 py-2 m-2">
+            <div class="text-gray-700 text-center py-2 w-full">
               <LandingPage
                 accounts={this.state.accounts}
                 thread={productThreadWithOrWithoutMetamask}
