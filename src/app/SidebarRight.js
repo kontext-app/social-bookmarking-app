@@ -14,10 +14,10 @@ export function SidebarRight() {
     <div className="md:flex flex-col md:flex-row md:min-h-screen">
       <div /*@click.away="open = false"*/ className="flex flex-col w-full md:w-64 text-gray-700 bg-gray-100 dark-mode:text-gray-200 dark-mode:bg-gray-800 flex-shrink-0" x-data="{ open: false }">
         <div className="flex-shrink-0 px-8 py-4 flex flex-row items-center justify-between">
-          <a href="#" className="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline">Social</a>
+          <a href="#" className="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline">Discover</a>
         </div>
         <nav className="flex-grow md:block px-4 pb-4 md:pb-0 md:overflow-y-auto">
-          <div className="flex flex-row relative" x-data="{ open: false }">
+          {/*<div className="flex flex-row relative" x-data="{ open: false }">
             <button className="flex space-x-2 w-full items-center block px-4 py-2 text-sm font-semibold text-gray-900 rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
               <img src={user_icon} alt="user_icon" className=""/>
               <span>Followers</span>
@@ -26,7 +26,7 @@ export function SidebarRight() {
               <img src={user_icon} alt="user_icon" className=""/>
               <span>Following</span>
             </button>
-          </div>
+          </div>*/}
 
           <Link to="/popular">
             <p className="text-gray-500 block px-4 py-2 text-sm font-semibold">
