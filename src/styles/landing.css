@@ -1,0 +1,15 @@
+.threeboxProfileHover__style_boxAddress .threeboxProfileHover__style_boxImg {
+    height: 15px !important;
+    width: 15px !important;
+}
+
+.threeboxProfileHover__style_boxShortAddress {
+  font-size: .75rem;
+  font-weight: 200;
+  padding: 0 0.5em;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+
+}
