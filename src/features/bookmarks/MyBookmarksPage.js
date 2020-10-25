@@ -1,9 +1,12 @@
 import React from 'react';
 
+import { PageLayout } from '../../app/PageLayout';
+import { BookmarksFeed } from './BookmarksFeed';
+
 export function MyBookmarksPage() {
   return (
-    <div className="container mx-auto">
-      <div className="text-xl">My bookmarks</div>
-    </div>
+    <PageLayout>
+      <BookmarksFeed bookmarks={[{}, {}, {}, {}]} />
+    </PageLayout>
   );
 }
