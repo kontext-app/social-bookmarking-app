@@ -47,8 +47,42 @@ function SidebarLeftSection(props) {
 
 export function SidebarLeft() {
   const isLoggedIn = false;
+  const sidebarData = getSidebarData(isLoggedIn);
 
-  const sidebarData = [
+  return (
+    <div className="md:flex flex-col md:flex-row md:min-h-screen">
+      <div
+        className="flex flex-col w-full md:w-64 text-gray-700 bg-gray-100 dark-mode:text-gray-200 dark-mode:bg-gray-800 flex-shrink-0"
+        x-data="{ open: false }"
+      >
+        <div className="flex-shrink-0 px-8 py-4 flex flex-row items-center justify-between">
+          <Link to="/">
+            <div className="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline">
+              My Bookmarks
+            </div>
+          </Link>
+        </div>
+        <nav className="flex-grow md:block px-4 pb-4 md:pb-0 md:overflow-y-auto">
+          {isLoggedIn ? (
+            <SidebarLeftDropDown />
+          ) : (
+            <SidebarLeftItem label="Log In" iconSrc={heart} linkTo="/login" />
+          )}
+          {sidebarData.map((section) => (
+            <SidebarLeftSection
+              sectionLabel={section.sectionLabel}
+              sectionData={section.sectionData}
+              key={section.sectionLabel}
+            />
+          ))}
+        </nav>
+      </div>
+    </div>
+  );
+}
+
+function getSidebarData(isLoggedIn = false) {
+  const sidebarDataOfLoggedOutUser = [
     {
       sectionData: [
         {
@@ -57,6 +91,14 @@ export function SidebarLeft() {
           linkTo: '/',
           numOfItems: 12,
         },
+      ],
+    },
+  ];
+
+  const sidebarDataOfLoggedInUser = [
+    {
+      sectionData: [
+        ...sidebarDataOfLoggedOutUser[0].sectionData,
         {
           label: 'Unsorted',
           iconSrc: inbox,
@@ -89,34 +131,5 @@ export function SidebarLeft() {
     },
   ];
 
-  return (
-    <div className="md:flex flex-col md:flex-row md:min-h-screen">
-      <div
-        className="flex flex-col w-full md:w-64 text-gray-700 bg-gray-100 dark-mode:text-gray-200 dark-mode:bg-gray-800 flex-shrink-0"
-        x-data="{ open: false }"
-      >
-        <div className="flex-shrink-0 px-8 py-4 flex flex-row items-center justify-between">
-          <Link to="/">
-            <div className="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline">
-              My Bookmarks
-            </div>
-          </Link>
-        </div>
-        <nav className="flex-grow md:block px-4 pb-4 md:pb-0 md:overflow-y-auto">
-          {isLoggedIn ? (
-            <SidebarLeftDropDown />
-          ) : (
-            <SidebarLeftItem label="Log In" iconSrc={heart} linkTo="/login" />
-          )}
-          {sidebarData.map((section) => (
-            <SidebarLeftSection
-              sectionLabel={section.sectionLabel}
-              sectionData={section.sectionData}
-              key={section.sectionLabel}
-            />
-          ))}
-        </nav>
-      </div>
-    </div>
-  );
+  return isLoggedIn ? sidebarDataOfLoggedInUser : sidebarDataOfLoggedOutUser;
 }
