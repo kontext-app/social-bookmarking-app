@@ -10,8 +10,8 @@ export function PageLayout(props) {
     <div className="bg-gray-100 h-full flex flex-row">
       <SidebarLeft />
       <div className="w-full">
-        <div class="flex justify-center ">
-          <div class="text-gray-700 text-center py-2 w-full">
+        <div className="flex justify-center ">
+          <div className="text-gray-700 text-center py-2 w-full">
             {props.children}
           </div>
         </div>

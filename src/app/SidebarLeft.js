@@ -35,6 +35,7 @@ function SidebarLeftSection(props) {
       ) : null}
       {sectionData.map((item) => (
         <SidebarLeftItem
+          key={item.label}
           label={item.label}
           iconSrc={item.iconSrc}
           linkTo={item.linkTo}
@@ -68,11 +69,11 @@ export function SidebarLeft() {
           ) : (
             <SidebarLeftItem label="Log In" iconSrc={heart} linkTo="/login" />
           )}
-          {sidebarData.map((section) => (
+          {sidebarData.map((section, i) => (
             <SidebarLeftSection
+              key={`section-${i}`}
               sectionLabel={section.sectionLabel}
               sectionData={section.sectionData}
-              key={section.sectionLabel}
             />
           ))}
         </nav>

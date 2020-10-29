@@ -23,10 +23,7 @@ export function BookmarkPost(props) {
       </div>
       <div className="w-11/12 pt-2 text-left">
         <div className="flex items-center text-xs mb-2">
-          <a
-            href="#"
-            className="font-semibold no-underline hover:underline text-black flex items-center"
-          >
+          <div className="font-semibold no-underline hover:underline text-black flex items-center">
             <svg
               className="rounded-full border h-5 w-5"
               viewBox="0 0 16 16"
@@ -39,20 +36,20 @@ export function BookmarkPost(props) {
               ></path>
             </svg>
             <span className="ml-2">github.com</span>
-          </a>
+          </div>
           <span className="text-grey-light mx-1 text-xs">•</span>
           <span className="text-grey">Posted by</span>
-          <a href="#" className="text-grey mx-1 no-underline hover:underline">
+          <div href="#" className="text-grey mx-1 no-underline hover:underline">
             <div>
               <ProfileHover address={props.authorAddress} showName={true} />
             </div>
-          </a>
+          </div>
           <span className="text-grey">2 hours ago</span>
         </div>
         <div>
           <h2 className="font-medium mb-1">unknown</h2>
         </div>
-        <div className="flex inline-flex items-center my-1">
+        <div className="flex items-center my-1">
           <div className="flex hover:bg-grey-lighter p-1 mr-2">
             <img src={heart} alt="Favorites" className="flex-shrink-0" />
           </div>
