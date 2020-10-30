@@ -5,6 +5,7 @@
   "dependencies": {
     "3id-connect": "^1.0.0-alpha.2",
     "@ceramicnetwork/ceramic-http-client": "^0.7.1-alpha.0",
+    "@ceramicstudio/idx-constants": "^0.3.0",
     "@ceramicstudio/idx-tools": "^0.2.2",
     "@ceramicstudio/idx-web": "^0.1.0",
     "@reduxjs/toolkit": "^1.4.0",
