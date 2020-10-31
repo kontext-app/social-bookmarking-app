@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ProfileHover from 'profile-hover';
 
-import share from './../../assets/icons/share.svg';
-import heart from './../../assets/icons/heart.svg';
-import comment from './../../assets/icons/speech-bubble.svg';
-import upvote from './../../assets/icons/arrow-up.svg';
-import downvote from './../../assets/icons/arrow-down.svg';
-import save from './../../assets/icons/save.svg';
+import share from 'assets/icons/share.svg';
+import heart from 'assets/icons/heart.svg';
+import comment from 'assets/icons/speech-bubble.svg';
+import upvote from 'assets/icons/arrow-up.svg';
+import downvote from 'assets/icons/arrow-down.svg';
+import save from 'assets/icons/save.svg';
 
 export function BookmarkPost(props) {
   return (

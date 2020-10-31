@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 
 import { SidebarLeftDropDown } from './SidebarLeftDropDown';
 
-import cloud from './../assets/icons/cloud.svg';
-import inbox from './../assets/icons/inbox.svg';
-import folder from './../assets/icons/folder.svg';
-import heart from './../assets/icons/heart.svg';
+import cloud from 'assets/icons/cloud.svg';
+import inbox from 'assets/icons/inbox.svg';
+import folder from 'assets/icons/folder.svg';
+import heart from 'assets/icons/heart.svg';
 
 function SidebarLeftItem(props) {
   const { label = '', iconSrc = '', numOfItems = '', linkTo = '' } = props;

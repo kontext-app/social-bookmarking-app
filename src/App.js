@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import { PopularBookmarksPage } from './features/bookmarks/PopularBookmarksPage';
-import { RecentBookmarksPage } from './features/bookmarks/RecentBookmarksPage';
-import { MyBookmarksPage } from './features/bookmarks/MyBookmarksPage';
-import { ProfilePage } from './features/profile/ProfilePage';
-import { LogInPage } from './features/profile/LogInPage';
+import { PopularBookmarksPage } from 'features/bookmarks/PopularBookmarksPage';
+import { RecentBookmarksPage } from 'features/bookmarks/RecentBookmarksPage';
+import { MyBookmarksPage } from 'features/bookmarks/MyBookmarksPage';
+import { ProfilePage } from 'features/profile/ProfilePage';
+import { LogInPage } from 'features/profile/LogInPage';
 
 function App() {
   return (

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import user_icon from './../assets/icons/user_placeholder.svg';
-import music from './../assets/icons/music.svg';
-import hashtag from './../assets/icons/hashtag.svg';
+import user_icon from 'assets/icons/user_placeholder.svg';
+import music from 'assets/icons/music.svg';
+import hashtag from 'assets/icons/hashtag.svg';
 
 export function SidebarRight() {
   return (

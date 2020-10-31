@@ -12,8 +12,8 @@ import {
 import storage from 'redux-persist/lib/storage';
 
 import { appReducer } from './appSlice';
-import { bookmarksReducer } from '../features/bookmarks/bookmarksSlice';
-import { profileReducer } from '../features/profile/profileSlice';
+import { bookmarksReducer } from 'features/bookmarks/bookmarksSlice';
+import { profileReducer } from 'features/profile/profileSlice';
 
 const rootReducer = combineReducers({
   app: appReducer,

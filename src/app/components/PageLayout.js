@@ -3,7 +3,7 @@ import React from 'react';
 import { SidebarLeft } from './SidebarLeft.js';
 import { SidebarRight } from './SidebarRight.js';
 
-import './../styles/custom.css';
+import 'styles/custom.css';
 
 export function PageLayout(props) {
   return (

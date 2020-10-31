@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import user_icon from './../assets/icons/user_placeholder.svg';
+import user_icon from 'assets/icons/user_placeholder.svg';
 
 function DropDownItem(props) {
   const { linkTo = '', label = '' } = props;

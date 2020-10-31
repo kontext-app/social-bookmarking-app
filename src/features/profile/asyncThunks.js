@@ -4,10 +4,8 @@ import {
   authenticateWithEthereum,
   isIDXAuthenticated,
   getDID,
-  getProfile,
-  getIDXDocID,
-} from '../../app/apis/ceramic';
-import { connectWithWeb3 } from '../../app/apis/web3';
+} from 'app/apis/ceramic';
+import { connectWithWeb3 } from 'app/apis/web3';
 import { authenticated } from './profileSlice';
 
 export const logInWithEthereum = createAsyncThunk(
@@ -18,7 +16,6 @@ export const logInWithEthereum = createAsyncThunk(
       await authenticateWithEthereum(provider, addresses[0]);
     }
     const did = getDID();
-    const profileDoc = await getProfile();
     thunkAPI.dispatch(authenticated({ did }));
   }
 );
