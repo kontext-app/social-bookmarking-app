@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+import { getProfileDoc } from 'features/profile/selectors';
 
 import user_icon from 'assets/icons/user_placeholder.svg';
 
@@ -22,32 +25,34 @@ function DropDownItem(props) {
   );
 }
 
+const dropDownData = [
+  {
+    linkTo: '/profile',
+    label: 'Profile',
+  },
+  {
+    linkTo: '/settings',
+    label: 'Settings',
+  },
+  {
+    linkTo: '/import',
+    label: 'Import Bookmarks',
+  },
+  {
+    linkTo: '/logout',
+    label: 'Log out',
+  },
+];
+
 export function SidebarLeftDropDown() {
-  const dropDownData = [
-    {
-      linkTo: '/profile',
-      label: 'Profile',
-    },
-    {
-      linkTo: '/settings',
-      label: 'Settings',
-    },
-    {
-      linkTo: '/import',
-      label: 'Import Bookmarks',
-    },
-    {
-      linkTo: '/logout',
-      label: 'Log out',
-    },
-  ];
+  const profileDoc = useSelector(getProfileDoc) || { name: 'Unknown' };
 
   return (
     <div className="dropdown relative" x-data="{ open: false }">
       <Link to="/profile">
         <button className="flex space-x-2 w-full items-center px-4 py-2 text-sm font-semibold text-gray-900 rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
           <img src={user_icon} alt="user_icon" className="" />
-          <span>Chris</span>
+          <span>{profileDoc.name}</span>
           <svg
             fill="currentColor"
             viewBox="0 0 20 20"

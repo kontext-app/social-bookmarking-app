@@ -41,7 +41,7 @@ export function getDIDInstance() {
   return idx.did;
 }
 
-export async function getProfile(did) {
+export async function getProfileByDID(did) {
   return idx.get('basicProfile', did);
 }
 
