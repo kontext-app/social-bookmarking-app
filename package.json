@@ -4,10 +4,11 @@
   "private": true,
   "dependencies": {
     "3id-connect": "^1.0.0-alpha.2",
-    "@ceramicnetwork/ceramic-http-client": "^0.7.1-alpha.0",
+    "@ceramicnetwork/3id-did-resolver": "^0.4.7",
+    "@ceramicnetwork/ceramic-http-client": "0.7.1",
+    "@ceramicnetwork/key-did-resolver": "^0.1.2",
+    "@ceramicstudio/idx": "^0.3.0",
     "@ceramicstudio/idx-constants": "^0.3.0",
-    "@ceramicstudio/idx-tools": "^0.2.2",
-    "@ceramicstudio/idx-web": "^0.1.0",
     "@reduxjs/toolkit": "^1.4.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -46,7 +47,8 @@
     ]
   },
   "devDependencies": {
-    "@ceramicnetwork/ceramic-cli": "^0.11.1",
+    "@ceramicnetwork/ceramic-cli": "0.13.0",
+    "@ceramicstudio/idx-cli": "^0.2.0",
     "autoprefixer": "^10.0.1",
     "eslint-plugin-prettier": "^3.1.4",
     "postcss-cli": "^8.0.0",
