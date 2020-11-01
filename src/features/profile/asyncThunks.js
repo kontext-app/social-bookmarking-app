@@ -24,6 +24,7 @@ export const logInWithEthereum = createAsyncThunk(
 export const fetchProfileDocByDID = createAsyncThunk(
   'profile/fetchProfileDocByDID',
   async (did, thunkAPI) => {
+    // NOTE: Fake this until idx + 3id-connect works again
     // const profile = await getProfileByDID(did);
     const FAKE_PROFILE = {
       name: 'Alice',
