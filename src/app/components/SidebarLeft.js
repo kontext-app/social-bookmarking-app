@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import { SidebarLeftDropDown } from './SidebarLeftDropDown';
+import { getProfileIsAuthenticated } from 'features/profile/selectors';
 
 import cloud from 'assets/icons/cloud.svg';
 import inbox from 'assets/icons/inbox.svg';
@@ -47,8 +49,8 @@ function SidebarLeftSection(props) {
 }
 
 export function SidebarLeft() {
-  const isLoggedIn = false;
-  const sidebarData = getSidebarData(isLoggedIn);
+  const isAuthenticated = useSelector(getProfileIsAuthenticated);
+  const sidebarData = getSidebarData(isAuthenticated);
 
   return (
     <div className="md:flex flex-col md:flex-row md:min-h-screen">
@@ -64,7 +66,7 @@ export function SidebarLeft() {
           </Link>
         </div>
         <nav className="flex-grow md:block px-4 pb-4 md:pb-0 md:overflow-y-auto">
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             <SidebarLeftDropDown />
           ) : (
             <SidebarLeftItem label="Log In" iconSrc={heart} linkTo="/login" />

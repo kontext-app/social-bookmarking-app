@@ -15,3 +15,7 @@ export function getProfileError(state) {
 export function getProfileIsAuthenticated(state) {
   return state.profile.isAuthenticated;
 }
+
+export function getProfileDoc(state) {
+  return state.profile.doc;
+}

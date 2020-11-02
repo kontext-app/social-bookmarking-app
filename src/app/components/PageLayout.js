@@ -7,7 +7,7 @@ import 'styles/custom.css';
 
 export function PageLayout(props) {
   return (
-    <div className="bg-gray-100 h-full flex flex-row">
+    <div className="bg-gray-100 h-full flex flex-row container mx-auto">
       <SidebarLeft />
       <div className="w-full">
         <div className="flex justify-center ">

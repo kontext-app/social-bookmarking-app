@@ -10,7 +10,7 @@
 ### Install
 
 ```bash
-git clone git@github.com:dakingha69/social-bookmarking-app.git
+git clone git@github.com:kontext-app/social-bookmarking-app.git
 cd social-bookmarking-app
 yarn
 ```

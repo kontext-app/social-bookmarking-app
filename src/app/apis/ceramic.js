@@ -7,8 +7,10 @@ import KeyDidResolver from '@ceramicnetwork/key-did-resolver';
 
 // NOTE: Set new instances from alpha versions of `3id-connect` and `ceramic-http-client` here
 // because the packaged versions in `idx-web` not working ATM.
-const threeIdConnect = new ThreeIdConnect();
-const ceramicClient = new CeramicClient();
+const threeIdConnect = new ThreeIdConnect(
+  process.env.REACT_APP_THREE_ID_CONNECT_HOST
+);
+const ceramicClient = new CeramicClient(process.env.REACT_APP_CERAMIC_API_HOST);
 
 const idx = new IDX({
   ceramic: ceramicClient,
@@ -41,7 +43,7 @@ export function getDIDInstance() {
   return idx.did;
 }
 
-export async function getProfile(did) {
+export async function getProfileByDID(did) {
   return idx.get('basicProfile', did);
 }
 
