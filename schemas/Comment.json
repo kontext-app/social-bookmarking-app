@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Comment",
+  "properties": {
+    "comment": {
+      "type": "string",
+      "title": "comment",
+      "maxLength": 1024
+    },
+    "commentDate": {
+      "type": "string",
+      "title": "commentDate",
+      "format": "date",
+      "maxLength": 10
+    },
+    "upVotes": {
+      "$ref": "#/definitions/DIDArray"
+    },
+    "downVotes": {
+      "$ref": "#/definitions/DIDArray"
+    }
+  },
+  "definitions": {
+    "DID": {
+      "type": "string",
+      "pattern": "^did:.+:.+",
+      "maxLength": 150
+    },
+    "DIDArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DID"
+      },
+      "maxLength": 1024
+    }
+  }
+}
