@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { logInWithEthereum, fetchProfileDocByDID } from './asyncThunks';
 
-import { LoadingStatus } from 'app/constants';
+import { LoadingStatus } from 'app/constants/enums';
 
 export const profileSlice = createSlice({
   name: 'profile',

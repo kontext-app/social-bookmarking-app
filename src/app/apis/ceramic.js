@@ -1,34 +1,24 @@
-import { ThreeIdConnect, EthereumAuthProvider } from '3id-connect';
-import CeramicClient from '@ceramicnetwork/ceramic-http-client';
-import { IDX } from '@ceramicstudio/idx';
+import { IDXWeb } from '@ceramicstudio/idx-web';
 import { definitions } from '@ceramicstudio/idx-constants';
-import ThreeIdResolver from '@ceramicnetwork/3id-did-resolver';
-import KeyDidResolver from '@ceramicnetwork/key-did-resolver';
 
-// NOTE: Set new instances from alpha versions of `3id-connect` and `ceramic-http-client` here
-// because the packaged versions in `idx-web` not working ATM.
-const threeIdConnect = new ThreeIdConnect(
-  process.env.REACT_APP_THREE_ID_CONNECT_HOST
-);
-const ceramicClient = new CeramicClient(process.env.REACT_APP_CERAMIC_API_HOST);
+import { PUBLISHED_DEFINITIONS } from 'app/constants/definitions';
 
-const idx = new IDX({
-  ceramic: ceramicClient,
-  definitions,
-  resolver: {
-    registry: {
-      ...KeyDidResolver.getResolver(),
-      ...ThreeIdResolver.getResolver(ceramicClient),
-    },
+const idx = new IDXWeb({
+  ceramic: process.env.REACT_APP_CERAMIC_API_HOST,
+  connect: process.env.REACT_APP_THREE_ID_CONNECT_HOST,
+  definitions: {
+    ...definitions,
+    ...PUBLISHED_DEFINITIONS,
   },
 });
 
 export async function authenticateWithEthereum(ethereumProvider, address) {
-  const authProvider = new EthereumAuthProvider(ethereumProvider, address);
-  await threeIdConnect.connect(authProvider);
-
-  const didProvider = await threeIdConnect.getDidProvider();
-  await idx.authenticate({ provider: didProvider });
+  await idx.authenticate({
+    ethereum: {
+      provider: ethereumProvider,
+      address,
+    },
+  });
 }
 
 export function isIDXAuthenticated() {
