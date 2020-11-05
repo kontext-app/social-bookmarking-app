@@ -3,7 +3,7 @@ const prettier = require('prettier');
 
 const { publishedDefinitions, publishedSchemas } = require('../schemas');
 
-const constantsFolderPath = `${process.cwd()}/src/constants`;
+const constantsFolderPath = `${process.cwd()}/src/app/constants`;
 
 function main() {
   const definitionsConstantString = `
@@ -19,7 +19,7 @@ function main() {
   )};\n
   `;
   writeFileSync(
-    `${constantsFolderPath}/definitions.js`,
+    `${constantsFolderPath}/definitions.ts`,
     prettier.format(definitionsConstantString, {
       parser: 'babel',
       singleQuote: true,

@@ -1,6 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import ProfileHover from 'profile-hover';
+// import ProfileHover from 'profile-hover';
 
 import share from 'assets/icons/share.svg';
 import heart from 'assets/icons/heart.svg';
@@ -9,7 +8,11 @@ import upvote from 'assets/icons/arrow-up.svg';
 import downvote from 'assets/icons/arrow-down.svg';
 import save from 'assets/icons/save.svg';
 
-export function BookmarkPost(props) {
+type Props = {
+  authorAddress?: string;
+};
+
+export function BookmarkPost(props: Props) {
   return (
     <div className="px-16 flex border border-grey-light-alt hover:border-grey rounded bg-white hover:bg-gray-100 cursor-pointer">
       <div className="mr-8 my-auto flex flex-col text-center items-center">
@@ -39,9 +42,9 @@ export function BookmarkPost(props) {
           </div>
           <span className="text-grey-light mx-1 text-xs">•</span>
           <span className="text-grey">Posted by</span>
-          <div href="#" className="text-grey mx-1 no-underline hover:underline">
+          <div className="text-grey mx-1 no-underline hover:underline">
             <div>
-              <ProfileHover address={props.authorAddress} showName={true} />
+              {/* <ProfileHover address={props.authorAddress} showName={true} /> */}
             </div>
           </div>
           <span className="text-grey">2 hours ago</span>
@@ -83,7 +86,3 @@ export function BookmarkPost(props) {
     </div>
   );
 }
-
-BookmarkPost.propTypes = {
-  authorAddress: PropTypes.string,
-};

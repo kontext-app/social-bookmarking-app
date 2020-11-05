@@ -2,7 +2,7 @@ import React from 'react';
 
 import { BookmarkPost } from './BookmarkPost';
 
-export function BookmarksFeed({ bookmarks = [] }) {
+export function BookmarksFeed({ bookmarks = [] }: { bookmarks?: any[] }) {
   return (
     <div className="mx-auto container">
       <div className="flex w-960 mx-auto">

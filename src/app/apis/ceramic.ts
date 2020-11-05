@@ -12,7 +12,10 @@ const idx = new IDXWeb({
   },
 });
 
-export async function authenticateWithEthereum(ethereumProvider, address) {
+export async function authenticateWithEthereum(
+  ethereumProvider: unknown,
+  address: string
+) {
   await idx.authenticate({
     ethereum: {
       provider: ethereumProvider,
@@ -33,7 +36,7 @@ export function getDIDInstance() {
   return idx.did;
 }
 
-export async function getProfileByDID(did) {
+export async function getProfileByDID(did?: string) {
   return idx.get('basicProfile', did);
 }
 

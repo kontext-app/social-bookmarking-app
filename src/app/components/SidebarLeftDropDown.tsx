@@ -6,7 +6,7 @@ import { getProfileDoc } from 'features/profile/selectors';
 
 import user_icon from 'assets/icons/user_placeholder.svg';
 
-function DropDownItem(props) {
+function DropDownItem(props: { linkTo?: string; label?: string }) {
   const { linkTo = '', label = '' } = props;
   return (
     <Link to={linkTo}>

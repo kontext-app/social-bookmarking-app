@@ -1,11 +1,16 @@
 import React from 'react';
 
-import { SidebarLeft } from './SidebarLeft.js';
-import { SidebarRight } from './SidebarRight.js';
+import { SidebarLeft } from './SidebarLeft';
+import { SidebarRight } from './SidebarRight';
 
 import 'styles/custom.css';
+import type { ReactNode } from 'react';
 
-export function PageLayout(props) {
+type Props = {
+  children?: ReactNode;
+};
+
+export function PageLayout(props: Props) {
   return (
     <div className="bg-gray-100 h-full flex flex-row container mx-auto">
       <SidebarLeft />

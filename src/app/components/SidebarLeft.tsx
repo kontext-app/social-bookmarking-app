@@ -10,8 +10,15 @@ import inbox from 'assets/icons/inbox.svg';
 import folder from 'assets/icons/folder.svg';
 import heart from 'assets/icons/heart.svg';
 
-function SidebarLeftItem(props) {
-  const { label = '', iconSrc = '', numOfItems = '', linkTo = '' } = props;
+type SectionItem = {
+  label?: string;
+  iconSrc?: string;
+  numOfItems?: number;
+  linkTo?: string;
+};
+
+function SidebarLeftItem(props: SectionItem) {
+  const { label = '', iconSrc = '', numOfItems = 0, linkTo = '' } = props;
   return (
     <Link to={linkTo}>
       <div className="flex justify-between space-x-2 items-center px-4 py-2 text-sm rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
@@ -23,7 +30,13 @@ function SidebarLeftItem(props) {
   );
 }
 
-function SidebarLeftSection(props) {
+type Section = {
+  sectionLabel?: string;
+  sectionData?: SectionItem[];
+  linkTo?: string;
+};
+
+function SidebarLeftSection(props: Section) {
   const { sectionLabel = '', sectionData = [], linkTo = '' } = props;
 
   return (
@@ -84,7 +97,7 @@ export function SidebarLeft() {
   );
 }
 
-function getSidebarData(isLoggedIn = false) {
+function getSidebarData(isLoggedIn = false): Section[] {
   const sidebarDataOfLoggedOutUser = [
     {
       sectionData: [

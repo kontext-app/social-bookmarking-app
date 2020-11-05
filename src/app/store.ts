@@ -13,7 +13,16 @@ import storage from 'redux-persist/lib/storage';
 
 import { appReducer } from './appSlice';
 import { bookmarksReducer } from 'features/bookmarks/bookmarksSlice';
-import { profileReducer } from 'features/profile/profileSlice';
+import {
+  profileReducer,
+  ProfileSliceState,
+} from 'features/profile/profileSlice';
+
+export type State = {
+  app: any;
+  bookmarks: any;
+  profile: ProfileSliceState;
+};
 
 const rootReducer = combineReducers({
   app: appReducer,

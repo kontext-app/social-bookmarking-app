@@ -20,14 +20,14 @@ export function ProfilePage() {
   const isAuthenticated = useSelector(getProfileIsAuthenticated);
   const history = useHistory();
 
-  const [name, setName] = React.useState();
-  const [description, setDescription] = React.useState();
-  const [didProfileDataChange, setDidProfileDataChange] = React.useState();
+  const [name, setName] = React.useState('');
+  const [description, setDescription] = React.useState('');
+  const [didProfileDataChange, setDidProfileDataChange] = React.useState(false);
 
   React.useEffect(() => {
     if (!isAuthenticated) {
       history.replace('/login');
-    } else {
+    } else if (typeof did === 'string') {
       dispatch(fetchProfileDocByDID(did));
     }
   }, [history, isAuthenticated, did, dispatch]);
@@ -38,12 +38,12 @@ export function ProfilePage() {
   }, [profileDoc]);
 
   React.useEffect(() => {
-    setDidProfileDataChange(
-      name !== profileDoc.name || description !== profileDoc.description
-    );
+    const profileChanged =
+      name !== profileDoc.name || description !== profileDoc.description;
+    setDidProfileDataChange(profileChanged);
   }, [name, description, setDidProfileDataChange, profileDoc]);
 
-  const handleChangeText = (key, changedText) => {
+  const handleChangeText = (key: string, changedText: string) => {
     if (key === 'name') {
       setName(changedText);
     }
@@ -57,7 +57,7 @@ export function ProfilePage() {
       {isAuthenticated && (
         <div className="p-3">
           <h3 className="mb-3">Hello{name ? `, ${name} ` : ' '}👋</h3>
-          <InputWithLabel label="Your DID" value={did} disabled />
+          <InputWithLabel label="Your DID" value={did || ''} disabled />
           <InputWithLabel
             label="Your Name"
             value={name}

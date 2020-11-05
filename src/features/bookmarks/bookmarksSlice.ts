@@ -44,12 +44,6 @@ export const bookmarksSlice = createSlice({
   },
 });
 
-export const {
-  increment,
-  decrement,
-  incrementByAmount,
-} = bookmarksSlice.actions;
-
 export const bookmarksReducer = bookmarksSlice.reducer;
 
 export default {

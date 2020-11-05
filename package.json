@@ -28,9 +28,9 @@
     "lint": "eslint --fix ./src",
     "format": "prettier --write './src/**/*.{js,md,json}'",
     "idx:publish": "idx bootstrap && yarn idx:publish:schemas && yarn idx:publish:definitions && yarn idx:publish:constants",
-    "idx:publish:schemas": "node ./scripts/publish-schemas.js",
-    "idx:publish:definitions": "node ./scripts/publish-definitions.js",
-    "idx:publish:constants": "node ./scripts/to-constants.js"
+    "idx:publish:schemas": "node ./scripts/publish-schemas.ts",
+    "idx:publish:definitions": "node ./scripts/publish-definitions.ts",
+    "idx:publish:constants": "node ./scripts/to-constants.ts"
   },
   "browserslist": {
     "production": [
@@ -47,6 +47,12 @@
   "devDependencies": {
     "@ceramicnetwork/ceramic-http-client": "^0.7.1",
     "@ceramicstudio/idx-tools": "^0.3.1",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^14.14.6",
+    "@types/react": "^16.9.55",
+    "@types/react-dom": "^16.9.9",
+    "@types/react-redux": "^7.1.11",
+    "@types/react-router-dom": "^5.1.6",
     "autoprefixer": "^10.0.1",
     "dotenv": "^8.2.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -55,6 +61,7 @@
     "postcss-cli": "^8.0.0",
     "prettier": "^2.1.2",
     "profile-hover": "^1.1.2",
-    "tailwindcss": "^1.8.10"
+    "tailwindcss": "^1.8.10",
+    "typescript": "^4.0.5"
   }
 }

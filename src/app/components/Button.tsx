@@ -1,7 +1,12 @@
 import React from 'react';
 
-export function Button(props) {
-  const { className = '', loading, disabled, ...restProps } = props;
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  loading?: boolean;
+  disabled?: boolean;
+}
+
+export function Button(props: Props) {
+  const { className = '', loading, disabled, children, ...restProps } = props;
   return (
     <button
       className={`bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded ${className} ${
@@ -9,7 +14,9 @@ export function Button(props) {
       }`}
       disabled={loading || disabled}
       {...restProps}
-    />
+    >
+      {children}
+    </button>
   );
 }
 

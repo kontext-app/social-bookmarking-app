@@ -9,7 +9,7 @@ import {
 import { connectWithWeb3 } from 'app/apis/web3';
 import { authenticated } from './profileSlice';
 
-export const logInWithEthereum = createAsyncThunk(
+export const logInWithEthereum = createAsyncThunk<void, void>(
   'profile/logInWithEthereum',
   async (arg, thunkAPI) => {
     if (!isIDXAuthenticated()) {
@@ -21,7 +21,7 @@ export const logInWithEthereum = createAsyncThunk(
   }
 );
 
-export const fetchProfileDocByDID = createAsyncThunk(
+export const fetchProfileDocByDID = createAsyncThunk<any, string>(
   'profile/fetchProfileDocByDID',
   async (did, thunkAPI) => {
     const profile = await getProfileByDID(did);
