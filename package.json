@@ -25,12 +25,13 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint --fix ./src",
+    "lint": "eslint './src/**/*.{js,jsx,ts,tsx}'",
+    "lint:fix": "eslint --fix './src/**/*.{js,jsx,ts,tsx}'",
     "format": "prettier --write './src/**/*.{js,md,json}'",
     "idx:publish": "idx bootstrap && yarn idx:publish:schemas && yarn idx:publish:definitions && yarn idx:publish:constants",
-    "idx:publish:schemas": "node ./scripts/publish-schemas.ts",
-    "idx:publish:definitions": "node ./scripts/publish-definitions.ts",
-    "idx:publish:constants": "node ./scripts/to-constants.ts"
+    "idx:publish:schemas": "node ./scripts/publish-schemas.js",
+    "idx:publish:definitions": "node ./scripts/publish-definitions.js",
+    "idx:publish:constants": "node ./scripts/to-constants.js"
   },
   "browserslist": {
     "production": [
@@ -53,8 +54,12 @@
     "@types/react-dom": "^16.9.9",
     "@types/react-redux": "^7.1.11",
     "@types/react-router-dom": "^5.1.6",
+    "@typescript-eslint/eslint-plugin": "^4.6.1",
+    "@typescript-eslint/parser": "^4.6.1",
     "autoprefixer": "^10.0.1",
     "dotenv": "^8.2.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-config-react": "^1.1.7",
     "eslint-plugin-prettier": "^3.1.4",
     "ethers": "^5.0.19",
     "identity-wallet": "^2.0.0-alpha.18",
