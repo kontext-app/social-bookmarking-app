@@ -28,10 +28,10 @@
     "lint": "eslint './src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "eslint --fix './src/**/*.{js,jsx,ts,tsx}'",
     "format": "prettier --write './src/**/*.{js,md,json}'",
-    "idx:publish": "idx bootstrap && yarn idx:publish:schemas && yarn idx:publish:definitions && yarn idx:publish:constants",
+    "idx:publish": "yarn idx:publish:schemas && yarn idx:publish:definitions && yarn idx:constants",
     "idx:publish:schemas": "node ./scripts/publish-schemas.js",
     "idx:publish:definitions": "node ./scripts/publish-definitions.js",
-    "idx:publish:constants": "node ./scripts/to-constants.js"
+    "idx:constants": "node ./scripts/to-constants.js"
   },
   "browserslist": {
     "production": [

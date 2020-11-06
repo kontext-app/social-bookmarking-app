@@ -21,9 +21,9 @@
         },
         "creationDate": {
           "type": "string",
-          "title": "bookmarkDate",
-          "format": "date",
-          "maxLength": 10
+          "title": "creationDate",
+          "format": "date-time",
+          "maxLength": 25
         },
         "tags": {
           "type": "array",
@@ -74,9 +74,9 @@
         },
         "creationDate": {
           "type": "string",
-          "title": "bookmarkDate",
-          "format": "date",
-          "maxLength": 10
+          "title": "creationDate",
+          "format": "date-time",
+          "maxLength": 25
         },
         "tags": {
           "type": "array",
@@ -101,7 +101,7 @@
           "$ref": "#/definitions/CeramicDocIdArray"
         }
       },
-      "required": ["url", "title", "bookmarkDate"]
+      "required": ["url", "title", "creationDate"]
     },
     "DID": {
       "type": "string",
