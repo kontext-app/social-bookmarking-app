@@ -24,19 +24,27 @@ export type State = {
   profile: ProfileSliceState;
 };
 
-const rootReducer = combineReducers({
-  app: appReducer,
-  bookmarks: bookmarksReducer,
-  profile: profileReducer,
-});
-
-const persistConfig = {
+const rootPersistConfig = {
   version: 1,
   key: 'root',
   storage,
+  blacklist: ['app', 'bookmarks', 'profile'],
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const rootReducer = combineReducers({
+  app: appReducer,
+  bookmarks: bookmarksReducer,
+  profile: persistReducer(
+    {
+      key: 'profile',
+      storage,
+      whitelist: ['did', 'isAuthenticated'],
+    },
+    profileReducer
+  ),
+});
+
+const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 
 export default configureStore({
   reducer: persistedReducer,

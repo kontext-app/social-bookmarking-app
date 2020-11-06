@@ -1,19 +1,44 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { LoadingStatus } from './constants/enums';
+import { bootstrapApp } from './asyncThunks';
+
+import type { LoadingStatusType } from './constants/enums';
+
+export type AppSliceState = {
+  bootstrapStatus: LoadingStatusType;
+  error: null | Error;
+  lastUpdated: null | number;
+};
+
+const initialState: AppSliceState = {
+  bootstrapStatus: LoadingStatus.IDLE,
+  error: null,
+  lastUpdated: null,
+};
+
 export const appSlice = createSlice({
   name: 'app',
-  initialState: {
-    idx: null,
-  },
+  initialState,
   reducers: {
-    setIDX: (state, action) => {
-      const { payload = {} } = action;
-      state.idx = payload.idx;
+    setLastUpdated: (state, action) => {
+      state.lastUpdated = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(bootstrapApp.fulfilled, (state) => {
+      state.bootstrapStatus = LoadingStatus.FULFILLED;
+    });
+    builder.addCase(bootstrapApp.pending, (state) => {
+      state.bootstrapStatus = LoadingStatus.PENDING;
+    });
+    builder.addCase(bootstrapApp.rejected, (state) => {
+      state.bootstrapStatus = LoadingStatus.REJECTED;
+    });
   },
 });
 
-export const { setIDX } = appSlice.actions;
+export const { setLastUpdated } = appSlice.actions;
 
 export const appReducer = appSlice.reducer;
 

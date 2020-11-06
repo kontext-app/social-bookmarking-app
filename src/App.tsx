@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { PopularBookmarksPage } from 'features/bookmarks/PopularBookmarksPage';
 import { RecentBookmarksPage } from 'features/bookmarks/RecentBookmarksPage';
@@ -7,7 +8,25 @@ import { MyBookmarksPage } from 'features/bookmarks/MyBookmarksPage';
 import { ProfilePage } from 'features/profile/ProfilePage';
 import { LogInPage } from 'features/profile/LogInPage';
 
-function App() {
+import { bootstrapApp } from 'app/asyncThunks';
+import { getAppBootstrapStatus } from 'app/selectors';
+import { LoadingStatus } from 'app/constants/enums';
+
+export function App(): React.ReactElement {
+  const dispatch = useDispatch();
+  const appBootstrapStatus = useSelector(getAppBootstrapStatus);
+
+  useEffect(() => {
+    dispatch(bootstrapApp());
+  }, [dispatch]);
+
+  if (
+    appBootstrapStatus === LoadingStatus.IDLE ||
+    appBootstrapStatus === LoadingStatus.PENDING
+  ) {
+    return <div>Bootstrapping App...</div>;
+  }
+
   return (
     <Router>
       <Switch>
