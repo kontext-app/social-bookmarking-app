@@ -1,22 +1,9 @@
-import { createSlice, Action, AnyAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 import { logInWithEthereum, fetchProfileDocByDID } from './asyncThunks';
 
-import { LoadingStatus } from 'app/constants/enums';
-
-import type { LoadingStatusType } from 'app/constants/enums';
-
-interface RejectedAction extends Action {
-  error: Error;
-}
-
-function isRejectedAction(action: AnyAction): action is RejectedAction {
-  return action.type.endsWith('rejected');
-}
-
-function isPendingAction(action: AnyAction): action is AnyAction {
-  return action.type.endsWith('pending');
-}
+import { LoadingStatus, LoadingStatusType } from 'app/constants/enums';
+import { addPendingAndRejectedMatcher } from 'app/utils/slice';
 
 export type ProfileSliceState = {
   did: null | string;
@@ -38,32 +25,25 @@ export const profileSlice = createSlice({
   name: 'profile',
   initialState,
   reducers: {
-    authenticated: (state, action) => {
-      const { did } = action.payload;
-      state.did = did;
+    setAuthenticated: (state) => {
       state.isAuthenticated = true;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(logInWithEthereum.fulfilled, (state, action) => {
+      state.did = action.payload;
+      state.isAuthenticated = true;
       state.loadingStatus = LoadingStatus.FULFILLED;
     });
     builder.addCase(fetchProfileDocByDID.fulfilled, (state, action) => {
       state.loadingStatus = LoadingStatus.FULFILLED;
       state.doc = action.payload;
     });
-    builder.addMatcher(isPendingAction, (state, action) => {
-      state.loadingStatus = LoadingStatus.PENDING;
-    });
-    builder.addMatcher(isRejectedAction, (state, action) => {
-      const { error } = action;
-      state.loadingStatus = LoadingStatus.REJECTED;
-      state.error = error;
-    });
+    addPendingAndRejectedMatcher(builder, 'profile');
   },
 });
 
-export const { authenticated } = profileSlice.actions;
+export const { setAuthenticated } = profileSlice.actions;
 
 export const profileReducer = profileSlice.reducer;
 

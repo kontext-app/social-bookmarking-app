@@ -1,46 +1,48 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { bootstrapBookmarks } from './asyncThunks';
+
+import { addPendingAndRejectedMatcher } from 'app/utils/slice';
+import { LoadingStatus, LoadingStatusType } from 'app/constants/enums';
+
+import type {
+  BookmarksIndexDoc,
+  BookmarksData,
+  BookmarksListsData,
+} from 'features/bookmarks/types';
+
+export type BookmarksSliceState = {
+  bookmarksIndexDoc: null | BookmarksIndexDoc;
+  bookmarksData: BookmarksData;
+  bookmarksListsData: BookmarksListsData;
+  loadingStatus: LoadingStatusType;
+  error: null | Error;
+  lastUpdated: null | number;
+};
+
+const initialState: BookmarksSliceState = {
+  bookmarksIndexDoc: null,
+  bookmarksData: {},
+  bookmarksListsData: {},
+  loadingStatus: LoadingStatus.IDLE,
+  error: null,
+  lastUpdated: null,
+};
+
 export const bookmarksSlice = createSlice({
   name: 'bookmarks',
-  initialState: {
-    data: [
-      {
-        id: 1,
-        title: 'Website Title 1',
-        description: 'Website Description',
-        url: 'https://whatever.com',
-        tags: [1, 2, 3],
-        upVotes: 10,
-        downVotes: 12,
-        pageContent: '<html></html>',
-        author: 12345,
-        timestamp: Date.now(),
-      },
-      {
-        id: 2,
-        title: 'Website Title 2',
-        description: 'Website Description',
-        url: 'https://whatever.com',
-        tags: [1, 2, 3],
-        upVotes: 10,
-        downVotes: 12,
-        pageContent: '<html></html>',
-        author: 12345,
-        timestamp: Date.now(),
-      },
-    ],
-    isLoading: 'idle',
-  },
+  initialState,
   reducers: {
-    recentBookmarksFetched: (state, action) => {
-      // TODO
+    setLastUpdated: (state, action) => {
+      state.lastUpdated = action.payload;
     },
-    popularBookmarksFetched: (state, action) => {
-      // TODO
-    },
-    myBookmarksFetched: (state, action) => {
-      // TODO
-    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(bootstrapBookmarks.fulfilled, (state, action) => {
+      state.loadingStatus = LoadingStatus.FULFILLED;
+      state.bookmarksIndexDoc = action.payload;
+    });
+    addPendingAndRejectedMatcher(builder, 'bookmarks');
   },
 });
 
