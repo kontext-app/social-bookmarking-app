@@ -1,48 +1,54 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
-  "title": "BookmarksList",
-  "properties": {
-    "title": {
-      "type": "string",
-      "title": "title",
-      "maxLength": 150
-    },
-    "description": {
-      "type": "string",
-      "title": "description",
-      "maxLength": 1024
-    },
-    "creationDate": {
-      "type": "string",
-      "title": "bookmarkDate",
-      "format": "date",
-      "maxLength": 10
-    },
-    "tags": {
-      "type": "array",
-      "title": "tags",
-      "items": {
-        "type": "string"
-      },
-      "maxItems": 10
-    },
-    "upVotes": {
-      "$ref": "#/definitions/DIDArray"
-    },
-    "downVotes": {
-      "$ref": "#/definitions/DIDArray"
-    },
-    "bookmarks": {
-      "type": "array",
-      "title": "Bookmarks",
-      "items": {
-        "$ref": "#/definitions/Bookmark"
-      },
-      "maxLength": 1024
-    }
+  "type": "array",
+  "title": "BookmarksLists",
+  "items": {
+    "$ref": "#/definitions/BookmarksList"
   },
+  "maxLength": 1024,
   "definitions": {
+    "BookmarksList": {
+      "properties": {
+        "title": {
+          "type": "string",
+          "title": "title",
+          "maxLength": 150
+        },
+        "description": {
+          "type": "string",
+          "title": "description",
+          "maxLength": 1024
+        },
+        "creationDate": {
+          "type": "string",
+          "title": "bookmarkDate",
+          "format": "date",
+          "maxLength": 10
+        },
+        "tags": {
+          "type": "array",
+          "title": "tags",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 10
+        },
+        "upVotes": {
+          "$ref": "#/definitions/DIDArray"
+        },
+        "downVotes": {
+          "$ref": "#/definitions/DIDArray"
+        },
+        "bookmarks": {
+          "type": "array",
+          "title": "Bookmarks",
+          "items": {
+            "$ref": "#/definitions/Bookmark"
+          },
+          "maxLength": 1024
+        }
+      }
+    },
     "Bookmark": {
       "type": "object",
       "properties": {

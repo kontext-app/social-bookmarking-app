@@ -23,6 +23,7 @@ async function parseSeedFromEnv() {
 
 async function createIDW(seed) {
   const idw = await IdentityWallet.create({
+    ceramic: ceramicClient,
     getPermission: async () => [],
     seed,
   });

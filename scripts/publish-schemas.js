@@ -1,18 +1,12 @@
 const { publishSchema } = require('@ceramicstudio/idx-tools');
 
 const utils = require('./utils');
-const {
-  Bookmarks,
-  BookmarksIndex,
-  BookmarksList,
-  Comment,
-} = require('../schemas');
+const { Bookmarks, BookmarksIndex, BookmarksLists } = require('../schemas');
 
 const schemasToPublish = {
   Bookmarks,
   BookmarksIndex,
-  BookmarksList,
-  Comment,
+  BookmarksLists,
 };
 
 async function main() {
