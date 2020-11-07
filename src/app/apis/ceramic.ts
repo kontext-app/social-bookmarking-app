@@ -1,5 +1,5 @@
 import { IDXWeb } from '@ceramicstudio/idx-web';
-import { definitions } from '@ceramicstudio/idx-constants';
+import { definitions, schemas } from '@ceramicstudio/idx-constants';
 
 import {
   PUBLISHED_DEFINITIONS,
@@ -8,11 +8,12 @@ import {
 import { DefaultBookmarksIndexKeys } from 'app/constants/enums';
 
 import type {
-  Bookmark,
+  BookmarkDocContent,
   BookmarksDoc,
-  BookmarksIndexDoc,
+  BookmarksIndexDocContent,
 } from 'features/bookmarks/types';
 import type { BasicProfile } from 'features/profile/types';
+import type { DefaultBookmarksIndexKeyType } from 'app/constants/enums';
 
 export let idx: IDXWeb;
 
@@ -51,6 +52,10 @@ export function getDIDInstance(): any {
   return idx.did;
 }
 
+export async function loadDocument(docID: string) {
+  return idx.ceramic.loadDocument(docID);
+}
+
 export async function getProfileByDID(
   did?: string
 ): Promise<BasicProfile | null> {
@@ -61,14 +66,28 @@ export async function getIDXDocID(did?: string): Promise<string | null> {
   return idx.getIDXDocID(did);
 }
 
+export async function getBookmarksIndexDocID(
+  did?: string
+): Promise<string | null> {
+  const idxDocContent = await idx.getIDXContent(did);
+
+  if (!idxDocContent) {
+    return null;
+  }
+
+  const bookmarksIndexDocID =
+    idxDocContent[PUBLISHED_DEFINITIONS.BookmarksIndex];
+  return bookmarksIndexDocID;
+}
+
 export async function hasBookmarksIndex(did?: string): Promise<boolean> {
   return idx.has('BookmarksIndex', did);
 }
 
 export async function getBookmarksIndexDocContent(
   did?: string
-): Promise<BookmarksIndexDoc | null> {
-  return idx.get<BookmarksIndexDoc>('BookmarksIndex', did);
+): Promise<BookmarksIndexDocContent | null> {
+  return idx.get<BookmarksIndexDocContent>('BookmarksIndex', did);
 }
 
 export async function setDefaultBookmarksIndex(): Promise<string> {
@@ -83,17 +102,16 @@ export async function setDefaultBookmarksIndex(): Promise<string> {
       defaultBookmarksIndexKey === DefaultBookmarksIndexKeys.LISTS
         ? await createEmptyBookmarksListsDoc()
         : await createEmptyBookmarksDoc();
-    defaultBookmarksIndexKeyToDocID[
-      defaultBookmarksIndexKey
-    ] = `ceramic://${docID}`;
+    defaultBookmarksIndexKeyToDocID[defaultBookmarksIndexKey] = docID;
   }
 
+  await idx.remove('BookmarksIndex');
   const bookmarksIndexDocID = await idx.set(
     'BookmarksIndex',
     defaultBookmarksIndexKeyToDocID
   );
 
-  return String(bookmarksIndexDocID);
+  return bookmarksIndexDocID.toUrl('base36');
 }
 
 export async function createEmptyBookmarksDoc(): Promise<string> {
@@ -107,7 +125,7 @@ export async function createEmptyBookmarksDoc(): Promise<string> {
     },
   });
 
-  return String(id);
+  return id.toUrl('base36');
 }
 
 export async function createEmptyBookmarksListsDoc(): Promise<string> {
@@ -121,20 +139,53 @@ export async function createEmptyBookmarksListsDoc(): Promise<string> {
     },
   });
 
-  return String(id);
+  return id.toUrl('base36');
 }
 
-export async function addBookmarkToBookmarksDoc(
-  docID: string,
-  bookmarkToAdd: Bookmark
+export async function createBookmarkDoc(
+  bookmarkToAdd: BookmarkDocContent
+): Promise<string> {
+  const { id } = await idx.ceramic.createDocument('tile', {
+    content: bookmarkToAdd,
+    metadata: {
+      schema: PUBLISHED_SCHEMAS.Bookmark,
+      controllers: [getDID()],
+      tags: ['bookmarks'],
+    },
+  });
+  return id.toUrl('base36');
+}
+
+export async function addBookmarkDocToBookmarksDoc(
+  bookmarkDocID: string,
+  bookmarksDocID: string
 ): Promise<BookmarksDoc> {
-  const bookmarksDoc = await idx.ceramic.loadDocument(docID);
-  const existingBookmarks = bookmarksDoc.content;
-  const updatedBookmarks = [bookmarkToAdd, ...existingBookmarks];
+  const bookmarksDoc = await idx.ceramic.loadDocument(bookmarksDocID);
+  const existingBookmarkDocIDs = bookmarksDoc.content;
+  const updatedBookmarkDocIDs = [bookmarkDocID, ...existingBookmarkDocIDs];
 
   await bookmarksDoc.change({
-    content: updatedBookmarks,
+    content: updatedBookmarkDocIDs,
   });
 
-  return updatedBookmarks;
+  return bookmarksDoc;
+}
+
+export function getSchemaNameByDocID(docID?: string): string | null {
+  if (!docID) {
+    return null;
+  }
+
+  const allSchemas = {
+    ...schemas,
+    ...PUBLISHED_SCHEMAS,
+  };
+
+  const schemaDocIDIndex = Object.values(allSchemas).indexOf(docID);
+
+  if (schemaDocIDIndex === -1) {
+    return null;
+  }
+
+  return Object.keys(allSchemas)[schemaDocIDIndex];
 }

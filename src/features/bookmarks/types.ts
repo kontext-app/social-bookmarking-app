@@ -1,45 +1,66 @@
-export type DefaultBookmarksIndexKeys =
-  | 'unsorted'
-  | 'public'
-  | 'private'
-  | 'lists';
+import type { Doctype } from '@ceramicnetwork/ceramic-common';
 
-export type BookmarksIndex = {
-  unsorted: BookmarksDoc;
-  public: BookmarksDoc;
-  private: BookmarksDoc;
-  lists: BookmarksListsDoc;
-};
+export interface CeramicDoc<T> extends Doctype {
+  content: T;
+}
 
-export type BookmarksIndexDoc = {
+export type BookmarksIndexDocContent = {
   unsorted: string;
   public: string;
   private: string;
-  lists: string;
+  [key: string]: string;
 };
 
-export type Bookmark = {
+export type BookmarksIndex = BookmarksIndexDocContent & {
+  docID: string;
+};
+
+export type BookmarksIndexDoc = CeramicDoc<BookmarksIndexDocContent>;
+
+export type BookmarksIndexData = {
+  [docID: string]: BookmarksIndex;
+};
+
+export type BookmarkDocContent = {
   url: string;
   title: string;
+  author: string;
   description: string;
-  highlight: string;
+  highlightedText: string;
   creationDate: string;
 };
 
-export type BookmarksDoc = Array<Bookmark>;
+export type BookmarkDoc = CeramicDoc<BookmarkDocContent>;
+
+export type BookmarksDocContent = Array<string>;
+
+export type BookmarksDoc = CeramicDoc<BookmarksDocContent>;
+
+export type BookmarksListDocContent = {
+  title: string;
+  author: string;
+  description: string;
+  creationDate: string;
+  bookmarks: Array<string>;
+};
+
+export type BookmarksListDoc = CeramicDoc<BookmarksListDocContent>;
+
+export type BookmarksListsDocContent = Array<string>;
+
+export type BookmarksListsDoc = CeramicDoc<BookmarksListsDocContent>;
+
+export type BookmarkData = {
+  [docID: string]: BookmarkDoc;
+};
 
 export type BookmarksData = {
   [docID: string]: BookmarksDoc;
 };
 
-export type BookmarksList = {
-  title: string;
-  description: string;
-  creationDate: string;
-  bookmarks: Array<Bookmark>;
+export type BookmarksListData = {
+  [docID: string]: BookmarksListDoc;
 };
-
-export type BookmarksListsDoc = Array<BookmarksList>;
 
 export type BookmarksListsData = {
   [docID: string]: BookmarksListsDoc;

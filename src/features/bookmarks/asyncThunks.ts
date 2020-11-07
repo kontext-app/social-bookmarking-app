@@ -4,52 +4,66 @@ import {
   getBookmarksIndexDocContent,
   setDefaultBookmarksIndex,
   hasBookmarksIndex,
-  addBookmarkToBookmarksDoc,
+  addBookmarkDocToBookmarksDoc,
+  getBookmarksIndexDocID,
+  loadDocument,
+  createBookmarkDoc,
+  getSchemaNameByDocID,
 } from 'app/apis/ceramic';
-import { selectBookmarksIndexDoc } from 'features/bookmarks/selectors';
+import { selectBookmarksIndex } from 'features/bookmarks/selectors';
 import { enrichPartialBookmark } from 'features/bookmarks/utils';
+import { getProfileDID } from 'features/profile/selectors';
 
 import type {
   BookmarksIndexDoc,
-  Bookmark,
   BookmarksDoc,
+  BookmarkDocContent,
+  BookmarksIndexData,
+  BookmarksIndex,
 } from 'features/bookmarks/types';
 import type { DefaultBookmarksIndexKeyType } from 'app/constants/enums';
 import type { State } from 'app/store';
 
-export const bootstrapBookmarks = createAsyncThunk<BookmarksIndexDoc | null>(
-  'bookmarks/bootstrap',
-  async () => {
-    const hasUserBookmarksIndex = hasBookmarksIndex();
+export const bootstrapBookmarks = createAsyncThunk<
+  BookmarksIndexData | null,
+  void,
+  { state: State }
+>('bookmarks/bootstrap', async (payload, thunkAPI) => {
+  const hasUserBookmarksIndex = hasBookmarksIndex();
 
-    if (!hasUserBookmarksIndex) {
-      const newBookmarksIndexDocID = await setDefaultBookmarksIndex();
-      console.log(
-        'New default bookmarks index created:',
-        newBookmarksIndexDocID
-      );
-    }
+  const bookmarksIndexDocID = hasUserBookmarksIndex
+    ? await getBookmarksIndexDocID()
+    : await setDefaultBookmarksIndex();
 
-    const bookmarksIndexDoc = await getBookmarksIndexDocContent();
-    return bookmarksIndexDoc;
+  if (!bookmarksIndexDocID) {
+    thunkAPI.rejectWithValue(new Error('BookmarksIndexDocID is null'));
   }
-);
+
+  const bookmarksIndexDoc = await loadDocument(bookmarksIndexDocID as string);
+  return {
+    [bookmarksIndexDocID as string]: {
+      docID: bookmarksIndexDocID,
+      ...bookmarksIndexDoc.content,
+    },
+  };
+});
 
 export const addBookmark = createAsyncThunk<
   BookmarksDoc,
   {
-    bookmarkToAdd: Partial<Bookmark>;
-    bookmarksIndexKey: DefaultBookmarksIndexKeyType;
+    bookmarkToAdd: Partial<BookmarkDocContent>;
+    bookmarksIndexKey: 'public' | 'private' | 'unsorted';
   },
   { state: State }
 >('bookmarks/add', async (payload, thunkAPI) => {
-  const bookmarksIndexDoc = selectBookmarksIndexDoc(thunkAPI.getState());
+  const authorDID = getProfileDID(thunkAPI.getState());
+  const bookmarksIndex = selectBookmarksIndex(thunkAPI.getState());
 
-  if (!bookmarksIndexDoc) {
+  if (!bookmarksIndex) {
     thunkAPI.rejectWithValue(new Error('BookmarksIndexDoc not loaded'));
   }
 
-  const bookmarksIndexKeyDocID = (bookmarksIndexDoc as BookmarksIndexDoc)[
+  const bookmarksIndexKeyDocID = (bookmarksIndex as BookmarksIndex)[
     payload.bookmarksIndexKey
   ];
 
@@ -57,9 +71,16 @@ export const addBookmark = createAsyncThunk<
     thunkAPI.rejectWithValue(new Error('Provided BookmarksIndex key invalid'));
   }
 
-  const updatedBookmarksDoc = await addBookmarkToBookmarksDoc(
-    bookmarksIndexKeyDocID,
-    enrichPartialBookmark(payload.bookmarkToAdd)
+  const addedBookmarkDocID = await createBookmarkDoc(
+    enrichPartialBookmark({
+      ...payload.bookmarkToAdd,
+      author: authorDID as string,
+    })
+  );
+
+  const updatedBookmarksDoc = await addBookmarkDocToBookmarksDoc(
+    addedBookmarkDocID,
+    bookmarksIndexKeyDocID
   );
 
   return updatedBookmarksDoc;
@@ -67,4 +88,5 @@ export const addBookmark = createAsyncThunk<
 
 export default {
   bootstrapBookmarks,
+  addBookmark,
 };

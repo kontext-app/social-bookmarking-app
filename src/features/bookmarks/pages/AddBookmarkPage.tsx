@@ -9,13 +9,13 @@ import { addBookmark } from 'features/bookmarks/asyncThunks';
 import { selectBookmarksLoadingStatus } from 'features/bookmarks/selectors';
 import { LoadingStatus } from 'app/constants/enums';
 
-import type { Bookmark } from 'features/bookmarks/types';
+import type { BookmarkDocContent } from 'features/bookmarks/types';
 
 export function AddBookmarkPage(): JSX.Element {
   const dispatch = useDispatch();
   const bookmarksLoadingStatus = useSelector(selectBookmarksLoadingStatus);
 
-  const [bookmark, setBookmark] = useState<Partial<Bookmark>>({
+  const [bookmark, setBookmark] = useState<Partial<BookmarkDocContent>>({
     url: '',
     title: '',
     description: '',
@@ -91,7 +91,9 @@ export function AddBookmarkPage(): JSX.Element {
 }
 
 // TODO: Add url validation
-function areInputValuesValid(inputValues: Partial<Bookmark>): boolean {
+function areInputValuesValid(
+  inputValues: Partial<BookmarkDocContent>
+): boolean {
   const { url = '', description = '', title = '' } = inputValues;
   return url !== '' && description !== '' && title !== '';
 }

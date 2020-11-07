@@ -1,15 +1,21 @@
-import type { Bookmark } from 'features/bookmarks/types';
+import type { BookmarkDocContent } from 'features/bookmarks/types';
 
 export function enrichPartialBookmark(
-  partialBookmark: Partial<Bookmark>
-): Bookmark {
-  const { url = '', description = '', title = '' } = partialBookmark;
+  partialBookmark: Partial<BookmarkDocContent>
+): BookmarkDocContent {
+  const {
+    url = '',
+    description = '',
+    title = '',
+    author = '',
+  } = partialBookmark;
 
   return {
     url,
     title,
+    author,
     description,
-    highlight: '',
+    highlightedText: '',
     creationDate: new Date().toISOString(),
   };
 }

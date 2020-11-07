@@ -2,13 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-import { SidebarLeftDropDown } from './SidebarLeftDropDown';
+import { SidebarLeftDropDown } from 'app/components/SidebarLeftDropDown';
 import { getProfileIsAuthenticated } from 'features/profile/selectors';
+import { selectBookmarksIndexData } from 'features/bookmarks/selectors';
+import { DefaultBookmarksIndexKeys } from 'app/constants/enums';
 
 import cloud from 'assets/icons/cloud.svg';
 import inbox from 'assets/icons/inbox.svg';
 import folder from 'assets/icons/folder.svg';
 import heart from 'assets/icons/heart.svg';
+
+import type { BookmarksListDoc } from 'features/bookmarks/types';
 
 type SectionItem = {
   label?: string;
@@ -24,7 +28,7 @@ function SidebarLeftItem(props: SectionItem) {
       <div className="flex justify-between space-x-2 items-center px-4 py-2 text-sm rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
         <img src={iconSrc} alt="all bookmarks" className="flex-shrink-0" />
         <span className="flex-1 font-semibold text-gray-900">{label}</span>
-        <span className="flex-shrink-0 text-gray-500">{numOfItems}</span>
+        {/* <span className="flex-shrink-0 text-gray-500">{numOfItems}</span> */}
       </div>
     </Link>
   );
@@ -74,7 +78,7 @@ export function SidebarLeft() {
         <div className="flex-shrink-0 px-8 py-4 flex flex-row items-center justify-between">
           <Link to="/">
             <div className="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline">
-              My Bookmarks
+              Kontext
             </div>
           </Link>
         </div>
@@ -97,15 +101,26 @@ export function SidebarLeft() {
   );
 }
 
-function getSidebarData(isLoggedIn = false): Section[] {
+function getSidebarData(isLoggedIn = false, lists = []): Section[] {
   const sidebarDataOfLoggedOutUser = [
     {
+      sectionLabel: 'Explore',
+      linkTo: '/explore',
       sectionData: [
         {
-          label: 'All bookmarks',
+          label: 'Recommended',
           iconSrc: cloud,
-          linkTo: '/',
-          numOfItems: 12,
+          linkTo: '/recommended',
+        },
+        {
+          label: 'Popular',
+          iconSrc: cloud,
+          linkTo: '/popular',
+        },
+        {
+          label: 'Recent',
+          iconSrc: cloud,
+          linkTo: '/recent',
         },
       ],
     },
@@ -113,38 +128,48 @@ function getSidebarData(isLoggedIn = false): Section[] {
 
   const sidebarDataOfLoggedInUser = [
     {
+      sectionLabel: 'My Bookmarks',
+      linkTo: '/my-bookmarks',
       sectionData: [
-        ...sidebarDataOfLoggedOutUser[0].sectionData,
+        {
+          label: 'Add bookmark',
+          iconSrc: inbox,
+          linkTo: '/add-bookmark',
+        },
         {
           label: 'Unsorted',
           iconSrc: inbox,
-          linkTo: '/',
-          numOfItems: 12,
+          linkTo: '/unsorted',
+        },
+        {
+          label: 'Public',
+          iconSrc: inbox,
+          linkTo: '/public',
+        },
+        {
+          label: 'Private',
+          iconSrc: inbox,
+          linkTo: '/private',
         },
       ],
     },
     {
-      sectionLabel: 'My Collections',
+      sectionLabel: 'My Lists',
+      linkTo: '/my-lists',
       sectionData: [
         {
-          label: 'First Collection',
+          label: 'Add list',
           iconSrc: folder,
-          linkTo: '/',
-          numOfItems: 12,
+          linkTo: '/add-list',
         },
+        ...lists.map((listDoc: BookmarksListDoc) => ({
+          label: listDoc.content.title,
+          iconSrc: folder,
+          linkTo: `/list/${listDoc.id}`,
+        })),
       ],
     },
-    {
-      sectionLabel: 'Filters',
-      sectionData: [
-        {
-          label: 'Favorites',
-          iconSrc: heart,
-          linkTo: '/',
-          numOfItems: 12,
-        },
-      ],
-    },
+    { ...sidebarDataOfLoggedOutUser[0] },
   ];
 
   return isLoggedIn ? sidebarDataOfLoggedInUser : sidebarDataOfLoggedOutUser;
