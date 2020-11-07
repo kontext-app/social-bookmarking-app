@@ -3,87 +3,14 @@
   "type": "array",
   "title": "Bookmarks",
   "items": {
-    "$ref": "#/definitions/Bookmark"
+    "$ref": "#/definitions/CeramicDocId"
   },
   "maxLength": 1024,
   "definitions": {
-    "Bookmark": {
-      "type": "object",
-      "properties": {
-        "url": {
-          "type": "string",
-          "title": "url",
-          "maxLength": 240
-        },
-        "title": {
-          "type": "string",
-          "title": "title",
-          "maxLength": 150
-        },
-        "description": {
-          "type": "string",
-          "title": "description",
-          "maxLength": 1024
-        },
-        "highlight": {
-          "type": "string",
-          "title": "description",
-          "maxLength": 1024
-        },
-        "creationDate": {
-          "type": "string",
-          "title": "creationDate",
-          "format": "date-time",
-          "maxLength": 25
-        },
-        "tags": {
-          "type": "array",
-          "title": "tags",
-          "maxItems": 10,
-          "items": {
-            "type": "string"
-          }
-        },
-        "numberOfShares": {
-          "type": "number",
-          "title": "numberOfShares",
-          "exclusiveMinimum": 0
-        },
-        "upVotes": {
-          "$ref": "#/definitions/DIDArray"
-        },
-        "downVotes": {
-          "$ref": "#/definitions/DIDArray"
-        },
-        "comments": {
-          "$ref": "#/definitions/CeramicDocIdArray"
-        }
-      },
-      "required": ["url", "title", "creationDate"]
-    },
-    "DID": {
-      "type": "string",
-      "pattern": "^did:.+:.+",
-      "maxLength": 1024
-    },
-    "DIDArray": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/DID"
-      },
-      "maxLength": 1024
-    },
     "CeramicDocId": {
       "type": "string",
       "pattern": "^ceramic://.+(\\?version=.+)?",
       "maxLength": 1024
-    },
-    "CeramicDocIdArray": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/CeramicDocId"
-      },
-      "maxItems": 1024
     }
   }
 }

@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Bookmark",
+  "properties": {
+    "url": {
+      "type": "string",
+      "title": "url",
+      "maxLength": 2048
+    },
+    "title": {
+      "type": "string",
+      "title": "title",
+      "maxLength": 150
+    },
+    "description": {
+      "type": "string",
+      "title": "description",
+      "maxLength": 2048
+    },
+    "highlightedText": {
+      "type": "string",
+      "title": "highlightedText",
+      "maxLength": 1024
+    },
+    "creationDate": {
+      "type": "string",
+      "title": "creationDate",
+      "format": "date-time",
+      "maxLength": 25
+    },
+    "tags": {
+      "type": "array",
+      "title": "tags",
+      "maxItems": 10,
+      "items": {
+        "type": "string"
+      }
+    },
+    "numberOfShares": {
+      "type": "number",
+      "title": "numberOfShares",
+      "exclusiveMinimum": 0
+    },
+    "author": {
+      "$ref": "#/definitions/DID"
+    },
+    "upVotes": {
+      "$ref": "#/definitions/DIDArray"
+    },
+    "downVotes": {
+      "$ref": "#/definitions/DIDArray"
+    },
+    "comments": {
+      "$ref": "#/definitions/CeramicDocIdArray"
+    }
+  },
+  "required": ["url", "title", "creationDate"],
+  "definitions": {
+    "DID": {
+      "type": "string",
+      "pattern": "^did:.+:.+",
+      "maxLength": 1024
+    },
+    "DIDArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DID"
+      },
+      "maxLength": 1024
+    },
+    "CeramicDocId": {
+      "type": "string",
+      "pattern": "^ceramic://.+(\\?version=.+)?",
+      "maxLength": 1024
+    },
+    "CeramicDocIdArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CeramicDocId"
+      },
+      "maxItems": 1024
+    }
+  }
+}

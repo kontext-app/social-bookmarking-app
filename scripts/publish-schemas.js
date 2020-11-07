@@ -1,11 +1,19 @@
 const { publishSchema } = require('@ceramicstudio/idx-tools');
 
 const utils = require('./utils');
-const { Bookmarks, BookmarksIndex, BookmarksLists } = require('../schemas');
-
-const schemasToPublish = {
+const {
+  Bookmark,
   Bookmarks,
   BookmarksIndex,
+  BookmarksList,
+  BookmarksLists,
+} = require('../schemas');
+
+const schemasToPublish = {
+  Bookmark,
+  Bookmarks,
+  BookmarksIndex,
+  BookmarksList,
   BookmarksLists,
 };
 
@@ -35,7 +43,7 @@ async function publishSchemas() {
         name: schema.title,
         content: schema,
       });
-      schemaNameToDocId[schemaName] = `ceramic://${String(docId)}`;
+      schemaNameToDocId[schemaName] = docId.toUrl('base36');
       console.log(`✅ Schema ${schema.title} published. DocId: ${docId}`);
     } catch (error) {
       console.log(`❌ Schema ${schema.title} failed.`, error);

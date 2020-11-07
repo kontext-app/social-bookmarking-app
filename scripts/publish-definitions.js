@@ -29,7 +29,7 @@ async function publishDefinitions() {
         name: schemaName,
         schema: schemaDocID,
       });
-      definitionNameToDocId[schemaName] = `ceramic://${String(docId)}`;
+      definitionNameToDocId[schemaName] = docId.toUrl('base36');
       console.log(`✅ Definition ${schemaName} published. DocId: ${docId}`);
     } catch (error) {
       console.log(`❌ Definition ${schemaName} failed.`, error);
