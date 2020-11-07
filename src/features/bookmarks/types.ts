@@ -23,7 +23,7 @@ export type Bookmark = {
   title: string;
   description: string;
   highlight: string;
-  creationDate: number;
+  creationDate: string;
 };
 
 export type BookmarksDoc = Array<Bookmark>;
@@ -35,7 +35,7 @@ export type BookmarksData = {
 export type BookmarksList = {
   title: string;
   description: string;
-  creationDate: number;
+  creationDate: string;
   bookmarks: Array<Bookmark>;
 };
 

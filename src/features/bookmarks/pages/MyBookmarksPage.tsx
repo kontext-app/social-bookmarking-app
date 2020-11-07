@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { PageLayout } from 'app/components/PageLayout';
 import { Button } from 'app/components/Button';
-import { BookmarksFeed } from './BookmarksFeed';
+import { BookmarksFeed } from '../components/BookmarksFeed';
 
-import { bootstrapBookmarks } from './asyncThunks';
+import { bootstrapBookmarks } from '../asyncThunks';
 import { getProfileDID } from 'features/profile/selectors';
 
 export function MyBookmarksPage() {
