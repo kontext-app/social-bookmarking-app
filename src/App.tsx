@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { PopularBookmarksPage } from 'features/bookmarks/PopularBookmarksPage';
-import { RecentBookmarksPage } from 'features/bookmarks/RecentBookmarksPage';
-import { MyBookmarksPage } from 'features/bookmarks/MyBookmarksPage';
+import { PopularBookmarksPage } from 'features/bookmarks/pages/PopularBookmarksPage';
+import { RecentBookmarksPage } from 'features/bookmarks/pages/RecentBookmarksPage';
+import { MyBookmarksPage } from 'features/bookmarks/pages/MyBookmarksPage';
+import { AddBookmarkPage } from 'features/bookmarks/pages/AddBookmarkPage';
 import { ProfilePage } from 'features/profile/ProfilePage';
 import { LogInPage } from 'features/profile/LogInPage';
 
@@ -31,9 +32,10 @@ export function App(): React.ReactElement {
     <Router>
       <Switch>
         <Route exact path="/" render={() => <MyBookmarksPage />} />
-        <Route exact path="/my" render={() => <MyBookmarksPage />} />
+        <Route exact path="/my-bookmarks" render={() => <MyBookmarksPage />} />
         <Route exact path="/popular" render={() => <PopularBookmarksPage />} />
         <Route exact path="/recent" render={() => <RecentBookmarksPage />} />
+        <Route exact path="/add-bookmark" render={() => <AddBookmarkPage />} />
         <Route exact path="/profile" render={() => <ProfilePage />} />
         <Route exact path="/login" render={() => <LogInPage />} />
       </Switch>

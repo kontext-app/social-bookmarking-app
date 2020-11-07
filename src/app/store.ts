@@ -13,14 +13,15 @@ import storage from 'redux-persist/lib/storage';
 
 import { appReducer } from './appSlice';
 import { bookmarksReducer } from 'features/bookmarks/bookmarksSlice';
-import {
-  profileReducer,
-  ProfileSliceState,
-} from 'features/profile/profileSlice';
+import { profileReducer } from 'features/profile/profileSlice';
+
+import type { AppSliceState } from 'app/appSlice';
+import type { ProfileSliceState } from 'features/profile/profileSlice';
+import type { BookmarksSliceState } from 'features/bookmarks/bookmarksSlice';
 
 export type State = {
-  app: any;
-  bookmarks: any;
+  app: AppSliceState;
+  bookmarks: BookmarksSliceState;
   profile: ProfileSliceState;
 };
 

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { bootstrapBookmarks } from './asyncThunks';
+import { bootstrapBookmarks, addBookmark } from './asyncThunks';
 
 import { addPendingAndRejectedMatcher } from 'app/utils/slice';
 import { LoadingStatus, LoadingStatusType } from 'app/constants/enums';
@@ -41,6 +41,10 @@ export const bookmarksSlice = createSlice({
     builder.addCase(bootstrapBookmarks.fulfilled, (state, action) => {
       state.loadingStatus = LoadingStatus.FULFILLED;
       state.bookmarksIndexDoc = action.payload;
+    });
+    builder.addCase(addBookmark.fulfilled, (state, action) => {
+      state.loadingStatus = LoadingStatus.FULFILLED;
+      console.log(action.payload);
     });
     addPendingAndRejectedMatcher(builder, 'bookmarks');
   },

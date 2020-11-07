@@ -5,16 +5,14 @@ import {
   PUBLISHED_DEFINITIONS,
   PUBLISHED_SCHEMAS,
 } from 'app/constants/definitions';
+import { DefaultBookmarksIndexKeys } from 'app/constants/enums';
 
-import type { BookmarksIndexDoc } from 'features/bookmarks/types';
+import type {
+  Bookmark,
+  BookmarksDoc,
+  BookmarksIndexDoc,
+} from 'features/bookmarks/types';
 import type { BasicProfile } from 'features/profile/types';
-
-export const DefaultBookmarksIndexKeys = {
-  UNSORTED: 'unsorted',
-  PUBLIC: 'public',
-  PRIVATE: 'private',
-  LISTS: 'lists',
-};
 
 export let idx: IDXWeb;
 
@@ -124,4 +122,19 @@ export async function createEmptyBookmarksListsDoc(): Promise<string> {
   });
 
   return String(id);
+}
+
+export async function addBookmarkToBookmarksDoc(
+  docID: string,
+  bookmarkToAdd: Bookmark
+): Promise<BookmarksDoc> {
+  const bookmarksDoc = await idx.ceramic.loadDocument(docID);
+  const existingBookmarks = bookmarksDoc.content;
+  const updatedBookmarks = [bookmarkToAdd, ...existingBookmarks];
+
+  await bookmarksDoc.change({
+    content: updatedBookmarks,
+  });
+
+  return updatedBookmarks;
 }
