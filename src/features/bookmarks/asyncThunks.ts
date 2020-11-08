@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import {
-  getBookmarksIndexDocContent,
   setDefaultBookmarksIndex,
   hasBookmarksIndex,
   addBookmarkDocToBookmarksDoc,
@@ -11,21 +10,23 @@ import {
   getSchemaNameByDocID,
 } from 'app/apis/ceramic';
 import { selectBookmarksIndex } from 'features/bookmarks/selectors';
-import { enrichPartialBookmark } from 'features/bookmarks/utils';
+import {
+  bookmarksIndexReceived,
+  anyCollectionsReceived,
+} from 'features/bookmarks/bookmarksSlice';
+import { enrichPartialBookmark, flattenDoc } from 'features/bookmarks/utils';
 import { getProfileDID } from 'features/profile/selectors';
+import { PUBLISHED_SCHEMAS } from 'app/constants/definitions';
 
 import type {
-  BookmarksIndexDoc,
   BookmarksDoc,
   BookmarkDocContent,
-  BookmarksIndexData,
   BookmarksIndex,
 } from 'features/bookmarks/types';
-import type { DefaultBookmarksIndexKeyType } from 'app/constants/enums';
 import type { State } from 'app/store';
 
 export const bootstrapBookmarks = createAsyncThunk<
-  BookmarksIndexData | null,
+  void,
   void,
   { state: State }
 >('bookmarks/bootstrap', async (payload, thunkAPI) => {
@@ -40,12 +41,63 @@ export const bootstrapBookmarks = createAsyncThunk<
   }
 
   const bookmarksIndexDoc = await loadDocument(bookmarksIndexDocID as string);
-  return {
-    [bookmarksIndexDocID as string]: {
-      docID: bookmarksIndexDocID,
-      ...bookmarksIndexDoc.content,
-    },
-  };
+  const bookmarksIndex = flattenDoc(bookmarksIndexDoc);
+  thunkAPI.dispatch(bookmarksIndexReceived(bookmarksIndex));
+  thunkAPI.dispatch(fetchCollectionsOfIndex(bookmarksIndex));
+});
+
+export const fetchCollectionsOfIndex = createAsyncThunk<
+  void,
+  BookmarksIndex | void | null,
+  { state: State }
+>('bookmarks/fetchCollectionsOfIndex', async (bookmarksIndex, thunkAPI) => {
+  bookmarksIndex = bookmarksIndex || selectBookmarksIndex(thunkAPI.getState());
+
+  if (!bookmarksIndex) {
+    thunkAPI.rejectWithValue(new Error('BookmarksIndexDoc not loaded'));
+  }
+
+  const collectionDocs = await Promise.all(
+    Object.values(bookmarksIndex as BookmarksIndex).map((collectionDocID) =>
+      loadDocument(collectionDocID)
+    )
+  );
+
+  const supportedCollectionDocs = collectionDocs.filter((collectionDoc) =>
+    [PUBLISHED_SCHEMAS.Bookmarks, PUBLISHED_SCHEMAS.BookmarksLists].includes(
+      collectionDoc.metadata.schema || ''
+    )
+  );
+
+  const collections = supportedCollectionDocs.map((collectionDoc) => {
+    const docID = collectionDoc.id.toUrl('base32');
+    const schemaDocID = collectionDoc.metadata.schema;
+    const indexKey = Object.keys(bookmarksIndex as BookmarksIndex).find(
+      (key) =>
+        (bookmarksIndex as BookmarksIndex)[key] ===
+        `ceramic://${collectionDoc.id.toString()}`
+    );
+
+    const collection = {
+      docID,
+      indexKey,
+      schemaDocID,
+    };
+
+    const schemaName = getSchemaNameByDocID(schemaDocID);
+
+    return schemaName === 'Bookmarks'
+      ? {
+          ...collection,
+          bookmarks: collectionDoc.content,
+        }
+      : {
+          ...collection,
+          bookmarksLists: collectionDoc.content,
+        };
+  });
+
+  thunkAPI.dispatch(anyCollectionsReceived(collections));
 });
 
 export const addBookmark = createAsyncThunk<
@@ -88,5 +140,6 @@ export const addBookmark = createAsyncThunk<
 
 export default {
   bootstrapBookmarks,
+  fetchCollectionsOfIndex,
   addBookmark,
 };

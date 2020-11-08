@@ -8,18 +8,16 @@ export type BookmarksIndexDocContent = {
   unsorted: string;
   public: string;
   private: string;
+  lists: string;
   [key: string]: string;
 };
 
 export type BookmarksIndex = BookmarksIndexDocContent & {
   docID: string;
+  schemaDocID?: string;
 };
 
 export type BookmarksIndexDoc = CeramicDoc<BookmarksIndexDocContent>;
-
-export type BookmarksIndexData = {
-  [docID: string]: BookmarksIndex;
-};
 
 export type BookmarkDocContent = {
   url: string;
@@ -32,9 +30,21 @@ export type BookmarkDocContent = {
 
 export type BookmarkDoc = CeramicDoc<BookmarkDocContent>;
 
+export type Bookmark = BookmarkDocContent & {
+  docID: string;
+  schemaDocID?: string;
+};
+
 export type BookmarksDocContent = Array<string>;
 
 export type BookmarksDoc = CeramicDoc<BookmarksDocContent>;
+
+export type BookmarksCollection = {
+  docID: string;
+  indexKey: string;
+  bookmarks: Array<string>;
+  schemaDocID?: string;
+};
 
 export type BookmarksListDocContent = {
   title: string;
@@ -46,22 +56,18 @@ export type BookmarksListDocContent = {
 
 export type BookmarksListDoc = CeramicDoc<BookmarksListDocContent>;
 
+export type BookmarksList = BookmarksListDocContent & {
+  docID: string;
+  schemaDocID?: string;
+};
+
 export type BookmarksListsDocContent = Array<string>;
 
 export type BookmarksListsDoc = CeramicDoc<BookmarksListsDocContent>;
 
-export type BookmarkData = {
-  [docID: string]: BookmarkDoc;
-};
-
-export type BookmarksData = {
-  [docID: string]: BookmarksDoc;
-};
-
-export type BookmarksListData = {
-  [docID: string]: BookmarksListDoc;
-};
-
-export type BookmarksListsData = {
-  [docID: string]: BookmarksListsDoc;
+export type BookmarksListsCollection = {
+  docID: string;
+  indexKey: string;
+  bookmarksLists: Array<string>;
+  schemaDocID?: string;
 };

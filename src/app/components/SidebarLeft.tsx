@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 import { SidebarLeftDropDown } from 'app/components/SidebarLeftDropDown';
 import { getProfileIsAuthenticated } from 'features/profile/selectors';
-import { selectBookmarksIndexData } from 'features/bookmarks/selectors';
+import { selectBookmarksIndex } from 'features/bookmarks/selectors';
 import { DefaultBookmarksIndexKeys } from 'app/constants/enums';
 
 import cloud from 'assets/icons/cloud.svg';

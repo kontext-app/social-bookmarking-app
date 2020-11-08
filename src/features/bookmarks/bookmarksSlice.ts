@@ -1,29 +1,64 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createEntityAdapter,
+  EntityState,
+} from '@reduxjs/toolkit';
 
-import { bootstrapBookmarks, addBookmark } from './asyncThunks';
-
-import { addPendingAndRejectedMatcher } from 'app/utils/slice';
+import { addAsyncMatchers } from 'app/utils/slice';
 import { LoadingStatus, LoadingStatusType } from 'app/constants/enums';
+import { PUBLISHED_SCHEMAS } from 'app/constants/definitions';
 
-import type {
-  BookmarksIndexDoc,
-  BookmarksData,
-  BookmarksListsData,
+import {
+  BookmarksIndex,
+  Bookmark,
+  BookmarksCollection,
+  BookmarksList,
+  BookmarksListsCollection,
 } from 'features/bookmarks/types';
 
 export type BookmarksSliceState = {
-  bookmarksIndexDoc: null | BookmarksIndexDoc;
-  bookmarksData: BookmarksData;
-  bookmarksListsData: BookmarksListsData;
+  bookmarksIndex: EntityState<BookmarksIndex>;
+  bookmarks: EntityState<Bookmark>;
+  bookmarksCollections: EntityState<BookmarksCollection>;
+  bookmarksLists: EntityState<BookmarksList>;
+  bookmarksListsCollections: EntityState<BookmarksListsCollection>;
   loadingStatus: LoadingStatusType;
   error: null | Error;
   lastUpdated: null | number;
 };
 
+export const bookmarksIndexAdapter = createEntityAdapter<BookmarksIndex>({
+  selectId: (bookmarksIndex) => bookmarksIndex.docID,
+});
+
+const bookmarksAdapter = createEntityAdapter<Bookmark>({
+  selectId: (bookmark) => bookmark.docID,
+  sortComparer: (a, b) =>
+    Date.parse(b.creationDate) - Date.parse(a.creationDate),
+});
+
+const bookmarksCollectionsAdapter = createEntityAdapter<BookmarksCollection>({
+  selectId: (bookmarksCollection) => bookmarksCollection.docID,
+});
+
+const bookmarksListsAdapter = createEntityAdapter<BookmarksList>({
+  selectId: (bookmarksIndex) => bookmarksIndex.docID,
+  sortComparer: (a, b) =>
+    Date.parse(b.creationDate) - Date.parse(a.creationDate),
+});
+
+const bookmarksListsCollectionsAdapter = createEntityAdapter<
+  BookmarksListsCollection
+>({
+  selectId: (bookmarksCollection) => bookmarksCollection.docID,
+});
+
 const initialState: BookmarksSliceState = {
-  bookmarksIndexDoc: null,
-  bookmarksData: {},
-  bookmarksListsData: {},
+  bookmarksIndex: bookmarksIndexAdapter.getInitialState(),
+  bookmarks: bookmarksAdapter.getInitialState(),
+  bookmarksCollections: bookmarksCollectionsAdapter.getInitialState(),
+  bookmarksLists: bookmarksListsAdapter.getInitialState(),
+  bookmarksListsCollections: bookmarksListsCollectionsAdapter.getInitialState(),
   loadingStatus: LoadingStatus.IDLE,
   error: null,
   lastUpdated: null,
@@ -33,24 +68,39 @@ export const bookmarksSlice = createSlice({
   name: 'bookmarks',
   initialState,
   reducers: {
-    setLastUpdated: (state, action) => {
-      state.lastUpdated = action.payload;
+    bookmarksIndexReceived: (state, action) => {
+      bookmarksIndexAdapter.addOne(state.bookmarksIndex, action.payload);
+    },
+    anyCollectionsReceived: (state, action) => {
+      const bookmarksCollections = action.payload.filter(
+        (collection: BookmarksCollection) =>
+          PUBLISHED_SCHEMAS.Bookmarks === collection.schemaDocID
+      );
+      const bookmarksListsCollections = action.payload.filter(
+        (collection: BookmarksListsCollection) =>
+          PUBLISHED_SCHEMAS.BookmarksLists === collection.schemaDocID
+      );
+      bookmarksCollectionsAdapter.addMany(
+        state.bookmarksCollections,
+        bookmarksCollections
+      );
+      bookmarksListsCollectionsAdapter.addMany(
+        state.bookmarksListsCollections,
+        bookmarksListsCollections
+      );
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(bootstrapBookmarks.fulfilled, (state, action) => {
-      state.loadingStatus = LoadingStatus.FULFILLED;
-      state.bookmarksIndexDoc = action.payload;
-    });
-    builder.addCase(addBookmark.fulfilled, (state, action) => {
-      state.loadingStatus = LoadingStatus.FULFILLED;
-      console.log(action.payload);
-    });
-    addPendingAndRejectedMatcher(builder, 'bookmarks');
+    addAsyncMatchers(builder, 'bookmarks');
   },
 });
 
 export const bookmarksReducer = bookmarksSlice.reducer;
+
+export const {
+  bookmarksIndexReceived,
+  anyCollectionsReceived,
+} = bookmarksSlice.actions;
 
 export default {
   bookmarksSlice,

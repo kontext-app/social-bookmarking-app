@@ -1,4 +1,4 @@
-import type { BookmarkDocContent } from 'features/bookmarks/types';
+import type { BookmarkDocContent, CeramicDoc } from 'features/bookmarks/types';
 
 export function enrichPartialBookmark(
   partialBookmark: Partial<BookmarkDocContent>
@@ -17,5 +17,16 @@ export function enrichPartialBookmark(
     description,
     highlightedText: '',
     creationDate: new Date().toISOString(),
+  };
+}
+
+export function flattenDoc<T>(
+  doc: CeramicDoc<T>
+): T & { docID: string; schemaDocID?: string } {
+  const { content, metadata, id } = doc;
+  return {
+    ...content,
+    docID: id.toUrl('base32'),
+    schemaDocID: metadata.schema,
   };
 }
