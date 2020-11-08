@@ -20,7 +20,16 @@ export function isPendingAction(
   return action.type.startsWith(entityName) && action.type.endsWith('pending');
 }
 
-export function addPendingAndRejectedMatcher(
+export function isFulfilledAction(
+  action: AnyAction,
+  entityName: string
+): action is AnyAction {
+  return (
+    action.type.startsWith(entityName) && action.type.endsWith('fulfilled')
+  );
+}
+
+export function addAsyncMatchers(
   builder: ActionReducerMapBuilder<any>,
   entityName: string
 ): void {
@@ -28,6 +37,12 @@ export function addPendingAndRejectedMatcher(
     (action): action is AnyAction => isPendingAction(action, entityName),
     (state) => {
       state.loadingStatus = LoadingStatus.PENDING;
+    }
+  );
+  builder.addMatcher(
+    (action): action is AnyAction => isFulfilledAction(action, entityName),
+    (state) => {
+      state.loadingStatus = LoadingStatus.FULFILLED;
     }
   );
   builder.addMatcher(

@@ -14,6 +14,7 @@ import type {
 } from 'features/bookmarks/types';
 import type { BasicProfile } from 'features/profile/types';
 import type { DefaultBookmarksIndexKeyType } from 'app/constants/enums';
+import type { Doctype } from '@ceramicnetwork/ceramic-common';
 
 export let idx: IDXWeb;
 
@@ -52,7 +53,7 @@ export function getDIDInstance(): any {
   return idx.did;
 }
 
-export async function loadDocument(docID: string) {
+export async function loadDocument(docID: string): Promise<Doctype> {
   return idx.ceramic.loadDocument(docID);
 }
 
