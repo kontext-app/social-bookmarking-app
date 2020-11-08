@@ -13,7 +13,6 @@ import type {
   BookmarksIndexDocContent,
 } from 'features/bookmarks/types';
 import type { BasicProfile } from 'features/profile/types';
-import type { DefaultBookmarksIndexKeyType } from 'app/constants/enums';
 import type { Doctype } from '@ceramicnetwork/ceramic-common';
 
 export let idx: IDXWeb;
@@ -169,7 +168,8 @@ export async function addBookmarkDocToBookmarksDoc(
     content: updatedBookmarkDocIDs,
   });
 
-  return bookmarksDoc;
+  const updatedBookmarksDoc = await idx.ceramic.loadDocument(bookmarksDocID);
+  return updatedBookmarksDoc;
 }
 
 export function getSchemaNameByDocID(docID?: string): string | null {

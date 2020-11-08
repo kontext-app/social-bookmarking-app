@@ -47,7 +47,7 @@ const rootReducer = combineReducers({
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 
-export default configureStore({
+export const store = configureStore({
   reducer: persistedReducer,
   devTools: process.env.NODE_ENV !== 'production',
   middleware: getDefaultMiddleware({
@@ -56,3 +56,7 @@ export default configureStore({
     },
   }),
 });
+
+export type AppDispatch = typeof store.dispatch;
+
+export default store;
