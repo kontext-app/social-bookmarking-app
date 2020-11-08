@@ -15,6 +15,10 @@ cd social-bookmarking-app
 yarn
 ```
 
+### Set Environmental Variables
+
+Copy the distributed `.env` into a local env file with the name `.env.local` and set the variables accordingly.
+
 ### Start Development Server
 
 ```bash
