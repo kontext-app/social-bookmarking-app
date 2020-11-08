@@ -6,6 +6,7 @@ import { PopularBookmarksPage } from 'features/bookmarks/pages/PopularBookmarksP
 import { RecentBookmarksPage } from 'features/bookmarks/pages/RecentBookmarksPage';
 import { MyBookmarksPage } from 'features/bookmarks/pages/MyBookmarksPage';
 import { AddBookmarkPage } from 'features/bookmarks/pages/AddBookmarkPage';
+import { UnsortedBookmarksPage } from 'features/bookmarks/pages/UnsortedBookmarksPage';
 import { ProfilePage } from 'features/profile/ProfilePage';
 import { LogInPage } from 'features/profile/LogInPage';
 
@@ -36,6 +37,11 @@ export function App(): React.ReactElement {
         <Route exact path="/popular" render={() => <PopularBookmarksPage />} />
         <Route exact path="/recent" render={() => <RecentBookmarksPage />} />
         <Route exact path="/add-bookmark" render={() => <AddBookmarkPage />} />
+        <Route
+          exact
+          path="/unsorted"
+          render={() => <UnsortedBookmarksPage />}
+        />
         <Route exact path="/profile" render={() => <ProfilePage />} />
         <Route exact path="/login" render={() => <LogInPage />} />
       </Switch>

@@ -10,9 +10,10 @@ import { selectBookmarksLoadingStatus } from 'features/bookmarks/selectors';
 import { LoadingStatus } from 'app/constants/enums';
 
 import type { BookmarkDocContent } from 'features/bookmarks/types';
+import type { AppDispatch } from 'app/store';
 
 export function AddBookmarkPage(): JSX.Element {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const bookmarksLoadingStatus = useSelector(selectBookmarksLoadingStatus);
 
   const [bookmark, setBookmark] = useState<Partial<BookmarkDocContent>>({
@@ -54,6 +55,12 @@ export function AddBookmarkPage(): JSX.Element {
       // TODO: Enable selection of other index key
       dispatch(
         addBookmark({ bookmarkToAdd: bookmark, bookmarksIndexKey: 'unsorted' })
+      ).then(() =>
+        setBookmark({
+          url: '',
+          title: '',
+          description: '',
+        })
       );
     }
   };

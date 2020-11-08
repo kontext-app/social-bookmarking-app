@@ -21,7 +21,7 @@ export function MyBookmarksPage() {
   return (
     <PageLayout>
       <Button onClick={handleClick}>Fetch</Button>
-      <BookmarksFeed bookmarks={[{}, {}, {}, {}]} />
+      {/* <BookmarksFeed bookmarks={[{}, {}, {}, {}]} /> */}
     </PageLayout>
   );
 }
