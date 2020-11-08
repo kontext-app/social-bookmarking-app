@@ -31,23 +31,25 @@ export const bookmarksIndexAdapter = createEntityAdapter<BookmarksIndex>({
   selectId: (bookmarksIndex) => bookmarksIndex.docID,
 });
 
-const bookmarksAdapter = createEntityAdapter<Bookmark>({
+export const bookmarksAdapter = createEntityAdapter<Bookmark>({
   selectId: (bookmark) => bookmark.docID,
   sortComparer: (a, b) =>
     Date.parse(b.creationDate) - Date.parse(a.creationDate),
 });
 
-const bookmarksCollectionsAdapter = createEntityAdapter<BookmarksCollection>({
+export const bookmarksCollectionsAdapter = createEntityAdapter<
+  BookmarksCollection
+>({
   selectId: (bookmarksCollection) => bookmarksCollection.docID,
 });
 
-const bookmarksListsAdapter = createEntityAdapter<BookmarksList>({
+export const bookmarksListsAdapter = createEntityAdapter<BookmarksList>({
   selectId: (bookmarksIndex) => bookmarksIndex.docID,
   sortComparer: (a, b) =>
     Date.parse(b.creationDate) - Date.parse(a.creationDate),
 });
 
-const bookmarksListsCollectionsAdapter = createEntityAdapter<
+export const bookmarksListsCollectionsAdapter = createEntityAdapter<
   BookmarksListsCollection
 >({
   selectId: (bookmarksCollection) => bookmarksCollection.docID,
@@ -69,7 +71,7 @@ export const bookmarksSlice = createSlice({
   initialState,
   reducers: {
     bookmarksIndexReceived: (state, action) => {
-      bookmarksIndexAdapter.addOne(state.bookmarksIndex, action.payload);
+      bookmarksIndexAdapter.upsertOne(state.bookmarksIndex, action.payload);
     },
     anyCollectionsReceived: (state, action) => {
       const bookmarksCollections = action.payload.filter(
@@ -80,14 +82,23 @@ export const bookmarksSlice = createSlice({
         (collection: BookmarksListsCollection) =>
           PUBLISHED_SCHEMAS.BookmarksLists === collection.schemaDocID
       );
-      bookmarksCollectionsAdapter.addMany(
+      bookmarksCollectionsAdapter.upsertMany(
         state.bookmarksCollections,
         bookmarksCollections
       );
-      bookmarksListsCollectionsAdapter.addMany(
+      bookmarksListsCollectionsAdapter.upsertMany(
         state.bookmarksListsCollections,
         bookmarksListsCollections
       );
+    },
+    bookmarksReceived: (state, action) => {
+      bookmarksAdapter.upsertMany(state.bookmarks, action.payload);
+    },
+    bookmarksCollectionUpdated: (state, action) => {
+      bookmarksCollectionsAdapter.updateOne(state.bookmarksCollections, {
+        id: action.payload.docID,
+        changes: { bookmarks: action.payload.bookmarks },
+      });
     },
   },
   extraReducers: (builder) => {
@@ -100,6 +111,8 @@ export const bookmarksReducer = bookmarksSlice.reducer;
 export const {
   bookmarksIndexReceived,
   anyCollectionsReceived,
+  bookmarksReceived,
+  bookmarksCollectionUpdated,
 } = bookmarksSlice.actions;
 
 export default {

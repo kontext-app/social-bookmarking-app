@@ -9,19 +9,24 @@ import {
   createBookmarkDoc,
   getSchemaNameByDocID,
 } from 'app/apis/ceramic';
-import { selectBookmarksIndex } from 'features/bookmarks/selectors';
+import {
+  selectBookmarksIndex,
+  selectBookmarksCollectionByDocID,
+} from 'features/bookmarks/selectors';
 import {
   bookmarksIndexReceived,
   anyCollectionsReceived,
+  bookmarksReceived,
+  bookmarksCollectionUpdated,
 } from 'features/bookmarks/bookmarksSlice';
 import { enrichPartialBookmark, flattenDoc } from 'features/bookmarks/utils';
 import { getProfileDID } from 'features/profile/selectors';
 import { PUBLISHED_SCHEMAS } from 'app/constants/definitions';
 
 import type {
-  BookmarksDoc,
   BookmarkDocContent,
   BookmarksIndex,
+  BookmarksCollection,
 } from 'features/bookmarks/types';
 import type { State } from 'app/store';
 
@@ -48,7 +53,7 @@ export const bootstrapBookmarks = createAsyncThunk<
 
 export const fetchCollectionsOfIndex = createAsyncThunk<
   void,
-  BookmarksIndex | void | null,
+  BookmarksIndex | undefined | null,
   { state: State }
 >('bookmarks/fetchCollectionsOfIndex', async (bookmarksIndex, thunkAPI) => {
   bookmarksIndex = bookmarksIndex || selectBookmarksIndex(thunkAPI.getState());
@@ -70,12 +75,10 @@ export const fetchCollectionsOfIndex = createAsyncThunk<
   );
 
   const collections = supportedCollectionDocs.map((collectionDoc) => {
-    const docID = collectionDoc.id.toUrl('base32');
+    const docID = collectionDoc.id.toUrl('base36');
     const schemaDocID = collectionDoc.metadata.schema;
     const indexKey = Object.keys(bookmarksIndex as BookmarksIndex).find(
-      (key) =>
-        (bookmarksIndex as BookmarksIndex)[key] ===
-        `ceramic://${collectionDoc.id.toString()}`
+      (key) => (bookmarksIndex as BookmarksIndex)[key] === docID
     );
 
     const collection = {
@@ -100,8 +103,36 @@ export const fetchCollectionsOfIndex = createAsyncThunk<
   thunkAPI.dispatch(anyCollectionsReceived(collections));
 });
 
+export const fetchBookmarksOfCollection = createAsyncThunk<
+  void,
+  string,
+  { state: State }
+>(
+  'bookmarks/fetchBookmarksOfCollection',
+  async (bookmarksCollectionDocID, thunkAPI) => {
+    const bookmarksCollection = selectBookmarksCollectionByDocID(
+      thunkAPI.getState(),
+      bookmarksCollectionDocID
+    );
+
+    if (!bookmarksCollection) {
+      thunkAPI.rejectWithValue(
+        new Error('No BookmarksCollection with given docID exists')
+      );
+    }
+
+    const bookmarkDocs = await Promise.all(
+      (bookmarksCollection as BookmarksCollection).bookmarks.map(
+        (bookmarkDocID) => loadDocument(bookmarkDocID)
+      )
+    );
+    const bookmarks = bookmarkDocs.map((doc) => flattenDoc(doc));
+    thunkAPI.dispatch(bookmarksReceived(bookmarks));
+  }
+);
+
 export const addBookmark = createAsyncThunk<
-  BookmarksDoc,
+  void,
   {
     bookmarkToAdd: Partial<BookmarkDocContent>;
     bookmarksIndexKey: 'public' | 'private' | 'unsorted';
@@ -135,11 +166,18 @@ export const addBookmark = createAsyncThunk<
     bookmarksIndexKeyDocID
   );
 
-  return updatedBookmarksDoc;
+  const updatedBookmarksCollection = {
+    docID: updatedBookmarksDoc.id.toUrl('base36'),
+    indexKey: payload.bookmarksIndexKey,
+    schemaDocID: updatedBookmarksDoc.metadata.schema,
+    bookmarks: updatedBookmarksDoc.content,
+  };
+  thunkAPI.dispatch(bookmarksCollectionUpdated(updatedBookmarksCollection));
 });
 
 export default {
   bootstrapBookmarks,
   fetchCollectionsOfIndex,
+  fetchBookmarksOfCollection,
   addBookmark,
 };
