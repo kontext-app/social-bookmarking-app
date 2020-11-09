@@ -7,20 +7,25 @@ import {
   getProfileByDID,
 } from 'app/apis/ceramic';
 import { connectWithWeb3 } from 'app/apis/web3';
+import { bootstrapBookmarks } from 'features/bookmarks/asyncThunks';
 
 import type { BasicProfile } from 'features/profile/types';
+import type { State } from 'app/store';
 
-export const logInWithEthereum = createAsyncThunk<string | null>(
-  'profile/logInWithEthereum',
-  async () => {
-    if (!isIDXAuthenticated()) {
-      const { provider, addresses } = await connectWithWeb3();
-      await authenticateWithEthereum(provider, addresses[0]);
-    }
-    const did = getDID();
-    return did;
+export const logInWithEthereum = createAsyncThunk<
+  string | null,
+  void,
+  { state: State }
+>('profile/logInWithEthereum', async (payload, thunkAPI) => {
+  if (!isIDXAuthenticated()) {
+    const { provider, addresses } = await connectWithWeb3();
+    await authenticateWithEthereum(provider, addresses[0]);
   }
-);
+
+  thunkAPI.dispatch(bootstrapBookmarks());
+
+  return getDID();
+});
 
 export const fetchProfileDocByDID = createAsyncThunk<
   BasicProfile | null,

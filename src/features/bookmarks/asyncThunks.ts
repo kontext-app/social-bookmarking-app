@@ -8,6 +8,7 @@ import {
   loadDocument,
   createBookmarkDoc,
   getSchemaNameByDocID,
+  isIDXAuthenticated,
 } from 'app/apis/ceramic';
 import {
   selectBookmarksIndex,
@@ -35,6 +36,10 @@ export const bootstrapBookmarks = createAsyncThunk<
   void,
   { state: State }
 >('bookmarks/bootstrap', async (payload, thunkAPI) => {
+  if (!isIDXAuthenticated()) {
+    return thunkAPI.rejectWithValue('IDX not authenticated');
+  }
+
   const hasUserBookmarksIndex = hasBookmarksIndex();
 
   const bookmarksIndexDocID = hasUserBookmarksIndex
