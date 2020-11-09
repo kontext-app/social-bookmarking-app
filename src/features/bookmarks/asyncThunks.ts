@@ -40,7 +40,7 @@ export const bootstrapBookmarks = createAsyncThunk<
     return thunkAPI.rejectWithValue('IDX not authenticated');
   }
 
-  const hasUserBookmarksIndex = hasBookmarksIndex();
+  const hasUserBookmarksIndex = await hasBookmarksIndex();
 
   const bookmarksIndexDocID = hasUserBookmarksIndex
     ? await getBookmarksIndexDocID()
