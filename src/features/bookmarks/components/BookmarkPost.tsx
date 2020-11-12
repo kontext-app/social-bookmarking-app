@@ -34,7 +34,7 @@ export function BookmarkPost(props: Props): JSX.Element {
           <img src={downVote} alt="Favorites" className="flex-shrink-0" />
         </button>
       </div>*/}
-      <div className="w-11/12 pt-2 text-left">
+      <div className="w-11/12 py-2 text-left">
         <div className="flex items-center text-xs mb-2">
           <div className="text-grey-lighter flex items-center">
             <a href={props.bookmark.url}>{props.bookmark.url}</a>
@@ -57,7 +57,7 @@ export function BookmarkPost(props: Props): JSX.Element {
         <div>
           <p className="font-normal mb-1">{props.bookmark.description}</p>
         </div>
-        <div className="flex items-center my-1">
+        <div className="flex items-center mt-2">
           {/*<div className="flex hover:bg-grey-lighter p-1 items-center mr-2">
             <img src={heart} alt="Favorites" className="flex-shrink-0" />
           </div>*/}
