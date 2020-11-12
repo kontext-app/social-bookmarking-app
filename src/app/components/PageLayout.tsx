@@ -21,7 +21,7 @@ export function PageLayout(props: Props) {
           </div>
         </div>
       </div>
-      <SidebarRight />
+      {/*<SidebarRight />*/}
     </div>
   );
 }
