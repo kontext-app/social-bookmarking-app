@@ -6,7 +6,7 @@ import comment from 'assets/icons/speech-bubble.svg';
 import upVote from 'assets/icons/arrow-up.svg';
 import downVote from 'assets/icons/arrow-down.svg';
 import save from 'assets/icons/save.svg';
-//import favicon from 'assets/icons/favicon.svg';
+import userpicPlaceholder from 'assets/icons/userpicPlaceholder.jpg';
 
 import type { Bookmark } from 'features/bookmarks/types';
 
@@ -18,10 +18,10 @@ export function BookmarkPost(props: Props): JSX.Element {
   const [upVotes, setUpVotes] = useState(0);
   const [downVotes, setDownVotes] = useState(0);
   const favicon = 'https://s2.googleusercontent.com/s2/favicons?domain=' + props.bookmark.url;
-
+  /* might need a fallback for icons googleusercontent does not have */
 
   return (
-    <div className="px-16 flex border border-grey-light-alt hover:border-grey rounded bg-white hover:bg-gray-100 cursor-pointer">
+    <div className="px-16 flex border border-grey-light-alt hover:border-grey rounded bg-white hover:bg-gray-100">
       <div className="m-2">
         <img src={favicon} alt="icon" className="h-4 flex-shrink-0" />
       </div>
@@ -63,25 +63,25 @@ export function BookmarkPost(props: Props): JSX.Element {
           {/*<div className="flex hover:bg-grey-lighter p-1 items-center mr-2">
             <img src={heart} alt="Favorites" className="flex-shrink-0" />
           </div>*/}
-          <div className="flex hover:bg-grey-lighter p-1 items-center">
+          <div className="flex hover:bg-grey-lighter p-1 items-center cursor-pointer">
             <img src={comment} alt="Comments" className="h-3 flex-shrink-0" />
             <span className="ml-1 text-xs font-normal text-grey">
               3k comments
             </span>
           </div>
           <span className="mx-2">·</span>
-          <div className="flex hover:bg-grey-lighter p-1 items-center ml-2">
+          <div className="flex hover:bg-grey-lighter p-1 items-center ml-2 cursor-pointer">
             <img src={share} alt="Share" className="h-3 flex-shrink-0" />
             <span className="ml-1 text-xs font-normal text-grey">
               120 shares
             </span>
           </div>
           <span className="mx-2">·</span>
-          <div className="flex hover:bg-grey-lighter p-1 items-center ml-2">
+          <div className="flex hover:bg-grey-lighter p-1 items-center ml-2 cursor-pointer">
             <img src={save} alt="Save" className="h-3 flex-shrink-0" />
             <span className="ml-1 text-xs font-normal text-grey">3 saves</span>
           </div>
-          <div className="flex hover:bg-grey-lighter p-1 items-center ml-2 rotate-90">
+          <div className="flex hover:bg-grey-lighter p-1 items-center ml-2 rotate-90 cursor-pointer">
             <svg
               className="w-3 fill-current text-grey"
               xmlns="http://www.w3.org/2000/svg"
@@ -90,8 +90,9 @@ export function BookmarkPost(props: Props): JSX.Element {
               <path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
             </svg>
           </div>
-          <div className="flex hover:bg-grey-lighter p-1 items-center ml-2 truncate text-xs font-normal text-grey">
-            {props.bookmark.author}
+          <div className="flex hover:bg-grey-lighter p-1 items-center ml-2 truncate text-xs font-normal text-grey cursor-pointer">
+            {/* {props.bookmark.author} */}
+            <img src={userpicPlaceholder} title={props.bookmark.author} alt="user" className="rounded-full h-6 flex-shrink-0" />
           </div>
         </div>
       </div>
