@@ -6,7 +6,7 @@ import comment from 'assets/icons/speech-bubble.svg';
 import upVote from 'assets/icons/arrow-up.svg';
 import downVote from 'assets/icons/arrow-down.svg';
 import save from 'assets/icons/save.svg';
-import favicon from 'assets/icons/favicon.svg';
+//import favicon from 'assets/icons/favicon.svg';
 
 import type { Bookmark } from 'features/bookmarks/types';
 
@@ -17,6 +17,8 @@ type Props = {
 export function BookmarkPost(props: Props): JSX.Element {
   const [upVotes, setUpVotes] = useState(0);
   const [downVotes, setDownVotes] = useState(0);
+  const favicon = 'https://s2.googleusercontent.com/s2/favicons?domain=' + props.bookmark.url;
+
 
   return (
     <div className="px-16 flex border border-grey-light-alt hover:border-grey rounded bg-white hover:bg-gray-100 cursor-pointer">
