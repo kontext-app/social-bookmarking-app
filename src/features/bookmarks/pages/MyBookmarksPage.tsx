@@ -3,14 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { PageLayout } from 'app/components/PageLayout';
 import { Button } from 'app/components/Button';
-import { BookmarksFeed } from '../components/BookmarksFeed';
 
-import { bootstrapBookmarks } from '../asyncThunks';
-import { getProfileDID } from 'features/profile/selectors';
+import { bootstrapBookmarks } from 'features/bookmarks/asyncThunks';
+import { selectProfileDID } from 'features/profile/selectors';
 
-export function MyBookmarksPage() {
+export function MyBookmarksPage(): JSX.Element {
   const dispatch = useDispatch();
-  const did = useSelector(getProfileDID);
+  const did = useSelector(selectProfileDID);
 
   const handleClick = () => {
     if (typeof did === 'string') {

@@ -12,7 +12,7 @@ import type {
   BookmarksDoc,
   BookmarksIndexDocContent,
 } from 'features/bookmarks/types';
-import type { BasicProfile } from 'features/profile/types';
+import type { BasicProfileDocContent } from 'features/profile/types';
 import type { Doctype } from '@ceramicnetwork/ceramic-common';
 
 export let idx: IDXWeb;
@@ -56,14 +56,21 @@ export async function loadDocument(docID: string): Promise<Doctype> {
   return idx.ceramic.loadDocument(docID);
 }
 
-export async function getProfileByDID(
-  did?: string
-): Promise<BasicProfile | null> {
-  return idx.get<BasicProfile>('basicProfile', did);
-}
-
 export async function getIDXDocID(did?: string): Promise<string | null> {
   return idx.getIDXDocID(did);
+}
+
+export async function getBasicProfileDocContent(
+  did?: string
+): Promise<BasicProfileDocContent | null> {
+  return idx.get<BasicProfileDocContent>('basicProfile', did);
+}
+
+export async function setBasicProfileDocContent(
+  basicProfileDocContent: BasicProfileDocContent
+): Promise<string> {
+  const docID = await idx.set('basicProfile', basicProfileDocContent);
+  return docID.toUrl('base36');
 }
 
 export async function getBookmarksIndexDocID(

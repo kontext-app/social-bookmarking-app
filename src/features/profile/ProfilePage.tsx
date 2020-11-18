@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -7,24 +7,31 @@ import { InputWithLabel } from 'app/components/InputWithLabel';
 import { Button } from 'app/components/Button';
 
 import {
-  getProfileDID,
-  getProfileIsAuthenticated,
-  getProfileDoc,
-} from './selectors';
-import { fetchProfileDocByDID } from './asyncThunks';
+  selectProfileDID,
+  selectProfileIsAuthenticated,
+  selectProfileDoc,
+  selectProfileLoadingStatus,
+} from 'features/profile/selectors';
+import {
+  fetchProfileDocByDID,
+  updateProfile,
+} from 'features/profile/asyncThunks';
+import { BasicProfileDocContent } from './types';
+import { LoadingStatus } from 'app/constants/enums';
 
-export function ProfilePage() {
+export function ProfilePage(): JSX.Element {
   const dispatch = useDispatch();
-  const did = useSelector(getProfileDID);
-  const profileDoc = useSelector(getProfileDoc) || {};
-  const isAuthenticated = useSelector(getProfileIsAuthenticated);
+  const did = useSelector(selectProfileDID);
+  const profileLoadingStatus = useSelector(selectProfileLoadingStatus);
+  const profileDoc = useSelector(selectProfileDoc) || {};
+  const isAuthenticated = useSelector(selectProfileIsAuthenticated);
   const history = useHistory();
 
-  const [name, setName] = React.useState('');
-  const [description, setDescription] = React.useState('');
-  const [didProfileDataChange, setDidProfileDataChange] = React.useState(false);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [image, setImage] = useState('');
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isAuthenticated) {
       history.replace('/login');
     } else if (typeof did === 'string') {
@@ -32,16 +39,11 @@ export function ProfilePage() {
     }
   }, [history, isAuthenticated, did, dispatch]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setName(profileDoc.name);
     setDescription(profileDoc.description);
+    setImage(profileDoc.image);
   }, [profileDoc]);
-
-  React.useEffect(() => {
-    const profileChanged =
-      name !== profileDoc.name || description !== profileDoc.description;
-    setDidProfileDataChange(profileChanged);
-  }, [name, description, setDidProfileDataChange, profileDoc]);
 
   const handleChangeText = (key: string, changedText: string) => {
     if (key === 'name') {
@@ -50,7 +52,28 @@ export function ProfilePage() {
     if (key === 'description') {
       setDescription(changedText);
     }
+    if (key === 'image') {
+      setImage(changedText);
+    }
   };
+
+  const didChange = didValuesChange(profileDoc, { name, description, image });
+
+  const handleClickSave = () => {
+    if (didChange) {
+      dispatch(
+        updateProfile({
+          name,
+          description,
+          image,
+        })
+      );
+    }
+  };
+
+  const isLoading =
+    profileLoadingStatus === LoadingStatus.IDLE ||
+    profileLoadingStatus === LoadingStatus.PENDING;
 
   return (
     <PageLayout>
@@ -62,6 +85,7 @@ export function ProfilePage() {
             label="Your Name"
             value={name}
             onChange={(event) => handleChangeText('name', event.target.value)}
+            disabled={isLoading}
           />
           <InputWithLabel
             label="Description"
@@ -69,13 +93,36 @@ export function ProfilePage() {
             onChange={(event) =>
               handleChangeText('description', event.target.value)
             }
+            disabled={isLoading}
           />
-          <Button className="mt-3" disabled={!didProfileDataChange}>
-            Save Changes
+          <InputWithLabel
+            label="Image URL"
+            value={image}
+            onChange={(event) => handleChangeText('image', event.target.value)}
+            disabled={isLoading}
+          />
+          <Button
+            className="mt-3"
+            onClick={handleClickSave}
+            loading={isLoading}
+          >
+            {isLoading && didChange ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
       )}
     </PageLayout>
+  );
+}
+
+function didValuesChange(
+  prevBasicProfileDocContent: BasicProfileDocContent,
+  nextBasicProfileDocContent: BasicProfileDocContent
+): boolean {
+  return (
+    prevBasicProfileDocContent.name !== nextBasicProfileDocContent.name ||
+    prevBasicProfileDocContent.description !==
+      nextBasicProfileDocContent.description ||
+    prevBasicProfileDocContent.image !== nextBasicProfileDocContent.image
   );
 }
 

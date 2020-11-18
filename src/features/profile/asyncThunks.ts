@@ -4,12 +4,15 @@ import {
   authenticateWithEthereum,
   isIDXAuthenticated,
   getDID,
-  getProfileByDID,
+  getBasicProfileDocContent,
+  setBasicProfileDocContent,
 } from 'app/apis/ceramic';
 import { connectWithWeb3 } from 'app/apis/web3';
 import { bootstrapBookmarks } from 'features/bookmarks/asyncThunks';
+import { selectProfileDID } from 'features/profile/selectors';
+import { enrichPartialProfile } from 'features/profile/utils';
 
-import type { BasicProfile } from 'features/profile/types';
+import type { BasicProfileDocContent } from 'features/profile/types';
 import type { State } from 'app/store';
 
 export const logInWithEthereum = createAsyncThunk<
@@ -28,14 +31,30 @@ export const logInWithEthereum = createAsyncThunk<
 });
 
 export const fetchProfileDocByDID = createAsyncThunk<
-  BasicProfile | null,
+  BasicProfileDocContent | null,
   string
 >('profile/fetchProfileDocByDID', async (did) => {
-  const profile = await getProfileByDID(did);
+  const profile = await getBasicProfileDocContent(did);
   return profile;
+});
+
+export const updateProfile = createAsyncThunk<
+  void,
+  Partial<BasicProfileDocContent>,
+  { state: State }
+>('profile/updateProfile', async (partialProfile, thunkAPI) => {
+  const enrichedProfile = enrichPartialProfile(partialProfile);
+  await setBasicProfileDocContent(enrichedProfile);
+
+  const authenticatedDID = selectProfileDID(thunkAPI.getState());
+
+  if (typeof authenticatedDID === 'string') {
+    thunkAPI.dispatch(fetchProfileDocByDID(authenticatedDID));
+  }
 });
 
 export default {
   logInWithEthereum,
   fetchProfileDocByDID,
+  updateProfile,
 };

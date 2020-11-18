@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { SidebarLeftDropDown } from 'app/components/SidebarLeftDropDown';
-import { getProfileIsAuthenticated } from 'features/profile/selectors';
+import { selectProfileIsAuthenticated } from 'features/profile/selectors';
 import { selectBookmarksIndex } from 'features/bookmarks/selectors';
 import { DefaultBookmarksIndexKeys } from 'app/constants/enums';
 
@@ -66,7 +66,7 @@ function SidebarLeftSection(props: Section) {
 }
 
 export function SidebarLeft() {
-  const isAuthenticated = useSelector(getProfileIsAuthenticated);
+  const isAuthenticated = useSelector(selectProfileIsAuthenticated);
   const sidebarData = getSidebarData(isAuthenticated);
 
   return (

@@ -7,14 +7,14 @@ import { Button } from 'app/components/Button';
 
 import { logInWithEthereum } from './asyncThunks';
 import {
-  getProfileLoadingStatus,
-  getProfileIsAuthenticated,
+  selectProfileLoadingStatus,
+  selectProfileIsAuthenticated,
 } from './selectors';
 
 export function LogInPage() {
   const dispatch = useDispatch();
-  const loadingStatus = useSelector(getProfileLoadingStatus);
-  const isAuthenticated = useSelector(getProfileIsAuthenticated);
+  const loadingStatus = useSelector(selectProfileLoadingStatus);
+  const isAuthenticated = useSelector(selectProfileIsAuthenticated);
   const history = useHistory();
 
   const handleClickLogIn = () => {

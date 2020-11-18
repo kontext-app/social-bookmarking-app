@@ -1,4 +1,5 @@
-export type BasicProfile = {
+export type BasicProfileDocContent = {
   name: string;
   description: string;
+  image: string;
 };
