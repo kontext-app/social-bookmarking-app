@@ -1,21 +1,24 @@
 import { State } from 'app/store';
 
-export function getProfileLoadingStatus(state: State) {
+import type { LoadingStatusType } from 'app/constants/enums';
+import type { BasicProfileDocContent } from 'features/profile/types';
+
+export function selectProfileLoadingStatus(state: State): LoadingStatusType {
   return state.profile.loadingStatus;
 }
 
-export function getProfileDID(state: State) {
+export function selectProfileDID(state: State): null | string {
   return state.profile.did;
 }
 
-export function getProfileError(state: State) {
+export function selectProfileError(state: State): null | Error {
   return state.profile.error;
 }
 
-export function getProfileIsAuthenticated(state: State) {
+export function selectProfileIsAuthenticated(state: State): boolean {
   return state.profile.isAuthenticated;
 }
 
-export function getProfileDoc(state: State) {
+export function selectProfileDoc(state: State): BasicProfileDocContent {
   return state.profile.doc;
 }
