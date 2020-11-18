@@ -21,7 +21,7 @@ import {
   bookmarksCollectionUpdated,
 } from 'features/bookmarks/bookmarksSlice';
 import { enrichPartialBookmark, flattenDoc } from 'features/bookmarks/utils';
-import { getProfileDID } from 'features/profile/selectors';
+import { selectProfileDID } from 'features/profile/selectors';
 import { PUBLISHED_SCHEMAS } from 'app/constants/definitions';
 
 import type {
@@ -144,7 +144,7 @@ export const addBookmark = createAsyncThunk<
   },
   { state: State }
 >('bookmarks/add', async (payload, thunkAPI) => {
-  const authorDID = getProfileDID(thunkAPI.getState());
+  const authorDID = selectProfileDID(thunkAPI.getState());
   const bookmarksIndex = selectBookmarksIndex(thunkAPI.getState());
 
   if (!bookmarksIndex) {
