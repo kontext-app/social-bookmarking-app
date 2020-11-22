@@ -19,11 +19,13 @@ import {
 import { BasicProfileDocContent } from './types';
 import { LoadingStatus } from 'app/constants/enums';
 
+const emptyProfileDoc = {};
+
 export function ProfilePage(): JSX.Element {
   const dispatch = useDispatch();
   const did = useSelector(selectProfileDID);
   const profileLoadingStatus = useSelector(selectProfileLoadingStatus);
-  const profileDoc = useSelector(selectProfileDoc) || {};
+  const profileDoc = useSelector(selectProfileDoc) || emptyProfileDoc;
   const isAuthenticated = useSelector(selectProfileIsAuthenticated);
   const history = useHistory();
 
