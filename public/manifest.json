@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "kontext.app",
+  "name": "web3 identity aggregator",
   "icons": [
     {
       "src": "favicon.ico",
