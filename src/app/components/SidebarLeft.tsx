@@ -88,7 +88,7 @@ export function SidebarLeft() {
           {isAuthenticated ? (
             <SidebarLeftDropDown />
           ) : (
-            <SidebarLeftItem label="Log In" iconSrc={heart} linkTo="/login" />
+            <SidebarLeftSection sectionLabel="Log In" iconSrc={heart} linkTo="/login" />
           )}
           {sidebarData.map((section, i) => (
             <SidebarLeftSection
