@@ -50,13 +50,13 @@ export function SidebarLeftDropDown() {
   return (
     <div className="dropdown relative" x-data="{ open: false }">
       <Link to="/profile">
-        <button className="flex space-x-2 w-full items-center px-4 py-2 text-sm font-semibold text-gray-900 rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
+        <button className="flex flex-col md:flex-row space-x-2 w-full items-center md:px-4 py-2 text-sm font-semibold text-gray-900 rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
           <img src={user_icon} alt="user_icon" className="" />
-          <span>{profileDoc.name}</span>
+          <span className="px-4 py-2 md:p-0">{profileDoc.name}</span>
           <svg
             fill="currentColor"
             viewBox="0 0 20 20"
-            className="inline w-4 h-4 mt-1 ml-1 transition-transform duration-200 transform md:-mt-1"
+            className="hidden md:flex inline w-4 h-4 mt-1 ml-1 transition-transform duration-200 transform md:-mt-1"
           >
             <path
               fillRule="evenodd"

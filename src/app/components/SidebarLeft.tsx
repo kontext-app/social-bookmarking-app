@@ -24,8 +24,8 @@ type SectionItem = {
 function SidebarLeftItem(props: SectionItem) {
   const { label = '', iconSrc = '', numOfItems = 0, linkTo = '' } = props;
   return (
-    <Link to={linkTo}>
-      <div className="hidden md:flex justify-between space-x-2 items-center px-4 py-2 text-sm rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
+    <Link to={linkTo} className="hidden md:flex">
+      <div className="flex justify-between space-x-2 items-center px-4 py-2 text-sm rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
         <img src={iconSrc} alt="icon" className="flex-shrink-0" />
         <span className="flex-1 font-semibold text-gray-900">{label}</span>
         {/* <span className="flex-shrink-0 text-gray-500">{numOfItems}</span> */}
@@ -84,7 +84,7 @@ export function SidebarLeft() {
             </div>
           </Link>
         </div>
-        <nav className="flex flex-row md:flex-col text-center md:text-left md:block px-4 pb-4 md:pb-0 md:overflow-y-auto w-full justify-between space-x-2">
+        <nav className="flex flex-row md:flex-col text-center md:text-left md:block px-4 pb-4 md:pb-0 md:overflow-y-auto w-full justify-between">
           {isAuthenticated ? (
             <SidebarLeftDropDown />
           ) : (
