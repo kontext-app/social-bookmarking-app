@@ -25,8 +25,8 @@ function SidebarLeftItem(props: SectionItem) {
   const { label = '', iconSrc = '', numOfItems = 0, linkTo = '' } = props;
   return (
     <Link to={linkTo}>
-      <div className="flex justify-between space-x-2 items-center px-4 py-2 text-sm rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
-        <img src={iconSrc} alt="all bookmarks" className="flex-shrink-0" />
+      <div className="hidden md:flex justify-between space-x-2 items-center px-4 py-2 text-sm rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
+        <img src={iconSrc} alt="icon" className="flex-shrink-0" />
         <span className="flex-1 font-semibold text-gray-900">{label}</span>
         {/* <span className="flex-shrink-0 text-gray-500">{numOfItems}</span> */}
       </div>
@@ -36,17 +36,19 @@ function SidebarLeftItem(props: SectionItem) {
 
 type Section = {
   sectionLabel?: string;
+  iconSrc?: string;
   sectionData?: SectionItem[];
   linkTo?: string;
 };
 
 function SidebarLeftSection(props: Section) {
-  const { sectionLabel = '', sectionData = [], linkTo = '' } = props;
+  const { sectionLabel = '', iconSrc = '', sectionData = [], linkTo = '' } = props;
 
   return (
     <>
       {sectionLabel ? (
         <Link to={linkTo}>
+          <img src={iconSrc} alt="icon" className="flex-shrink-0 md:hidden mx-auto mt-2" />
           <p className="text-gray-500 block px-4 py-2 text-sm font-semibold">
             {sectionLabel}
           </p>
@@ -70,19 +72,19 @@ export function SidebarLeft() {
   const sidebarData = getSidebarData(isAuthenticated);
 
   return (
-    <div className="md:flex flex-col md:flex-row md:min-h-screen">
+    <div className="md:flex flex-col md:flex-row md:min-h-screen fixed bottom-0 md:pt-8 md:top-0 md:left-0 w-full">
       <div
         className="flex flex-col w-full md:w-64 text-gray-700 bg-gray-100 dark-mode:text-gray-200 dark-mode:bg-gray-800 flex-shrink-0"
         x-data="{ open: false }"
       >
-        <div className="flex-shrink-0 px-8 py-4 flex flex-row items-center justify-between">
+        <div className="flex-shrink-0 px-8 py-4 flex flex-row items-center justify-between hidden md:block">
           <Link to="/">
             <div className="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline">
               Kontext
             </div>
           </Link>
         </div>
-        <nav className="flex-grow md:block px-4 pb-4 md:pb-0 md:overflow-y-auto">
+        <nav className="flex flex-row md:flex-col text-center md:text-left md:block px-4 pb-4 md:pb-0 md:overflow-y-auto w-full justify-between space-x-2">
           {isAuthenticated ? (
             <SidebarLeftDropDown />
           ) : (
@@ -93,6 +95,7 @@ export function SidebarLeft() {
               key={`section-${i}`}
               sectionLabel={section.sectionLabel}
               sectionData={section.sectionData}
+              iconSrc={section.iconSrc}
             />
           ))}
         </nav>
@@ -105,6 +108,7 @@ function getSidebarData(isLoggedIn = false, lists = []): Section[] {
   const sidebarDataOfLoggedOutUser = [
     {
       sectionLabel: 'Explore',
+      iconSrc: cloud,
       linkTo: '/explore',
       sectionData: [
         {
@@ -126,9 +130,11 @@ function getSidebarData(isLoggedIn = false, lists = []): Section[] {
     },
   ];
 
+  // instead of public private, we should show an icon next to each list, indicating if it's `public` or `private`
   const sidebarDataOfLoggedInUser = [
     {
       sectionLabel: 'My Bookmarks',
+      iconSrc: cloud,
       linkTo: '/my-bookmarks',
       sectionData: [
         {
@@ -137,10 +143,10 @@ function getSidebarData(isLoggedIn = false, lists = []): Section[] {
           linkTo: '/add-bookmark',
         },
         {
-          label: 'Unsorted',
+          label: 'Inbox',
           iconSrc: inbox,
           linkTo: '/unsorted',
-        },
+        },/*
         {
           label: 'Public',
           iconSrc: inbox,
@@ -150,11 +156,12 @@ function getSidebarData(isLoggedIn = false, lists = []): Section[] {
           label: 'Private',
           iconSrc: inbox,
           linkTo: '/private',
-        },
+        },*/
       ],
     },
     {
       sectionLabel: 'My Lists',
+      iconSrc: cloud,
       linkTo: '/my-lists',
       sectionData: [
         {
