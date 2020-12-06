@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import { createIDX } from 'app/apis/ceramic';
+import { initializeIDX } from 'app/apis/ceramic';
 import { selectProfileDID } from 'features/profile/selectors';
 import { logInWithEthereum } from 'features/profile/asyncThunks';
 
@@ -11,7 +11,7 @@ export const bootstrapApp = createAsyncThunk<void, void, { state: State }>(
   async (arg, thunkAPI) => {
     const state = thunkAPI.getState();
 
-    await createIDX();
+    initializeIDX();
 
     const previouslyAuthenticatedDID = selectProfileDID(state);
 
