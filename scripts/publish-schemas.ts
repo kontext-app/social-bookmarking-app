@@ -1,15 +1,19 @@
-const { publishSchema } = require('@ceramicstudio/idx-tools');
+import { publishSchema } from '@ceramicstudio/idx-tools';
+import DocID from '@ceramicnetwork/docid';
+import utils from './utils';
+import schemas from '../schemas';
 
-const utils = require('./utils');
 const {
   Bookmark,
   Bookmarks,
   BookmarksIndex,
   BookmarksList,
   BookmarksLists,
-} = require('../schemas');
+} = schemas;
 
-const schemasToPublish = {
+const schemasToPublish: {
+  [schemaName: string]: any;
+} = {
   Bookmark,
   Bookmarks,
   BookmarksIndex,
@@ -33,18 +37,22 @@ async function publishSchemas() {
   console.log(
     `Publishing schemas to ceramic node at: ${process.env.REACT_APP_CERAMIC_API_HOST}`
   );
-  const schemaNameToDocId = {};
+  const schemaNameToDocId: {
+    [schemaName: string]: string;
+  } = {};
 
   for (const schemaName of Object.keys(schemasToPublish)) {
     const schema = schemasToPublish[schemaName];
 
     try {
-      const docId = await publishSchema(utils.ceramicClient, {
+      const schemaDoc = await publishSchema(utils.ceramicClient, {
         name: schema.title,
         content: schema,
       });
-      schemaNameToDocId[schemaName] = docId.toUrl('base36');
-      console.log(`✅ Schema ${schema.title} published. DocId: ${docId}`);
+      const schemaDocID = schemaDoc.id.toUrl();
+      const withVersion = DocID.fromString(schemaDocID, '0').toUrl();
+      schemaNameToDocId[schemaName] = withVersion;
+      console.log(`✅ Schema ${schema.title} published. DocId: ${withVersion}`);
     } catch (error) {
       console.log(`❌ Schema ${schema.title} failed.`, error);
     }

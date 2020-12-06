@@ -36,7 +36,7 @@
     "idx:publish": "yarn scripts:build && yarn idx:publish:schemas && yarn idx:publish:definitions && yarn idx:constants",
     "idx:publish:schemas": "node ./scripts/build/scripts/publish-schemas.js",
     "idx:publish:definitions": "node ./scripts/build/scripts/publish-definitions.js",
-    "idx:constants": "node ./scripts/build/scripts/to-constants.js"
+    "idx:constants": "yarn scripts:build && node ./scripts/build/scripts/to-constants.js"
   },
   "browserslist": {
     "production": [
