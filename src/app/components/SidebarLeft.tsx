@@ -72,7 +72,7 @@ export function SidebarLeft() {
   const sidebarData = getSidebarData(isAuthenticated);
 
   return (
-    <div className="md:flex flex-col md:flex-row md:min-h-screen fixed bottom-0 md:pt-8 md:top-0 md:left-0 w-full">
+    <div className="md:flex flex-col md:flex-row md:min-h-screen fixed bottom-0 md:pt-8 md:top-0 md:left-0 w-full md:w-6">
       <div
         className="flex flex-col w-full md:w-64 text-gray-700 bg-gray-100 dark-mode:text-gray-200 dark-mode:bg-gray-800 flex-shrink-0"
         x-data="{ open: false }"
