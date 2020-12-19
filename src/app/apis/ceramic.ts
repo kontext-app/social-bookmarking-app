@@ -1,7 +1,10 @@
 import CeramicClient from '@ceramicnetwork/http-client';
+import ThreeIdResolver from '@ceramicnetwork/3id-did-resolver';
+import ThreeIdDidProvider from '3id-did-provider';
 import { EthereumAuthProvider, ThreeIdConnect } from '3id-connect';
 import { IDX } from '@ceramicstudio/idx';
 import { definitions, schemas } from '@ceramicstudio/idx-constants';
+import { DID } from 'dids';
 
 import {
   PUBLISHED_DEFINITIONS,
@@ -18,27 +21,20 @@ import type { BasicProfileDocContent } from 'features/profile/types';
 import type { Doctype } from '@ceramicnetwork/common';
 import type { EthereumProvider } from '3id-connect';
 
-export let idx: IDX;
-export let ceramic: CeramicClient;
-export let threeIdConnect: ThreeIdConnect;
+let idx: IDX;
+let ceramic: CeramicClient;
 
-function initializeThreeIdConnect(): void {
-  threeIdConnect = new ThreeIdConnect(
-    process.env.REACT_APP_THREE_ID_CONNECT_HOST || 'https://app.3idconnect.org'
+function initializeCeramic(): void {
+  ceramic = new CeramicClient(
+    process.env.REACT_APP_CERAMIC_API_HOST ||
+      'https://ceramic-dev.3boxlabs.com',
+    { docSyncEnabled: false }
   );
 }
 
-function initializeCeramic(): void {
-  ceramic = new CeramicClient(process.env.REACT_APP_CERAMIC_API_HOST, {
-    docSyncEnabled: false,
-  });
-}
-
-export function initializeIDX(): void {
-  initializeCeramic();
-  initializeThreeIdConnect();
-
+function initializeIDX(ceramic: CeramicClient): void {
   idx = new IDX({
+    // @ts-ignore
     ceramic,
     aliases: {
       ...definitions,
@@ -47,41 +43,67 @@ export function initializeIDX(): void {
   });
 }
 
+export async function authenticateWithSeed(seed: Uint8Array): Promise<void> {
+  initializeCeramic();
+
+  const threeIdProvider = await ThreeIdDidProvider.create({
+    // @ts-ignore
+    ceramic,
+    getPermission: async () => [],
+    seed,
+  });
+
+  const didProvider = threeIdProvider.getDidProvider();
+  const did = new DID({
+    provider: didProvider,
+    // @ts-ignore
+    resolver: ThreeIdResolver.getResolver(ceramic),
+  });
+  await did.authenticate();
+
+  await ceramic.setDIDProvider(didProvider);
+  initializeIDX(ceramic);
+}
+
 export async function authenticateWithEthereum(
   ethereumProvider: EthereumProvider,
   address: string
 ): Promise<void> {
-  if (!threeIdConnect) {
-    throw new Error('ThreeIdConnect instance is not initialized');
-  }
+  initializeCeramic();
 
-  if (!ceramic) {
-    throw new Error('Ceramic instance is not initialized');
-  }
-
-  if (!idx) {
-    throw new Error('IDX instance is not initialized');
-  }
+  const threeIdConnect = new ThreeIdConnect(
+    process.env.REACT_APP_THREE_ID_CONNECT_HOST || 'https://app.3idconnect.org'
+  );
 
   const ethereumAuthProvider = new EthereumAuthProvider(
     ethereumProvider,
     address
   );
   await threeIdConnect.connect(ethereumAuthProvider);
-  const didProvider = threeIdConnect.getDidProvider();
-  await idx.authenticate({ provider: didProvider });
+
+  const didProvider = await threeIdConnect.getDidProvider();
+  const did = new DID({
+    provider: didProvider,
+    // @ts-ignore
+    resolver: ThreeIdResolver.getResolver(ceramic),
+  });
+  console.log({ resolver: ThreeIdResolver.getResolver(ceramic) });
+  await did.authenticate();
+
+  await ceramic.setDIDProvider(didProvider);
+  initializeIDX(ceramic);
 }
 
 export function isIDXAuthenticated(): boolean {
+  if (!idx) {
+    return false;
+  }
+
   return idx.authenticated;
 }
 
 export function getDID(): string {
   return idx.id;
-}
-
-export function getDIDInstance(): any {
-  return idx.did;
 }
 
 export async function loadDocument(docID: string): Promise<Doctype> {
