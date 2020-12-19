@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "3id-connect": "1.0.0-alpha.6",
+    "3id-connect": "1.0.0-alpha.8",
+    "3id-did-provider": "^0.2.0",
     "@ceramicnetwork/3id-did-resolver": "^0.6.0",
     "@ceramicnetwork/http-client": "^0.8.8",
     "@ceramicstudio/idx": "^0.5.0",
@@ -13,7 +14,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@walletconnect/web3-provider": "^1.3.1",
-    "dids": "^1.1.0",
+    "dids": "^1.1.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
@@ -51,7 +52,6 @@
     ]
   },
   "devDependencies": {
-    "3id-did-provider": "^0.2.0",
     "@ceramicstudio/idx-tools": "^0.5.0",
     "@types/jest": "^26.0.15",
     "@types/node": "^14.14.6",

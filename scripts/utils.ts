@@ -3,6 +3,11 @@ import ThreeIdDidProvider from '3id-did-provider';
 import { ethers } from 'ethers';
 import dotenv from 'dotenv';
 import { writeFileSync } from 'fs';
+import { publishIDXConfig } from '@ceramicstudio/idx-tools';
+
+import type { CeramicApi } from '@ceramicnetwork/common';
+
+let ceramicClient: CeramicApi;
 
 function parseDotenv(): {
   PUBLISHER_IDW_SEED: string;
@@ -23,10 +28,17 @@ function parseDotenv(): {
   return result.parsed as any;
 }
 
-export const ceramicClient = new CeramicClient(
-  process.env.REACT_APP_CERAMIC_API_HOST,
-  { docSyncEnabled: false }
-);
+function createCeramic() {
+  const { REACT_APP_CERAMIC_API_HOST } = parseDotenv();
+  (ceramicClient as any) = new CeramicClient(
+    REACT_APP_CERAMIC_API_HOST || 'https://ceramic-dev.3boxlabs.com',
+    { docSyncEnabled: false }
+  );
+}
+
+export function getCeramic() {
+  return ceramicClient;
+}
 
 export async function parseSeedFromEnv() {
   const { PUBLISHER_IDW_SEED } = parseDotenv();
@@ -34,13 +46,15 @@ export async function parseSeedFromEnv() {
   return seed;
 }
 
-export async function createIDW(seed: Uint8Array) {
-  const idw = await ThreeIdDidProvider.create({
+export async function createThreeIdFromSeed(seed: Uint8Array) {
+  createCeramic();
+  await publishIDXConfig(ceramicClient);
+  const threeIdProvider = await ThreeIdDidProvider.create({
     ceramic: ceramicClient,
     getPermission: async () => [],
     seed,
   });
-  await ceramicClient.setDIDProvider(idw.getDidProvider());
+  await ceramicClient.setDIDProvider(threeIdProvider.getDidProvider());
 }
 
 export function createJSONFile(path: string, fileContent: unknown) {
@@ -48,8 +62,8 @@ export function createJSONFile(path: string, fileContent: unknown) {
 }
 
 export default {
-  ceramicClient,
+  getCeramic,
   parseSeedFromEnv,
-  createIDW,
+  createThreeIdFromSeed,
   createJSONFile,
 };

@@ -30,16 +30,7 @@
     "author": {
       "$ref": "#/definitions/DID"
     },
-    "upVotes": {
-      "$ref": "#/definitions/DIDArray"
-    },
-    "downVotes": {
-      "$ref": "#/definitions/DIDArray"
-    },
     "bookmarks": {
-      "$ref": "#/definitions/CeramicDocIdArray"
-    },
-    "comments": {
       "$ref": "#/definitions/CeramicDocIdArray"
     }
   },

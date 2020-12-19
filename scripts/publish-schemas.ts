@@ -22,15 +22,20 @@ const schemasToPublish: {
 };
 
 async function main() {
-  const seed = await utils.parseSeedFromEnv();
-  await utils.createIDW(seed);
+  try {
+    const seed = await utils.parseSeedFromEnv();
+    await utils.createThreeIdFromSeed(seed);
 
-  const docIDs = await publishSchemas();
-  utils.createJSONFile(
-    `${process.cwd()}/schemas/publishedSchemas.json`,
-    docIDs
-  );
-  process.exit();
+    const docIDs = await publishSchemas();
+    utils.createJSONFile(
+      `${process.cwd()}/schemas/publishedSchemas.json`,
+      docIDs
+    );
+    process.exit();
+  } catch (error) {
+    console.error(error);
+    process.exit(-1);
+  }
 }
 
 async function publishSchemas() {
@@ -45,7 +50,7 @@ async function publishSchemas() {
     const schema = schemasToPublish[schemaName];
 
     try {
-      const schemaDoc = await publishSchema(utils.ceramicClient, {
+      const schemaDoc = await publishSchema(utils.getCeramic(), {
         name: schema.title,
         content: schema,
       });

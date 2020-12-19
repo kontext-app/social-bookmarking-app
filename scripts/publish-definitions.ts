@@ -4,7 +4,7 @@ import schemas from '../schemas';
 
 async function main() {
   const seed = await utils.parseSeedFromEnv();
-  await utils.createIDW(seed);
+  await utils.createThreeIdFromSeed(seed);
 
   const docIDs = await publishDefinitions();
   utils.createJSONFile(
@@ -26,7 +26,7 @@ async function publishDefinitions() {
     const schemaDocID = schemas.publishedSchemas[schemaName];
 
     try {
-      const definitionDoc = await createDefinition(utils.ceramicClient, {
+      const definitionDoc = await createDefinition(utils.getCeramic(), {
         description: schemaName,
         name: schemaName,
         schema: schemaDocID,
