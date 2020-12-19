@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Kontext",
+  "properties": {
+    "referencedDoc": {
+      "type": "string",
+      "pattern": "^ceramic://.+(\\?version=.+)?",
+      "maxLength": 1024
+    },
+    "comment": {
+      "type": "string",
+      "title": "comment",
+      "maxLength": 1024
+    },
+    "vote": {
+      "type": "number",
+      "title": "vote"
+    },
+    "rating": {
+      "type": "number",
+      "title": "vote"
+    }
+  }
+}
