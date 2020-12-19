@@ -1,7 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { utils as ethersUtils } from 'ethers';
 
 import {
   authenticateWithEthereum,
+  authenticateWithSeed,
   isIDXAuthenticated,
   getDID,
   getBasicProfileDocContent,
@@ -23,6 +25,20 @@ export const logInWithEthereum = createAsyncThunk<
   if (!isIDXAuthenticated()) {
     const { provider, addresses } = await connectWithWeb3();
     await authenticateWithEthereum(provider, addresses[0]);
+  }
+
+  thunkAPI.dispatch(bootstrapBookmarks());
+
+  return getDID();
+});
+
+export const logInWithSeed = createAsyncThunk<
+  string | null,
+  string,
+  { state: State }
+>('profile/logInWithSeed', async (payload, thunkAPI) => {
+  if (!isIDXAuthenticated()) {
+    await authenticateWithSeed(ethersUtils.arrayify(payload));
   }
 
   thunkAPI.dispatch(bootstrapBookmarks());

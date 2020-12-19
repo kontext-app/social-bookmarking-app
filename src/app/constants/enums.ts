@@ -24,3 +24,13 @@ export const DefaultBookmarksIndexKeys = {
   PRIVATE: 'private',
   LISTS: 'lists',
 };
+
+export type AuthenticationMethodType = 'seed' | 'ethereum';
+
+export const AuthenticationMethods: {
+  SEED: 'seed';
+  ETHEREUM: 'ethereum';
+} = {
+  SEED: 'seed',
+  ETHEREUM: 'ethereum',
+};

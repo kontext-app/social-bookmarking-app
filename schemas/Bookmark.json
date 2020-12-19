@@ -18,10 +18,13 @@
       "title": "description",
       "maxLength": 2048
     },
-    "highlightedText": {
-      "type": "string",
-      "title": "highlightedText",
-      "maxLength": 1024
+    "highlights": {
+      "type": "array",
+      "title": "highlights",
+      "maxItems": 10,
+      "items": {
+        "type": "string"
+      }
     },
     "creationDate": {
       "type": "string",
@@ -37,22 +40,8 @@
         "type": "string"
       }
     },
-    "numberOfShares": {
-      "type": "number",
-      "title": "numberOfShares",
-      "exclusiveMinimum": 0
-    },
     "author": {
       "$ref": "#/definitions/DID"
-    },
-    "upVotes": {
-      "$ref": "#/definitions/DIDArray"
-    },
-    "downVotes": {
-      "$ref": "#/definitions/DIDArray"
-    },
-    "comments": {
-      "$ref": "#/definitions/CeramicDocIdArray"
     }
   },
   "required": ["url", "title", "creationDate"],
