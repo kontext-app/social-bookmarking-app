@@ -87,7 +87,6 @@ export async function authenticateWithEthereum(
     // @ts-ignore
     resolver: ThreeIdResolver.getResolver(ceramic),
   });
-  console.log({ resolver: ThreeIdResolver.getResolver(ceramic) });
   await did.authenticate();
 
   await ceramic.setDIDProvider(didProvider);
