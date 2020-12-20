@@ -1,25 +1,25 @@
 export const PUBLISHED_DEFINITIONS = {
   Bookmark:
-    'ceramic://kjzl6cwe1jw146hypsnbta8cuumpwq79gvd938s6d6a12o5fry11csrrk1dfg3i',
+    'ceramic://kjzl6cwe1jw14b7f8ct0nlksen4rr2ovxly28zaayf96cxodhscm9e4efpsyuif',
   Bookmarks:
-    'ceramic://kjzl6cwe1jw147pvq0a9qsim4t1fsbjgwmyi0842txum3gwitjp4pp6o2teizgd',
+    'ceramic://kjzl6cwe1jw14akd00a9tghbtkqwy12mi29l8ovnutp5dbj0ofxich18euz3kl0',
   BookmarksIndex:
-    'ceramic://kjzl6cwe1jw145hvxwoyz1drweybip31f8ayetrps3rc6k0uc2kyasbwvntw3hu',
+    'ceramic://kjzl6cwe1jw145w8tbl1pfzutvbbylvgsijbd6b8nxs9zj3els1c0lwfubcx5yw',
   BookmarksList:
-    'ceramic://kjzl6cwe1jw147985gnpw3iqv0846fjllainzi6tgqz06njqbuuvrdy79rb7pvo',
+    'ceramic://kjzl6cwe1jw14be3p5fv2rc7hmybztgydbt02jkrq2m8ep7gs07qj29kkfll9pr',
   BookmarksLists:
-    'ceramic://kjzl6cwe1jw149rj02t1fd8mcp070dfuk4nlmy1p2a3oq1zvk3v7omzzstu13f4',
+    'ceramic://kjzl6cwe1jw146cpvhreey7wiy4axzuraajghw1r0kdny05udcz0v6z16y2it9x',
 };
 
 export const PUBLISHED_SCHEMAS = {
   Bookmark:
-    'ceramic://k3y52l7qbv1fry85xftafhp4ao2eccp910ufcmeimxvzzaqd30skomljtuqrdbrpc',
+    'ceramic://k3y52l7qbv1fry5ag8pi928d0mu3c7lpdol4ept3gkwahbzxff3ocbgmdgwpqfksg',
   Bookmarks:
-    'ceramic://k3y52l7qbv1fryc24z257am0vmkjxhh0deswf3uhxkifndyxrsfff6cz3htbhf474',
+    'ceramic://k3y52l7qbv1fry92ho9kx5xxis6hc274vcqp4x4ob5pmowoqaadstkrp9krtw883k',
   BookmarksIndex:
-    'ceramic://k3y52l7qbv1frynwmwvy66febzao2i9zl20yrhw1h2jwz1fq0h5vbwezlpx295n9c',
+    'ceramic://k3y52l7qbv1frxkkcxdllxztyv0srmpowqlqx0rfkkx54yg0k8tgn18otjl3088w0',
   BookmarksList:
-    'ceramic://k3y52l7qbv1frxn7hhyhac8i591d1kfd6kfua399mfxe6zsttz4rtdb2zn5n6rksg',
+    'ceramic://k3y52l7qbv1frylz22em5agocctsugozx3lvwvf99jguk5sihvupdvvtqizb8fdvk',
   BookmarksLists:
-    'ceramic://k3y52l7qbv1fryqd4vpozro7zmfizdb365suh7b81wmxeg7v4nd80105jvzutzvgg',
+    'ceramic://k3y52l7qbv1fryjeewabnmn3rdiiuyayhsa8ubi06e81zw71jah81auvqzm8jm1hc',
 };

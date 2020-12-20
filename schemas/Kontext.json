@@ -13,13 +13,13 @@
       "title": "comment",
       "maxLength": 1024
     },
-    "vote": {
-      "type": "number",
-      "title": "vote"
+    "bestRating": {
+      "type": "integer",
+      "title": "bestRating"
     },
-    "rating": {
-      "type": "number",
-      "title": "vote"
+    "worstRating": {
+      "type": "integer",
+      "title": "worstRating"
     }
   }
 }

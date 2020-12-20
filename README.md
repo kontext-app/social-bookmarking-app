@@ -23,10 +23,11 @@ Copy the distributed `.env` into a local env file with the name `.env.local` and
 
 You can run your own local ceramic node and 3id-connect iframe service. Therefore run following steps:
 
-1. Globally install the ceramic cli
+1. Globally install the ceramic cli and start local ceramic node
 
 ```bash
-> yarn add --global @ceramicnetwork/cli
+> yarn global add @ceramicnetwork/cli
+> ceramic daemon
 ```
 
 2. Clone 3id-connect repo in your preferred folder and start locally
@@ -43,6 +44,15 @@ You can run your own local ceramic node and 3id-connect iframe service. Therefor
 ```
 REACT_APP_CERAMIC_API_HOST=http://localhost:7007
 REACT_APP_THREE_ID_CONNECT_HOST=http://localhost:30001
+```
+
+#### Kontext Servers
+
+You can also use servers provided by us. Therefore set the relevant env variables as follows:
+
+```
+REACT_APP_CERAMIC_API_HOST=https://ceramic.kontext.app
+REACT_APP_THREE_ID_CONNECT_HOST=https://3id.kontext.app
 ```
 
 ### Start Development Server
