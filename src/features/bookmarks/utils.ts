@@ -26,7 +26,7 @@ export function flattenDoc<T>(
   const { content, metadata, id } = doc;
   return {
     ...content,
-    docID: id.toUrl('base36'),
+    docID: id.toUrl(),
     schemaDocID: metadata.schema,
   };
 }

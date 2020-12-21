@@ -9,6 +9,7 @@ module.exports = {
   plugins: ['react', '@typescript-eslint', 'prettier'],
   rules: {
     'prettier/prettier': 'error',
+    '@typescript-eslint/ban-ts-comment': 'off',
   },
   settings: {
     react: {

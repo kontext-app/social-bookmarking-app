@@ -80,7 +80,7 @@ export const fetchCollectionsOfIndex = createAsyncThunk<
   );
 
   const collections = supportedCollectionDocs.map((collectionDoc) => {
-    const docID = collectionDoc.id.toUrl('base36');
+    const docID = collectionDoc.id.toUrl();
     const schemaDocID = collectionDoc.metadata.schema;
     const indexKey = Object.keys(bookmarksIndex as BookmarksIndex).find(
       (key) => (bookmarksIndex as BookmarksIndex)[key] === docID
@@ -172,7 +172,7 @@ export const addBookmark = createAsyncThunk<
   );
 
   const updatedBookmarksCollection = {
-    docID: updatedBookmarksDoc.id.toUrl('base36'),
+    docID: updatedBookmarksDoc.id.toUrl(),
     indexKey: payload.bookmarksIndexKey,
     schemaDocID: updatedBookmarksDoc.metadata.schema,
     bookmarks: updatedBookmarksDoc.content,

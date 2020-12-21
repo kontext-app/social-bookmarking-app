@@ -1,5 +1,10 @@
-import { IDXWeb } from '@ceramicstudio/idx-web';
+import CeramicClient from '@ceramicnetwork/http-client';
+import ThreeIdResolver from '@ceramicnetwork/3id-did-resolver';
+import ThreeIdDidProvider from '3id-did-provider';
+import { EthereumAuthProvider, ThreeIdConnect } from '3id-connect';
+import { IDX } from '@ceramicstudio/idx';
 import { definitions, schemas } from '@ceramicstudio/idx-constants';
+import { DID } from 'dids';
 
 import {
   PUBLISHED_DEFINITIONS,
@@ -13,34 +18,86 @@ import type {
   BookmarksIndexDocContent,
 } from 'features/bookmarks/types';
 import type { BasicProfileDocContent } from 'features/profile/types';
-import type { Doctype } from '@ceramicnetwork/ceramic-common';
+import type { Doctype } from '@ceramicnetwork/common';
+import type { EthereumProvider } from '3id-connect';
 
-export let idx: IDXWeb;
+let idx: IDX;
+let ceramic: CeramicClient;
 
-export function createIDX(): void {
-  idx = new IDXWeb({
-    ceramic: process.env.REACT_APP_CERAMIC_API_HOST,
-    connect: process.env.REACT_APP_THREE_ID_CONNECT_HOST,
-    definitions: {
+function initializeCeramic(): void {
+  ceramic = new CeramicClient(
+    process.env.REACT_APP_CERAMIC_API_HOST ||
+      'https://ceramic-dev.3boxlabs.com',
+    { docSyncEnabled: false }
+  );
+}
+
+function initializeIDX(ceramic: CeramicClient): void {
+  idx = new IDX({
+    // @ts-ignore
+    ceramic,
+    aliases: {
       ...definitions,
       ...PUBLISHED_DEFINITIONS,
     },
   });
 }
 
+export async function authenticateWithSeed(seed: Uint8Array): Promise<void> {
+  initializeCeramic();
+
+  const threeIdProvider = await ThreeIdDidProvider.create({
+    // @ts-ignore
+    ceramic,
+    getPermission: async () => [],
+    seed,
+  });
+
+  const didProvider = threeIdProvider.getDidProvider();
+  const did = new DID({
+    provider: didProvider,
+    // @ts-ignore
+    resolver: ThreeIdResolver.getResolver(ceramic),
+  });
+  await did.authenticate();
+
+  await ceramic.setDIDProvider(didProvider);
+  initializeIDX(ceramic);
+}
+
 export async function authenticateWithEthereum(
-  ethereumProvider: unknown,
+  ethereumProvider: EthereumProvider,
   address: string
 ): Promise<void> {
-  await idx.authenticate({
-    ethereum: {
-      provider: ethereumProvider,
-      address,
-    },
+  initializeCeramic();
+
+  const threeIdConnect = new ThreeIdConnect(
+    process.env.REACT_APP_THREE_ID_CONNECT_HOST || 'https://app.3idconnect.org'
+  );
+
+  const ethereumAuthProvider = new EthereumAuthProvider(
+    ethereumProvider,
+    address
+  );
+  await threeIdConnect.connect(ethereumAuthProvider);
+
+  const didProvider = await threeIdConnect.getDidProvider();
+  const did = new DID({
+    provider: didProvider,
+    // @ts-ignore
+    resolver: ThreeIdResolver.getResolver(ceramic),
   });
+  await did.authenticate();
+
+  await ceramic.setDIDProvider(didProvider);
+  initializeIDX(ceramic);
 }
 
 export function isIDXAuthenticated(): boolean {
+  if (!idx) {
+    return false;
+  }
+
   return idx.authenticated;
 }
 
@@ -48,16 +105,8 @@ export function getDID(): string {
   return idx.id;
 }
 
-export function getDIDInstance(): any {
-  return idx.did;
-}
-
 export async function loadDocument(docID: string): Promise<Doctype> {
-  return idx.ceramic.loadDocument(docID);
-}
-
-export async function getIDXDocID(did?: string): Promise<string | null> {
-  return idx.getIDXDocID(did);
+  return idx.ceramic.loadDocument(docID, {});
 }
 
 export async function getBasicProfileDocContent(
@@ -70,7 +119,7 @@ export async function setBasicProfileDocContent(
   basicProfileDocContent: BasicProfileDocContent
 ): Promise<string> {
   const docID = await idx.set('basicProfile', basicProfileDocContent);
-  return docID.toUrl('base36');
+  return docID.toUrl();
 }
 
 export async function getBookmarksIndexDocID(
@@ -118,7 +167,7 @@ export async function setDefaultBookmarksIndex(): Promise<string> {
     defaultBookmarksIndexKeyToDocID
   );
 
-  return bookmarksIndexDocID.toUrl('base36');
+  return bookmarksIndexDocID.toUrl();
 }
 
 export async function createEmptyBookmarksDoc(): Promise<string> {
@@ -131,8 +180,7 @@ export async function createEmptyBookmarksDoc(): Promise<string> {
       isUnique: true,
     },
   });
-
-  return id.toUrl('base36');
+  return id.toUrl();
 }
 
 export async function createEmptyBookmarksListsDoc(): Promise<string> {
@@ -145,8 +193,7 @@ export async function createEmptyBookmarksListsDoc(): Promise<string> {
       isUnique: true,
     },
   });
-
-  return id.toUrl('base36');
+  return id.toUrl();
 }
 
 export async function createBookmarkDoc(
@@ -160,7 +207,7 @@ export async function createBookmarkDoc(
       tags: ['bookmarks'],
     },
   });
-  return id.toUrl('base36');
+  return id.toUrl();
 }
 
 export async function addBookmarkDocToBookmarksDoc(

@@ -1,4 +1,4 @@
-import type { Doctype } from '@ceramicnetwork/ceramic-common';
+import type { Doctype } from '@ceramicnetwork/common';
 
 export interface CeramicDoc<T> extends Doctype {
   content: T;

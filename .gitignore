@@ -128,3 +128,7 @@ yarn-error.log*
 
 # ceramic
 .pinning.store
+
+# compiled scripts
+/scripts/*.js
+/scripts/build

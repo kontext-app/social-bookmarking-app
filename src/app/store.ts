@@ -39,7 +39,7 @@ const rootReducer = combineReducers({
     {
       key: 'profile',
       storage,
-      whitelist: ['did', 'isAuthenticated'],
+      whitelist: ['did', 'isAuthenticated', 'authenticationMethod'],
     },
     profileReducer
   ),
