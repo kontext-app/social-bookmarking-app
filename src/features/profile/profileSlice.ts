@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { constants } from 'kontext-common';
 
 import {
   logInWithEthereum,
@@ -6,20 +7,16 @@ import {
   logInWithSeed,
 } from 'features/profile/asyncThunks';
 import { removeSeed } from 'app/apis/storage';
-import {
-  LoadingStatus,
-  LoadingStatusType,
-  AuthenticationMethodType,
-  AuthenticationMethods,
-} from 'app/constants/enums';
 import { addAsyncMatchers } from 'app/utils/slice';
+
+import type { LoadingStatus, AuthenticationMethod } from 'kontext-common';
 
 export type ProfileSliceState = {
   did: null | string;
   doc: null | any;
   isAuthenticated: boolean;
-  authenticationMethod: AuthenticationMethodType | null;
-  loadingStatus: LoadingStatusType;
+  authenticationMethod: AuthenticationMethod | null;
+  loadingStatus: LoadingStatus;
   error: null | Error;
 };
 
@@ -28,7 +25,7 @@ const initialState: ProfileSliceState = {
   doc: null,
   isAuthenticated: false,
   authenticationMethod: null,
-  loadingStatus: LoadingStatus.IDLE,
+  loadingStatus: constants.LoadingStatus.IDLE,
   error: null,
 };
 
@@ -41,7 +38,7 @@ export const profileSlice = createSlice({
     },
     setAuthenticationMethod: (
       state,
-      action: PayloadAction<AuthenticationMethodType>
+      action: PayloadAction<AuthenticationMethod>
     ) => {
       state.authenticationMethod = action.payload;
     },
@@ -50,7 +47,7 @@ export const profileSlice = createSlice({
       state.doc = null;
       state.isAuthenticated = false;
       state.authenticationMethod = null;
-      state.loadingStatus = LoadingStatus.IDLE;
+      state.loadingStatus = constants.LoadingStatus.IDLE;
       removeSeed();
     },
   },
@@ -58,12 +55,12 @@ export const profileSlice = createSlice({
     builder.addCase(logInWithEthereum.fulfilled, (state, action) => {
       state.did = action.payload;
       state.isAuthenticated = true;
-      state.authenticationMethod = AuthenticationMethods.ETHEREUM;
+      state.authenticationMethod = constants.AuthenticationMethods.ETHEREUM;
     });
     builder.addCase(logInWithSeed.fulfilled, (state, action) => {
       state.did = action.payload;
       state.isAuthenticated = true;
-      state.authenticationMethod = AuthenticationMethods.SEED;
+      state.authenticationMethod = constants.AuthenticationMethods.SEED;
     });
     builder.addCase(fetchProfileDocByDID.fulfilled, (state, action) => {
       state.doc = action.payload;

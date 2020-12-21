@@ -3,10 +3,9 @@ import {
   createEntityAdapter,
   EntityState,
 } from '@reduxjs/toolkit';
+import { constants, schemas } from 'kontext-common';
 
 import { addAsyncMatchers } from 'app/utils/slice';
-import { LoadingStatus, LoadingStatusType } from 'app/constants/enums';
-import { PUBLISHED_SCHEMAS } from 'app/constants/definitions';
 
 import {
   BookmarksIndex,
@@ -15,6 +14,7 @@ import {
   BookmarksList,
   BookmarksListsCollection,
 } from 'features/bookmarks/types';
+import type { LoadingStatus } from 'kontext-common';
 
 export type BookmarksSliceState = {
   bookmarksIndex: EntityState<BookmarksIndex>;
@@ -22,7 +22,7 @@ export type BookmarksSliceState = {
   bookmarksCollections: EntityState<BookmarksCollection>;
   bookmarksLists: EntityState<BookmarksList>;
   bookmarksListsCollections: EntityState<BookmarksListsCollection>;
-  loadingStatus: LoadingStatusType;
+  loadingStatus: LoadingStatus;
   error: null | Error;
   lastUpdated: null | number;
 };
@@ -37,11 +37,11 @@ export const bookmarksAdapter = createEntityAdapter<Bookmark>({
     Date.parse(b.creationDate) - Date.parse(a.creationDate),
 });
 
-export const bookmarksCollectionsAdapter = createEntityAdapter<
-  BookmarksCollection
->({
-  selectId: (bookmarksCollection) => bookmarksCollection.docID,
-});
+export const bookmarksCollectionsAdapter = createEntityAdapter<BookmarksCollection>(
+  {
+    selectId: (bookmarksCollection) => bookmarksCollection.docID,
+  }
+);
 
 export const bookmarksListsAdapter = createEntityAdapter<BookmarksList>({
   selectId: (bookmarksIndex) => bookmarksIndex.docID,
@@ -49,11 +49,11 @@ export const bookmarksListsAdapter = createEntityAdapter<BookmarksList>({
     Date.parse(b.creationDate) - Date.parse(a.creationDate),
 });
 
-export const bookmarksListsCollectionsAdapter = createEntityAdapter<
-  BookmarksListsCollection
->({
-  selectId: (bookmarksCollection) => bookmarksCollection.docID,
-});
+export const bookmarksListsCollectionsAdapter = createEntityAdapter<BookmarksListsCollection>(
+  {
+    selectId: (bookmarksCollection) => bookmarksCollection.docID,
+  }
+);
 
 const initialState: BookmarksSliceState = {
   bookmarksIndex: bookmarksIndexAdapter.getInitialState(),
@@ -61,7 +61,7 @@ const initialState: BookmarksSliceState = {
   bookmarksCollections: bookmarksCollectionsAdapter.getInitialState(),
   bookmarksLists: bookmarksListsAdapter.getInitialState(),
   bookmarksListsCollections: bookmarksListsCollectionsAdapter.getInitialState(),
-  loadingStatus: LoadingStatus.IDLE,
+  loadingStatus: constants.LoadingStatus.IDLE,
   error: null,
   lastUpdated: null,
 };
@@ -76,11 +76,11 @@ export const bookmarksSlice = createSlice({
     anyCollectionsReceived: (state, action) => {
       const bookmarksCollections = action.payload.filter(
         (collection: BookmarksCollection) =>
-          PUBLISHED_SCHEMAS.Bookmarks === collection.schemaDocID
+          schemas.Bookmarks === collection.schemaDocID
       );
       const bookmarksListsCollections = action.payload.filter(
         (collection: BookmarksListsCollection) =>
-          PUBLISHED_SCHEMAS.BookmarksLists === collection.schemaDocID
+          schemas.BookmarksLists === collection.schemaDocID
       );
       bookmarksCollectionsAdapter.upsertMany(
         state.bookmarksCollections,

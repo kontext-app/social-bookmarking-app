@@ -14,7 +14,7 @@ import { bootstrapBookmarks } from 'features/bookmarks/asyncThunks';
 import { selectProfileDID } from 'features/profile/selectors';
 import { enrichPartialProfile } from 'features/profile/utils';
 
-import type { BasicProfileDocContent } from 'features/profile/types';
+import type { BasicProfileDocContent } from 'kontext-common';
 import type { State } from 'app/store';
 
 export const logInWithEthereum = createAsyncThunk<

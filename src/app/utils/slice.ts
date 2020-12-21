@@ -1,6 +1,5 @@
 import { Action, AnyAction, ActionReducerMapBuilder } from '@reduxjs/toolkit';
-
-import { LoadingStatus } from 'app/constants/enums';
+import { constants } from 'kontext-common';
 
 interface RejectedAction extends Action {
   error: Error;
@@ -36,20 +35,20 @@ export function addAsyncMatchers(
   builder.addMatcher(
     (action): action is AnyAction => isPendingAction(action, entityName),
     (state) => {
-      state.loadingStatus = LoadingStatus.PENDING;
+      state.loadingStatus = constants.LoadingStatus.PENDING;
     }
   );
   builder.addMatcher(
     (action): action is AnyAction => isFulfilledAction(action, entityName),
     (state) => {
-      state.loadingStatus = LoadingStatus.FULFILLED;
+      state.loadingStatus = constants.LoadingStatus.FULFILLED;
     }
   );
   builder.addMatcher(
     (action): action is RejectedAction => isRejectedAction(action, entityName),
     (state, action) => {
       const { error } = action;
-      state.loadingStatus = LoadingStatus.REJECTED;
+      state.loadingStatus = constants.LoadingStatus.REJECTED;
       state.error = error;
     }
   );

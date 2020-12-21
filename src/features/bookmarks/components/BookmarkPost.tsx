@@ -17,7 +17,8 @@ type Props = {
 export function BookmarkPost(props: Props): JSX.Element {
   const [upVotes, setUpVotes] = useState(0);
   const [downVotes, setDownVotes] = useState(0);
-  const favicon = 'https://s2.googleusercontent.com/s2/favicons?domain=' + props.bookmark.url;
+  const favicon =
+    'https://s2.googleusercontent.com/s2/favicons?domain=' + props.bookmark.url;
   /* might need a fallback for icons googleusercontent does not have */
 
   return (
@@ -92,7 +93,12 @@ export function BookmarkPost(props: Props): JSX.Element {
           </div>
           <div className="flex hover:bg-grey-lighter p-1 items-center ml-2 truncate text-xs font-normal text-grey cursor-pointer">
             {/* {props.bookmark.author} */}
-            <img src={userpicPlaceholder} title={props.bookmark.author} alt="user" className="rounded-full h-6 flex-shrink-0" />
+            <img
+              src={userpicPlaceholder}
+              title={props.bookmark.author}
+              alt="user"
+              className="rounded-full h-6 flex-shrink-0"
+            />
           </div>
         </div>
       </div>

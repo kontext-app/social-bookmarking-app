@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { constants } from 'kontext-common';
 
 import { PageLayout } from 'app/components/PageLayout';
 import { Button } from 'app/components/Button';
@@ -7,9 +8,8 @@ import { InputWithLabel } from 'app/components/InputWithLabel';
 
 import { addBookmark } from 'features/bookmarks/asyncThunks';
 import { selectBookmarksLoadingStatus } from 'features/bookmarks/selectors';
-import { LoadingStatus } from 'app/constants/enums';
 
-import type { BookmarkDocContent } from 'features/bookmarks/types';
+import type { BookmarkDocContent } from 'kontext-common';
 import type { AppDispatch } from 'app/store';
 
 export function AddBookmarkPage(): JSX.Element {
@@ -23,7 +23,7 @@ export function AddBookmarkPage(): JSX.Element {
   });
 
   const areBookmarkInputValuesValid = areInputValuesValid(bookmark);
-  const isLoading = bookmarksLoadingStatus === LoadingStatus.PENDING;
+  const isLoading = bookmarksLoadingStatus === constants.LoadingStatus.PENDING;
 
   const handleChange = useCallback(
     (property: 'url' | 'title' | 'description', changedValue: string) => {

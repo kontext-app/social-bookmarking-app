@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { schemas } from 'kontext-common';
 
 import {
   setDefaultBookmarksIndex,
@@ -22,14 +23,13 @@ import {
 } from 'features/bookmarks/bookmarksSlice';
 import { enrichPartialBookmark, flattenDoc } from 'features/bookmarks/utils';
 import { selectProfileDID } from 'features/profile/selectors';
-import { PUBLISHED_SCHEMAS } from 'app/constants/definitions';
 
 import type {
-  BookmarkDocContent,
   BookmarksIndex,
   BookmarksCollection,
 } from 'features/bookmarks/types';
 import type { State } from 'app/store';
+import type { BookmarkDocContent } from 'kontext-common';
 
 export const bootstrapBookmarks = createAsyncThunk<
   void,
@@ -74,7 +74,7 @@ export const fetchCollectionsOfIndex = createAsyncThunk<
   );
 
   const supportedCollectionDocs = collectionDocs.filter((collectionDoc) =>
-    [PUBLISHED_SCHEMAS.Bookmarks, PUBLISHED_SCHEMAS.BookmarksLists].includes(
+    [schemas.Bookmarks, schemas.BookmarksLists].includes(
       collectionDoc.metadata.schema || ''
     )
   );

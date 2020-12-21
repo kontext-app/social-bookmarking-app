@@ -1,12 +1,12 @@
 import { State } from 'app/store';
 
 import type {
-  LoadingStatusType,
-  AuthenticationMethodType,
-} from 'app/constants/enums';
-import type { BasicProfileDocContent } from 'features/profile/types';
+  LoadingStatus,
+  AuthenticationMethod,
+  BasicProfileDocContent,
+} from 'kontext-common';
 
-export function selectProfileLoadingStatus(state: State): LoadingStatusType {
+export function selectProfileLoadingStatus(state: State): LoadingStatus {
   return state.profile.loadingStatus;
 }
 
@@ -24,7 +24,7 @@ export function selectProfileIsAuthenticated(state: State): boolean {
 
 export function selectProfileAuthenticationMethod(
   state: State
-): AuthenticationMethodType | null {
+): AuthenticationMethod | null {
   return state.profile.authenticationMethod;
 }
 

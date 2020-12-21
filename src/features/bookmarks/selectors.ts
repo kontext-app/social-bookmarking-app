@@ -5,7 +5,7 @@ import {
   bookmarksAdapter,
 } from 'features/bookmarks/bookmarksSlice';
 
-import type { LoadingStatusType } from 'app/constants/enums';
+import type { LoadingStatus } from 'kontext-common';
 import type {
   BookmarksCollection,
   BookmarksIndex,
@@ -24,7 +24,7 @@ const bookmarksSelectors = bookmarksAdapter.getSelectors(
   (state: State) => state.bookmarks.bookmarks
 );
 
-export function selectBookmarksLoadingStatus(state: State): LoadingStatusType {
+export function selectBookmarksLoadingStatus(state: State): LoadingStatus {
   return state.bookmarks.loadingStatus;
 }
 

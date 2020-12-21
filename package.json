@@ -3,18 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "3id-connect": "1.0.0-alpha.8",
-    "3id-did-provider": "^0.2.0",
-    "@ceramicnetwork/3id-did-resolver": "^0.6.0",
-    "@ceramicnetwork/http-client": "^0.8.8",
-    "@ceramicstudio/idx": "^0.5.0",
-    "@ceramicstudio/idx-constants": "^0.5.1",
     "@reduxjs/toolkit": "^1.4.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@walletconnect/web3-provider": "^1.3.1",
-    "dids": "^1.1.1",
+    "kontext-common": "^1.0.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
@@ -32,12 +26,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint './src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "eslint --fix './src/**/*.{js,jsx,ts,tsx}'",
-    "format": "prettier --write './src/**/*.{js,md,json}'",
-    "scripts:build": "tsc -p tsconfig.scripts.json",
-    "idx:publish": "yarn idx:publish:schemas && yarn idx:publish:definitions && yarn idx:constants",
-    "idx:publish:schemas": "yarn scripts:build && node ./scripts/build/scripts/publish-schemas.js",
-    "idx:publish:definitions": "yarn scripts:build && node ./scripts/build/scripts/publish-definitions.js",
-    "idx:constants": "yarn scripts:build && node ./scripts/build/scripts/to-constants.js"
+    "format": "prettier --write './src/**/*.{js,md,json}'"
   },
   "browserslist": {
     "production": [
@@ -52,7 +41,6 @@
     ]
   },
   "devDependencies": {
-    "@ceramicstudio/idx-tools": "^0.5.0",
     "@types/jest": "^26.0.15",
     "@types/node": "^14.14.6",
     "@types/prettier": "^2.1.5",
@@ -70,7 +58,6 @@
     "ethers": "^5.0.19",
     "postcss-cli": "^8.0.0",
     "prettier": "^2.1.2",
-    "profile-hover": "^1.1.2",
     "tailwindcss": "^1.8.10",
     "typescript": "^4.0.5"
   }

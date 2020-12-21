@@ -1,4 +1,4 @@
-import type { BookmarkDocContent, CeramicDoc } from 'features/bookmarks/types';
+import type { BookmarkDocContent, CeramicDoc } from 'kontext-common';
 
 export function enrichPartialBookmark(
   partialBookmark: Partial<BookmarkDocContent>

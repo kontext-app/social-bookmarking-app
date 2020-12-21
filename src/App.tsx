@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { constants } from 'kontext-common';
 
 import { PopularBookmarksPage } from 'features/bookmarks/pages/PopularBookmarksPage';
 import { RecentBookmarksPage } from 'features/bookmarks/pages/RecentBookmarksPage';
@@ -12,7 +13,6 @@ import { LogInPage } from 'features/profile/LogInPage';
 
 import { bootstrapApp } from 'app/asyncThunks';
 import { getAppBootstrapStatus } from 'app/selectors';
-import { LoadingStatus } from 'app/constants/enums';
 
 export function App(): React.ReactElement {
   const dispatch = useDispatch();
@@ -23,8 +23,8 @@ export function App(): React.ReactElement {
   }, [dispatch]);
 
   if (
-    appBootstrapStatus === LoadingStatus.IDLE ||
-    appBootstrapStatus === LoadingStatus.PENDING
+    appBootstrapStatus === constants.LoadingStatus.IDLE ||
+    appBootstrapStatus === constants.LoadingStatus.PENDING
   ) {
     return <div>Bootstrapping App...</div>;
   }
