@@ -1,67 +1,36 @@
-import CeramicClient from '@ceramicnetwork/http-client';
-import ThreeIdResolver from '@ceramicnetwork/3id-did-resolver';
-import ThreeIdDidProvider from '3id-did-provider';
-import { EthereumAuthProvider, ThreeIdConnect } from '3id-connect';
-import { IDX } from '@ceramicstudio/idx';
-import { definitions, schemas } from '@ceramicstudio/idx-constants';
-import { DID } from 'dids';
+import { apis, constants, definitions, schemas } from 'kontext-common';
 
-import {
-  PUBLISHED_DEFINITIONS,
-  PUBLISHED_SCHEMAS,
-} from 'app/constants/definitions';
-import { DefaultBookmarksIndexKeys } from 'app/constants/enums';
-
+import type { IDX } from '@ceramicstudio/idx';
+import type { Doctype, CeramicApi } from '@ceramicnetwork/common';
+import type { EthereumProvider } from '3id-connect';
 import type {
+  BasicProfileDocContent,
+  BookmarksIndexDocContent,
   BookmarkDocContent,
   BookmarksDoc,
-  BookmarksIndexDocContent,
-} from 'features/bookmarks/types';
-import type { BasicProfileDocContent } from 'features/profile/types';
-import type { Doctype } from '@ceramicnetwork/common';
-import type { EthereumProvider } from '3id-connect';
+} from 'kontext-common';
 
 let idx: IDX;
-let ceramic: CeramicClient;
+let ceramic: CeramicApi;
 
 function initializeCeramic(): void {
-  ceramic = new CeramicClient(
-    process.env.REACT_APP_CERAMIC_API_HOST ||
-      'https://ceramic-dev.3boxlabs.com',
-    { docSyncEnabled: false }
-  );
+  // @ts-ignore
+  ceramic = apis.ceramic.createCeramic(process.env.REACT_APP_CERAMIC_API_HOST);
 }
 
-function initializeIDX(ceramic: CeramicClient): void {
-  idx = new IDX({
-    // @ts-ignore
-    ceramic,
-    aliases: {
-      ...definitions,
-      ...PUBLISHED_DEFINITIONS,
-    },
-  });
+function initializeIDX(ceramic: CeramicApi): void {
+  idx = apis.idx.createIDX(ceramic);
 }
 
 export async function authenticateWithSeed(seed: Uint8Array): Promise<void> {
   initializeCeramic();
 
-  const threeIdProvider = await ThreeIdDidProvider.create({
-    // @ts-ignore
+  const didProvider = await apis.threeId.createThreeIdFromSeed({
     ceramic,
-    getPermission: async () => [],
     seed,
   });
+  await apis.threeId.authenticate({ ceramic, didProvider });
 
-  const didProvider = threeIdProvider.getDidProvider();
-  const did = new DID({
-    provider: didProvider,
-    // @ts-ignore
-    resolver: ThreeIdResolver.getResolver(ceramic),
-  });
-  await did.authenticate();
-
-  await ceramic.setDIDProvider(didProvider);
   initializeIDX(ceramic);
 }
 
@@ -71,25 +40,14 @@ export async function authenticateWithEthereum(
 ): Promise<void> {
   initializeCeramic();
 
-  const threeIdConnect = new ThreeIdConnect(
-    process.env.REACT_APP_THREE_ID_CONNECT_HOST || 'https://app.3idconnect.org'
-  );
-
-  const ethereumAuthProvider = new EthereumAuthProvider(
+  const didProvider = await apis.threeId.createThreeIdFromEthereumProvider({
+    threeIdConnectHost: process.env.REACT_APP_THREE_ID_CONNECT_HOST,
+    ceramic,
     ethereumProvider,
-    address
-  );
-  await threeIdConnect.connect(ethereumAuthProvider);
-
-  const didProvider = await threeIdConnect.getDidProvider();
-  const did = new DID({
-    provider: didProvider,
-    // @ts-ignore
-    resolver: ThreeIdResolver.getResolver(ceramic),
+    address,
   });
-  await did.authenticate();
+  await apis.threeId.authenticate({ ceramic, didProvider });
 
-  await ceramic.setDIDProvider(didProvider);
   initializeIDX(ceramic);
 }
 
@@ -131,8 +89,7 @@ export async function getBookmarksIndexDocID(
     return null;
   }
 
-  const bookmarksIndexDocID =
-    idxDocContent[PUBLISHED_DEFINITIONS.BookmarksIndex];
+  const bookmarksIndexDocID = idxDocContent[definitions.BookmarksIndex];
   return bookmarksIndexDocID;
 }
 
@@ -152,10 +109,10 @@ export async function setDefaultBookmarksIndex(): Promise<string> {
   } = {};
 
   for (const defaultBookmarksIndexKey of Object.values(
-    DefaultBookmarksIndexKeys
+    constants.DefaultBookmarksIndexKeys
   )) {
     const docID =
-      defaultBookmarksIndexKey === DefaultBookmarksIndexKeys.LISTS
+      defaultBookmarksIndexKey === constants.DefaultBookmarksIndexKeys.LISTS
         ? await createEmptyBookmarksListsDoc()
         : await createEmptyBookmarksDoc();
     defaultBookmarksIndexKeyToDocID[defaultBookmarksIndexKey] = docID;
@@ -174,7 +131,7 @@ export async function createEmptyBookmarksDoc(): Promise<string> {
   const { id } = await idx.ceramic.createDocument('tile', {
     content: [],
     metadata: {
-      schema: PUBLISHED_SCHEMAS.Bookmarks,
+      schema: schemas.Bookmarks,
       controllers: [getDID()],
       tags: ['bookmarks'],
       isUnique: true,
@@ -187,7 +144,7 @@ export async function createEmptyBookmarksListsDoc(): Promise<string> {
   const { id } = await idx.ceramic.createDocument('tile', {
     content: [],
     metadata: {
-      schema: PUBLISHED_SCHEMAS.BookmarksLists,
+      schema: schemas.BookmarksLists,
       controllers: [getDID()],
       tags: ['bookmarks'],
       isUnique: true,
@@ -202,7 +159,7 @@ export async function createBookmarkDoc(
   const { id } = await idx.ceramic.createDocument('tile', {
     content: bookmarkToAdd,
     metadata: {
-      schema: PUBLISHED_SCHEMAS.Bookmark,
+      schema: schemas.Bookmark,
       controllers: [getDID()],
       tags: ['bookmarks'],
     },
@@ -231,16 +188,11 @@ export function getSchemaNameByDocID(docID?: string): string | null {
     return null;
   }
 
-  const allSchemas = {
-    ...schemas,
-    ...PUBLISHED_SCHEMAS,
-  };
-
-  const schemaDocIDIndex = Object.values(allSchemas).indexOf(docID);
+  const schemaDocIDIndex = Object.values(schemas).indexOf(docID);
 
   if (schemaDocIDIndex === -1) {
     return null;
   }
 
-  return Object.keys(allSchemas)[schemaDocIDIndex];
+  return Object.keys(schemas)[schemaDocIDIndex];
 }

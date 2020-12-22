@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { constants } from 'kontext-common';
 
 import { PageLayout } from 'app/components/PageLayout';
 import { InputWithLabel } from 'app/components/InputWithLabel';
@@ -16,8 +17,8 @@ import {
   fetchProfileDocByDID,
   updateProfile,
 } from 'features/profile/asyncThunks';
-import { BasicProfileDocContent } from './types';
-import { LoadingStatus } from 'app/constants/enums';
+
+import type { BasicProfileDocContent } from 'kontext-common';
 
 const emptyProfileDoc = {};
 
@@ -74,8 +75,8 @@ export function ProfilePage(): JSX.Element {
   };
 
   const isLoading =
-    profileLoadingStatus === LoadingStatus.IDLE ||
-    profileLoadingStatus === LoadingStatus.PENDING;
+    profileLoadingStatus === constants.LoadingStatus.IDLE ||
+    profileLoadingStatus === constants.LoadingStatus.PENDING;
 
   return (
     <PageLayout>

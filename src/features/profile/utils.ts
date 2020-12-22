@@ -1,4 +1,4 @@
-import type { BasicProfileDocContent } from 'features/profile/types';
+import type { BasicProfileDocContent } from 'kontext-common';
 
 export function enrichPartialProfile(
   partialProfile: Partial<BasicProfileDocContent>

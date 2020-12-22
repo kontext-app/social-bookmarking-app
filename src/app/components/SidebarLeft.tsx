@@ -1,18 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { constants } from 'kontext-common';
 
 import { SidebarLeftDropDown } from 'app/components/SidebarLeftDropDown';
 import { selectProfileIsAuthenticated } from 'features/profile/selectors';
 import { selectBookmarksIndex } from 'features/bookmarks/selectors';
-import { DefaultBookmarksIndexKeys } from 'app/constants/enums';
 
 import cloud from 'assets/icons/cloud.svg';
 import inbox from 'assets/icons/inbox.svg';
 import folder from 'assets/icons/folder.svg';
 import heart from 'assets/icons/heart.svg';
 
-import type { BookmarksListDoc } from 'features/bookmarks/types';
+import type { BookmarksListDoc } from 'kontext-common';
 
 type SectionItem = {
   label?: string;
@@ -42,13 +42,22 @@ type Section = {
 };
 
 function SidebarLeftSection(props: Section) {
-  const { sectionLabel = '', iconSrc = '', sectionData = [], linkTo = '' } = props;
+  const {
+    sectionLabel = '',
+    iconSrc = '',
+    sectionData = [],
+    linkTo = '',
+  } = props;
 
   return (
     <>
       {sectionLabel ? (
         <Link to={linkTo}>
-          <img src={iconSrc} alt="icon" className="flex-shrink-0 md:hidden mx-auto mt-2" />
+          <img
+            src={iconSrc}
+            alt="icon"
+            className="flex-shrink-0 md:hidden mx-auto mt-2"
+          />
           <p className="text-gray-500 block px-4 py-2 text-sm font-semibold">
             {sectionLabel}
           </p>
@@ -88,7 +97,11 @@ export function SidebarLeft() {
           {isAuthenticated ? (
             <SidebarLeftDropDown />
           ) : (
-            <SidebarLeftSection sectionLabel="Log In" iconSrc={heart} linkTo="/login" />
+            <SidebarLeftSection
+              sectionLabel="Log In"
+              iconSrc={heart}
+              linkTo="/login"
+            />
           )}
           {sidebarData.map((section, i) => (
             <SidebarLeftSection
@@ -146,7 +159,7 @@ function getSidebarData(isLoggedIn = false, lists = []): Section[] {
           label: 'Inbox',
           iconSrc: inbox,
           linkTo: '/unsorted',
-        },/*
+        } /*
         {
           label: 'Public',
           iconSrc: inbox,
@@ -156,7 +169,7 @@ function getSidebarData(isLoggedIn = false, lists = []): Section[] {
           label: 'Private',
           iconSrc: inbox,
           linkTo: '/private',
-        },*/
+        },*/,
       ],
     },
     {
