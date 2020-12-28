@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { constants } from 'kontext-common';
+import { enums } from 'kontext-common';
 
 import {
   logInWithEthereum,
@@ -25,7 +25,7 @@ const initialState: ProfileSliceState = {
   doc: null,
   isAuthenticated: false,
   authenticationMethod: null,
-  loadingStatus: constants.LoadingStatus.IDLE,
+  loadingStatus: enums.LoadingStatus.IDLE,
   error: null,
 };
 
@@ -47,7 +47,7 @@ export const profileSlice = createSlice({
       state.doc = null;
       state.isAuthenticated = false;
       state.authenticationMethod = null;
-      state.loadingStatus = constants.LoadingStatus.IDLE;
+      state.loadingStatus = enums.LoadingStatus.IDLE;
       removeSeed();
     },
   },
@@ -55,12 +55,12 @@ export const profileSlice = createSlice({
     builder.addCase(logInWithEthereum.fulfilled, (state, action) => {
       state.did = action.payload;
       state.isAuthenticated = true;
-      state.authenticationMethod = constants.AuthenticationMethods.ETHEREUM;
+      state.authenticationMethod = enums.AuthenticationMethods.ETHEREUM;
     });
     builder.addCase(logInWithSeed.fulfilled, (state, action) => {
       state.did = action.payload;
       state.isAuthenticated = true;
-      state.authenticationMethod = constants.AuthenticationMethods.SEED;
+      state.authenticationMethod = enums.AuthenticationMethods.SEED;
     });
     builder.addCase(fetchProfileDocByDID.fulfilled, (state, action) => {
       state.doc = action.payload;

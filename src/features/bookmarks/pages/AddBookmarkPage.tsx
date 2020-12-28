@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { constants } from 'kontext-common';
+import { enums } from 'kontext-common';
 
 import { PageLayout } from 'app/components/PageLayout';
 import { Button } from 'app/components/Button';
@@ -25,7 +25,7 @@ export function AddBookmarkPage(): JSX.Element {
   const [makePublic, setMakePublic] = useState<boolean>(false);
 
   const areBookmarkInputValuesValid = areInputValuesValid(bookmark);
-  const isLoading = bookmarksLoadingStatus === constants.LoadingStatus.PENDING;
+  const isLoading = bookmarksLoadingStatus === enums.LoadingStatus.PENDING;
 
   const handleChange = useCallback(
     (property: 'url' | 'title' | 'description', changedValue: string) => {

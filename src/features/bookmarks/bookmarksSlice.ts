@@ -3,7 +3,7 @@ import {
   createEntityAdapter,
   EntityState,
 } from '@reduxjs/toolkit';
-import { constants, schemas } from 'kontext-common';
+import { enums, schemas } from 'kontext-common';
 
 import { addAsyncMatchers } from 'app/utils/slice';
 
@@ -61,7 +61,7 @@ const initialState: BookmarksSliceState = {
   bookmarksCollections: bookmarksCollectionsAdapter.getInitialState(),
   bookmarksLists: bookmarksListsAdapter.getInitialState(),
   bookmarksListsCollections: bookmarksListsCollectionsAdapter.getInitialState(),
-  loadingStatus: constants.LoadingStatus.IDLE,
+  loadingStatus: enums.LoadingStatus.IDLE,
   error: null,
   lastUpdated: null,
 };
