@@ -8753,10 +8753,10 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-kontext-common@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/kontext-common/-/kontext-common-1.5.0.tgz#451b433d9895473c4d1b9bfbe621e10acb93cb7a"
-  integrity sha512-hIwjwJJnjAgKLNXeA/6HnYpduPmW8+LCBAG/uIIiOG9YcwH4LsihAW5mE7kIp+in+tSvM53SZ8YiyI8ZHpfnSw==
+kontext-common@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/kontext-common/-/kontext-common-1.6.0.tgz#1da9df228badccf4f1cb7c54e37bf358ef682f8a"
+  integrity sha512-B46eSS9QO8D+Sza7EPZEbgA7KsUKejw198qDuzC/7yigGE8uyohAABNzRP+S+QlW9LRpXFK2dNsp57rJun8Xsg==
   dependencies:
     "3id-connect" "^1.0.0-alpha.8"
     "3id-did-provider" "^0.2.0"
