@@ -14,7 +14,7 @@ import { LogInPage } from 'features/profile/LogInPage';
 import { bootstrapApp } from 'app/asyncThunks';
 import { getAppBootstrapStatus } from 'app/selectors';
 
-export function App(): React.ReactElement {
+export function App(): JSX.Element {
   const dispatch = useDispatch();
   const appBootstrapStatus = useSelector(getAppBootstrapStatus);
 
