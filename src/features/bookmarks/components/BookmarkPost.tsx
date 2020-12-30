@@ -11,7 +11,7 @@ import userpicPlaceholder from 'assets/icons/userpicPlaceholder.jpg';
 import type { Bookmark } from 'features/bookmarks/types';
 
 type Props = {
-  bookmark: Bookmark;
+  bookmark: Partial<Bookmark>;
 };
 
 export function BookmarkPost(props: Props): JSX.Element {

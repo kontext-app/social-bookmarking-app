@@ -3,6 +3,7 @@ import {
   bookmarksIndexAdapter,
   bookmarksCollectionsAdapter,
   bookmarksAdapter,
+  publicBookmarksAdapter,
 } from 'features/bookmarks/bookmarksSlice';
 
 import type { LoadingStatus } from 'kontext-common';
@@ -10,6 +11,7 @@ import type {
   BookmarksCollection,
   BookmarksIndex,
   Bookmark,
+  BookmarkFromRecommender,
 } from 'features/bookmarks/types';
 
 const bookmarksIndexSelectors = bookmarksIndexAdapter.getSelectors(
@@ -22,6 +24,10 @@ const bookmarksCollectionsSelectors = bookmarksCollectionsAdapter.getSelectors(
 
 const bookmarksSelectors = bookmarksAdapter.getSelectors(
   (state: State) => state.bookmarks.bookmarks
+);
+
+const publicBookmarksSelectors = publicBookmarksAdapter.getSelectors(
+  (state: State) => state.bookmarks.publicBookmarks
 );
 
 export function selectBookmarksLoadingStatus(state: State): LoadingStatus {
@@ -81,4 +87,10 @@ export function selectBookmarksByDocIDs(
   return bookmarksSelectors
     .selectAll(state)
     .filter((bookmark) => docIDs.includes(bookmark.docID));
+}
+
+export function selectRecentPublicBookmarks(
+  state: State
+): BookmarkFromRecommender[] {
+  return publicBookmarksSelectors.selectAll(state);
 }

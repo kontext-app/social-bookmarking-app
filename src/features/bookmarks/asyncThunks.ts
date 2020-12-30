@@ -11,6 +11,7 @@ import {
   getSchemaNameByDocID,
   isIDXAuthenticated,
 } from 'app/apis/ceramic';
+import { getRecentPublicBookmarks } from 'app/apis/recommender';
 import {
   selectBookmarksIndex,
   selectBookmarksCollectionByDocID,
@@ -20,6 +21,7 @@ import {
   anyCollectionsReceived,
   bookmarksReceived,
   bookmarksCollectionUpdated,
+  publicBookmarksReceived,
 } from 'features/bookmarks/bookmarksSlice';
 import { enrichPartialBookmark, flattenDoc } from 'features/bookmarks/utils';
 import { selectProfileDID } from 'features/profile/selectors';
@@ -210,6 +212,16 @@ export const publicizeBookmark = createAsyncThunk<
     bookmarks: updatedPublicBookmarksDoc.content,
   };
   thunkAPI.dispatch(bookmarksCollectionUpdated(updatedBookmarksCollection));
+});
+
+export const fetchRecentBookmarksFromRecommender = createAsyncThunk<
+  void,
+  void,
+  { state: State }
+>('bookmarks/fetchRecentBookmarksFromRecommender', async (_, thunkAPI) => {
+  const recentPublicBookmarks = await getRecentPublicBookmarks();
+
+  thunkAPI.dispatch(publicBookmarksReceived(recentPublicBookmarks));
 });
 
 export default {

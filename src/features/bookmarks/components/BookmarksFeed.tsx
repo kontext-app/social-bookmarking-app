@@ -5,7 +5,7 @@ import { BookmarkPost } from './BookmarkPost';
 import type { Bookmark } from 'features/bookmarks/types';
 
 type Props = {
-  bookmarks: Array<Bookmark>;
+  bookmarks: Array<Partial<Bookmark>>;
 };
 
 export function BookmarksFeed(props: Props): JSX.Element {
