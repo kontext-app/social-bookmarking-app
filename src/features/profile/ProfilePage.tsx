@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { constants } from 'kontext-common';
+import { enums } from 'kontext-common';
 
 import { PageLayout } from 'app/components/PageLayout';
 import { InputWithLabel } from 'app/components/InputWithLabel';
@@ -75,8 +75,8 @@ export function ProfilePage(): JSX.Element {
   };
 
   const isLoading =
-    profileLoadingStatus === constants.LoadingStatus.IDLE ||
-    profileLoadingStatus === constants.LoadingStatus.PENDING;
+    profileLoadingStatus === enums.LoadingStatus.IDLE ||
+    profileLoadingStatus === enums.LoadingStatus.PENDING;
 
   return (
     <PageLayout>

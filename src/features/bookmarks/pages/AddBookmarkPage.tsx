@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { constants } from 'kontext-common';
+import { enums } from 'kontext-common';
 
 import { PageLayout } from 'app/components/PageLayout';
 import { Button } from 'app/components/Button';
 import { InputWithLabel } from 'app/components/InputWithLabel';
+import { SwitchWithLabel } from 'app/components/SwitchWithLabel';
 
 import { addBookmark } from 'features/bookmarks/asyncThunks';
 import { selectBookmarksLoadingStatus } from 'features/bookmarks/selectors';
@@ -21,9 +22,10 @@ export function AddBookmarkPage(): JSX.Element {
     title: '',
     description: '',
   });
+  const [makePublic, setMakePublic] = useState<boolean>(false);
 
   const areBookmarkInputValuesValid = areInputValuesValid(bookmark);
-  const isLoading = bookmarksLoadingStatus === constants.LoadingStatus.PENDING;
+  const isLoading = bookmarksLoadingStatus === enums.LoadingStatus.PENDING;
 
   const handleChange = useCallback(
     (property: 'url' | 'title' | 'description', changedValue: string) => {
@@ -52,9 +54,12 @@ export function AddBookmarkPage(): JSX.Element {
 
   const handleClickAdd = () => {
     if (areBookmarkInputValuesValid) {
-      // TODO: Enable selection of other index key
       dispatch(
-        addBookmark({ bookmarkToAdd: bookmark, bookmarksIndexKey: 'unsorted' })
+        addBookmark({
+          bookmarkToAdd: bookmark,
+          bookmarksIndexKey: 'unsorted',
+          makePublic,
+        })
       ).then(() =>
         setBookmark({
           url: '',
@@ -86,6 +91,13 @@ export function AddBookmarkPage(): JSX.Element {
         loading={isLoading}
         onChange={handleDescriptionChange}
       />
+      <div className="flex justify-center">
+        <SwitchWithLabel
+          label="Make bookmark public?"
+          enabled={makePublic}
+          onChange={setMakePublic}
+        />
+      </div>
       <Button
         disabled={!areBookmarkInputValuesValid}
         loading={isLoading}

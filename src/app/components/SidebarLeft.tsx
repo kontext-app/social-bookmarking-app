@@ -1,11 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { constants } from 'kontext-common';
 
 import { SidebarLeftDropDown } from 'app/components/SidebarLeftDropDown';
 import { selectProfileIsAuthenticated } from 'features/profile/selectors';
-import { selectBookmarksIndex } from 'features/bookmarks/selectors';
 
 import cloud from 'assets/icons/cloud.svg';
 import inbox from 'assets/icons/inbox.svg';

@@ -140,7 +140,8 @@ export const addBookmark = createAsyncThunk<
   void,
   {
     bookmarkToAdd: Partial<BookmarkDocContent>;
-    bookmarksIndexKey: 'public' | 'private' | 'unsorted';
+    bookmarksIndexKey: 'private' | 'unsorted';
+    makePublic?: boolean;
   },
   { state: State }
 >('bookmarks/add', async (payload, thunkAPI) => {
@@ -178,6 +179,37 @@ export const addBookmark = createAsyncThunk<
     bookmarks: updatedBookmarksDoc.content,
   };
   thunkAPI.dispatch(bookmarksCollectionUpdated(updatedBookmarksCollection));
+
+  if (payload.makePublic) {
+    thunkAPI.dispatch(publicizeBookmark({ bookmarkDocID: addedBookmarkDocID }));
+  }
+});
+
+export const publicizeBookmark = createAsyncThunk<
+  void,
+  { bookmarkDocID: string },
+  { state: State }
+>('bookmarks/add', async (payload, thunkAPI) => {
+  const bookmarksIndex = selectBookmarksIndex(thunkAPI.getState());
+
+  if (!bookmarksIndex) {
+    thunkAPI.rejectWithValue(new Error('BookmarksIndexDoc not loaded'));
+  }
+
+  const publicBookmarksDocID = (bookmarksIndex as BookmarksIndex).public;
+
+  const updatedPublicBookmarksDoc = await addBookmarkDocToBookmarksDoc(
+    payload.bookmarkDocID,
+    publicBookmarksDocID
+  );
+
+  const updatedBookmarksCollection = {
+    docID: updatedPublicBookmarksDoc.id.toUrl(),
+    indexKey: 'public',
+    schemaDocID: updatedPublicBookmarksDoc.metadata.schema,
+    bookmarks: updatedPublicBookmarksDoc.content,
+  };
+  thunkAPI.dispatch(bookmarksCollectionUpdated(updatedBookmarksCollection));
 });
 
 export default {
@@ -185,4 +217,5 @@ export default {
   fetchCollectionsOfIndex,
   fetchBookmarksOfCollection,
   addBookmark,
+  publicizeBookmark,
 };

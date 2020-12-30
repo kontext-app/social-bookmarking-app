@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { constants } from 'kontext-common';
+import { enums } from 'kontext-common';
 import { bootstrapApp } from './asyncThunks';
 
 import type { LoadingStatus } from 'kontext-common';
@@ -11,7 +11,7 @@ export type AppSliceState = {
 };
 
 const initialState: AppSliceState = {
-  bootstrapStatus: constants.LoadingStatus.IDLE,
+  bootstrapStatus: enums.LoadingStatus.IDLE,
   error: null,
   lastUpdated: null,
 };
@@ -26,13 +26,13 @@ export const appSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(bootstrapApp.fulfilled, (state) => {
-      state.bootstrapStatus = constants.LoadingStatus.FULFILLED;
+      state.bootstrapStatus = enums.LoadingStatus.FULFILLED;
     });
     builder.addCase(bootstrapApp.pending, (state) => {
-      state.bootstrapStatus = constants.LoadingStatus.PENDING;
+      state.bootstrapStatus = enums.LoadingStatus.PENDING;
     });
     builder.addCase(bootstrapApp.rejected, (state) => {
-      state.bootstrapStatus = constants.LoadingStatus.REJECTED;
+      state.bootstrapStatus = enums.LoadingStatus.REJECTED;
     });
   },
 });

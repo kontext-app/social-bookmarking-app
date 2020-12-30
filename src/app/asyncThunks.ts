@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { constants } from 'kontext-common';
+import { enums } from 'kontext-common';
 
 import { getSeed } from 'app/apis/storage';
 import {
@@ -20,10 +20,10 @@ export const bootstrapApp = createAsyncThunk<void, void, { state: State }>(
     const authenticationMethod = selectProfileAuthenticationMethod(state);
 
     if (typeof previouslyAuthenticatedDID === 'string') {
-      if (authenticationMethod === constants.AuthenticationMethods.ETHEREUM) {
+      if (authenticationMethod === enums.AuthenticationMethods.ETHEREUM) {
         thunkAPI.dispatch(logInWithEthereum());
       }
-      if (authenticationMethod === constants.AuthenticationMethods.SEED) {
+      if (authenticationMethod === enums.AuthenticationMethods.SEED) {
         const seed = getSeed();
 
         if (typeof seed === 'string') {
