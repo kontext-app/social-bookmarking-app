@@ -10,6 +10,7 @@ import {
   setBasicProfileDocContent,
 } from 'app/apis/ceramic';
 import { connectWithWeb3 } from 'app/apis/web3';
+import { subscribeDID } from 'app/apis/recommender';
 import { bootstrapBookmarks } from 'features/bookmarks/asyncThunks';
 import { selectProfileDID } from 'features/profile/selectors';
 import { enrichPartialProfile } from 'features/profile/utils';
@@ -28,6 +29,7 @@ export const logInWithEthereum = createAsyncThunk<
   }
 
   thunkAPI.dispatch(bootstrapBookmarks());
+  thunkAPI.dispatch(subscribeToRecommender());
 
   return getDID();
 });
@@ -42,6 +44,7 @@ export const logInWithSeed = createAsyncThunk<
   }
 
   thunkAPI.dispatch(bootstrapBookmarks());
+  thunkAPI.dispatch(subscribeToRecommender());
 
   return getDID();
 });
@@ -69,8 +72,21 @@ export const updateProfile = createAsyncThunk<
   }
 });
 
+export const subscribeToRecommender = createAsyncThunk<
+  void,
+  void,
+  { state: State }
+>('profile/subscribe', async (_, thunkAPI) => {
+  const authenticatedDID = selectProfileDID(thunkAPI.getState());
+
+  if (typeof authenticatedDID === 'string') {
+    await subscribeDID(authenticatedDID);
+  }
+});
+
 export default {
   logInWithEthereum,
   fetchProfileDocByDID,
   updateProfile,
+  subscribeToRecommender,
 };
