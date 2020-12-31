@@ -5,6 +5,7 @@ import {
   logInWithEthereum,
   fetchProfileDocByDID,
   logInWithSeed,
+  subscribeToRecommender,
 } from 'features/profile/asyncThunks';
 import { removeSeed } from 'app/apis/storage';
 import { addAsyncMatchers } from 'app/utils/slice';
@@ -16,6 +17,7 @@ export type ProfileSliceState = {
   doc: null | any;
   isAuthenticated: boolean;
   authenticationMethod: AuthenticationMethod | null;
+  subscribedToRecommender: boolean;
   loadingStatus: LoadingStatus;
   error: null | Error;
 };
@@ -26,6 +28,7 @@ const initialState: ProfileSliceState = {
   isAuthenticated: false,
   authenticationMethod: null,
   loadingStatus: enums.LoadingStatus.IDLE,
+  subscribedToRecommender: false,
   error: null,
 };
 
@@ -64,6 +67,9 @@ export const profileSlice = createSlice({
     });
     builder.addCase(fetchProfileDocByDID.fulfilled, (state, action) => {
       state.doc = action.payload;
+    });
+    builder.addCase(subscribeToRecommender.fulfilled, (state) => {
+      state.subscribedToRecommender = true;
     });
     addAsyncMatchers(builder, 'profile');
   },

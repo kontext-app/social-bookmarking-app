@@ -13,15 +13,18 @@ import {
   BookmarksCollection,
   BookmarksList,
   BookmarksListsCollection,
+  BookmarkFromRecommender,
 } from 'features/bookmarks/types';
 import type { LoadingStatus } from 'kontext-common';
 
+// TODO: Split up state
 export type BookmarksSliceState = {
   bookmarksIndex: EntityState<BookmarksIndex>;
   bookmarks: EntityState<Bookmark>;
   bookmarksCollections: EntityState<BookmarksCollection>;
   bookmarksLists: EntityState<BookmarksList>;
   bookmarksListsCollections: EntityState<BookmarksListsCollection>;
+  publicBookmarks: EntityState<BookmarkFromRecommender>;
   loadingStatus: LoadingStatus;
   error: null | Error;
   lastUpdated: null | number;
@@ -36,6 +39,14 @@ export const bookmarksAdapter = createEntityAdapter<Bookmark>({
   sortComparer: (a, b) =>
     Date.parse(b.creationDate) - Date.parse(a.creationDate),
 });
+
+export const publicBookmarksAdapter = createEntityAdapter<BookmarkFromRecommender>(
+  {
+    selectId: (bookmark) => bookmark.docID,
+    sortComparer: (a, b) =>
+      Date.parse(b.creationDate) - Date.parse(a.creationDate),
+  }
+);
 
 export const bookmarksCollectionsAdapter = createEntityAdapter<BookmarksCollection>(
   {
@@ -58,6 +69,7 @@ export const bookmarksListsCollectionsAdapter = createEntityAdapter<BookmarksLis
 const initialState: BookmarksSliceState = {
   bookmarksIndex: bookmarksIndexAdapter.getInitialState(),
   bookmarks: bookmarksAdapter.getInitialState(),
+  publicBookmarks: publicBookmarksAdapter.getInitialState(),
   bookmarksCollections: bookmarksCollectionsAdapter.getInitialState(),
   bookmarksLists: bookmarksListsAdapter.getInitialState(),
   bookmarksListsCollections: bookmarksListsCollectionsAdapter.getInitialState(),
@@ -94,6 +106,9 @@ export const bookmarksSlice = createSlice({
     bookmarksReceived: (state, action) => {
       bookmarksAdapter.upsertMany(state.bookmarks, action.payload);
     },
+    publicBookmarksReceived: (state, action) => {
+      publicBookmarksAdapter.upsertMany(state.publicBookmarks, action.payload);
+    },
     bookmarksCollectionUpdated: (state, action) => {
       bookmarksCollectionsAdapter.updateOne(state.bookmarksCollections, {
         id: action.payload.docID,
@@ -112,6 +127,7 @@ export const {
   bookmarksIndexReceived,
   anyCollectionsReceived,
   bookmarksReceived,
+  publicBookmarksReceived,
   bookmarksCollectionUpdated,
 } = bookmarksSlice.actions;
 

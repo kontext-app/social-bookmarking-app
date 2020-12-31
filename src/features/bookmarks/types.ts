@@ -31,3 +31,11 @@ export type BookmarksListsCollection = {
   bookmarksLists: Array<string>;
   schemaDocID?: string;
 };
+
+export type BookmarkFromRecommender = {
+  docID: string;
+  author: string;
+  creationDate: string;
+  description: string;
+  url: string;
+};
