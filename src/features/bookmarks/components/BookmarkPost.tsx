@@ -1,22 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import share from 'assets/icons/share.svg';
-import heart from 'assets/icons/heart.svg';
+// import heart from 'assets/icons/heart.svg';
 import comment from 'assets/icons/speech-bubble.svg';
 import upVote from 'assets/icons/arrow-up.svg';
 import downVote from 'assets/icons/arrow-down.svg';
 import save from 'assets/icons/save.svg';
 import userpicPlaceholder from 'assets/icons/userpicPlaceholder.jpg';
 
-import type { Bookmark } from 'features/bookmarks/types';
+import type {
+  Bookmark,
+  BookmarkFromRecommender,
+} from 'features/bookmarks/types';
 
 type Props = {
-  bookmark: Partial<Bookmark>;
+  bookmark: Partial<Bookmark> | Partial<BookmarkFromRecommender>;
+  onClickUpVote?: (docID: string) => void;
+  onClickDownVote?: (docID: string) => void;
+  isPublic?: boolean;
 };
 
 export function BookmarkPost(props: Props): JSX.Element {
-  const [upVotes, setUpVotes] = useState(0);
-  const [downVotes, setDownVotes] = useState(0);
+  const handleClickUpVote = () => {
+    props.onClickUpVote && props.onClickUpVote(props.bookmark.docID as string);
+  };
+
+  const handleClickDownVote = () => {
+    props.onClickDownVote &&
+      props.onClickDownVote(props.bookmark.docID as string);
+  };
+
   const favicon =
     'https://s2.googleusercontent.com/s2/favicons?domain=' + props.bookmark.url;
   /* might need a fallback for icons googleusercontent does not have */
@@ -26,17 +39,20 @@ export function BookmarkPost(props: Props): JSX.Element {
       <div className="m-2">
         <img src={favicon} alt="icon" className="h-4 flex-shrink-0" />
       </div>
-      {/*<div className="mr-8 my-auto flex flex-col text-center items-center">
-        <button className="text-xs" onClick={() => setUpVotes(upVotes + 1)}>
-          <img src={upVote} alt="Favorites" className="flex-shrink-0" />
-        </button>
-        <span className="text-xs font-semibold my-1">
-          {upVotes - downVotes}
-        </span>
-        <button className="text-xs" onClick={() => setDownVotes(downVotes + 1)}>
-          <img src={downVote} alt="Favorites" className="flex-shrink-0" />
-        </button>
-      </div>*/}
+      {props.isPublic && (
+        <div className="mr-8 my-auto flex flex-col text-center items-center">
+          <button className="text-xs" onClick={handleClickUpVote}>
+            <img src={upVote} alt="Favorites" className="flex-shrink-0" />
+          </button>
+          <span className="text-xs font-semibold my-1">
+            {(props.bookmark as BookmarkFromRecommender).upVotes.length -
+              (props.bookmark as BookmarkFromRecommender).downVotes.length}
+          </span>
+          <button className="text-xs" onClick={handleClickDownVote}>
+            <img src={downVote} alt="Favorites" className="flex-shrink-0" />
+          </button>
+        </div>
+      )}
       <div className="w-11/12 py-2 text-left">
         <div className="flex items-center text-xs mb-2">
           <div className="text-grey-lighter flex items-center">

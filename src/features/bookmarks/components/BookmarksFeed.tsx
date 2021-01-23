@@ -6,6 +6,9 @@ import type { Bookmark } from 'features/bookmarks/types';
 
 type Props = {
   bookmarks: Array<Partial<Bookmark>>;
+  isPublic?: boolean;
+  onClickUpVote?: (bookmarkDocID: string) => void;
+  onClickDownVote?: (bookmarkDocID: string) => void;
 };
 
 export function BookmarksFeed(props: Props): JSX.Element {
@@ -15,7 +18,13 @@ export function BookmarksFeed(props: Props): JSX.Element {
         <div className="w-full">
           <div className="py-2">
             {props.bookmarks.map((bookmark) => (
-              <BookmarkPost key={bookmark.docID} bookmark={bookmark} />
+              <BookmarkPost
+                key={bookmark.docID}
+                bookmark={bookmark}
+                isPublic={props.isPublic}
+                onClickDownVote={props.onClickDownVote}
+                onClickUpVote={props.onClickUpVote}
+              />
             ))}
           </div>
         </div>
