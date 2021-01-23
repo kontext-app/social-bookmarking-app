@@ -12,6 +12,7 @@ import {
 import { connectWithWeb3 } from 'app/apis/web3';
 import { subscribeDID } from 'app/apis/recommender';
 import { bootstrapBookmarks } from 'features/bookmarks/asyncThunks';
+import { bootstrapRatings } from 'features/ratings/asyncThunks';
 import { selectProfileDID } from 'features/profile/selectors';
 import { enrichPartialProfile } from 'features/profile/utils';
 
@@ -29,6 +30,7 @@ export const logInWithEthereum = createAsyncThunk<
   }
 
   thunkAPI.dispatch(bootstrapBookmarks());
+  thunkAPI.dispatch(bootstrapRatings());
   thunkAPI.dispatch(subscribeToRecommender());
 
   return getDID();

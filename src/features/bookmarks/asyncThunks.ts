@@ -23,8 +23,9 @@ import {
   bookmarksCollectionUpdated,
   publicBookmarksReceived,
 } from 'features/bookmarks/bookmarksSlice';
-import { enrichPartialBookmark, flattenDoc } from 'features/bookmarks/utils';
+import { enrichPartialBookmark } from 'features/bookmarks/utils';
 import { selectProfileDID } from 'features/profile/selectors';
+import { flattenDoc } from 'app/utils/doc';
 
 import type {
   BookmarksIndex,
@@ -53,6 +54,7 @@ export const bootstrapBookmarks = createAsyncThunk<
   }
 
   const bookmarksIndexDoc = await loadDocument(bookmarksIndexDocID as string);
+  // @ts-ignore
   const bookmarksIndex = flattenDoc(bookmarksIndexDoc);
   thunkAPI.dispatch(bookmarksIndexReceived(bookmarksIndex));
   thunkAPI.dispatch(fetchCollectionsOfIndex(bookmarksIndex));
@@ -133,6 +135,7 @@ export const fetchBookmarksOfCollection = createAsyncThunk<
         (bookmarkDocID) => loadDocument(bookmarkDocID)
       )
     );
+    // @ts-ignore
     const bookmarks = bookmarkDocs.map((doc) => flattenDoc(doc));
     thunkAPI.dispatch(bookmarksReceived(bookmarks));
   }

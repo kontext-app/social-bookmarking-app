@@ -1,4 +1,4 @@
-import type { BookmarkDocContent, CeramicDoc } from 'kontext-common';
+import type { BookmarkDocContent } from 'kontext-common';
 
 export function enrichPartialBookmark(
   partialBookmark: Partial<BookmarkDocContent>
@@ -17,16 +17,5 @@ export function enrichPartialBookmark(
     description,
     highlightedText: '',
     creationDate: new Date().toISOString(),
-  };
-}
-
-export function flattenDoc<T>(
-  doc: CeramicDoc<T>
-): T & { docID: string; schemaDocID?: string } {
-  const { content, metadata, id } = doc;
-  return {
-    ...content,
-    docID: id.toUrl(),
-    schemaDocID: metadata.schema,
   };
 }

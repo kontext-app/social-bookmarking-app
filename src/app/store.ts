@@ -18,11 +18,16 @@ import { profileReducer } from 'features/profile/profileSlice';
 import type { AppSliceState } from 'app/appSlice';
 import type { ProfileSliceState } from 'features/profile/profileSlice';
 import type { BookmarksSliceState } from 'features/bookmarks/bookmarksSlice';
+import {
+  ratingsReducer,
+  RatingsSliceState,
+} from 'features/ratings/ratingsSlice';
 
 export type State = {
   app: AppSliceState;
   bookmarks: BookmarksSliceState;
   profile: ProfileSliceState;
+  ratings: RatingsSliceState;
 };
 
 const rootPersistConfig = {
@@ -35,6 +40,7 @@ const rootPersistConfig = {
 const rootReducer = combineReducers({
   app: appReducer,
   bookmarks: bookmarksReducer,
+  ratings: ratingsReducer,
   profile: persistReducer(
     {
       key: 'profile',
