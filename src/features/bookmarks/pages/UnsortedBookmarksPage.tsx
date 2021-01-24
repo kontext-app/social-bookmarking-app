@@ -5,14 +5,11 @@ import { PageLayout } from 'app/components/PageLayout';
 import { BookmarksFeed } from 'features/bookmarks/components/BookmarksFeed';
 
 import { fetchBookmarksOfCollection } from 'features/bookmarks/asyncThunks';
-import {
-  selectBookmarksCollectionByIndexKey,
-  selectBookmarksOfCollectionDocID,
-} from 'features/bookmarks/selectors';
+import { selectBookmarksCollectionByIndexKey } from 'features/bookmarks/selectors';
 
 import { State } from 'app/store';
 
-import type { BookmarksCollection, Bookmark } from 'features/bookmarks/types';
+import type { BookmarksCollection } from 'features/bookmarks/types';
 
 export function UnsortedBookmarksPage(): JSX.Element {
   const dispatch = useDispatch();
@@ -20,9 +17,6 @@ export function UnsortedBookmarksPage(): JSX.Element {
     State,
     BookmarksCollection | undefined
   >((state) => selectBookmarksCollectionByIndexKey(state, 'unsorted'));
-  const unsortedBookmarks = useSelector<State, Array<Bookmark>>((state) =>
-    selectBookmarksOfCollectionDocID(state, unsortedBookmarksCollection?.docID)
-  );
 
   useEffect(() => {
     if (typeof unsortedBookmarksCollection !== 'undefined') {
@@ -32,7 +26,9 @@ export function UnsortedBookmarksPage(): JSX.Element {
 
   return (
     <PageLayout>
-      <BookmarksFeed bookmarks={unsortedBookmarks} />
+      <BookmarksFeed
+        bookmarkDocIDs={unsortedBookmarksCollection?.bookmarks || []}
+      />
     </PageLayout>
   );
 }

@@ -13,8 +13,13 @@ import {
   ratingsIndexReceived,
   ratingsReceived,
 } from 'features/ratings/ratingsSlice';
+import {
+  upVotePublicBookmark,
+  downVotePublicBookmark,
+} from 'features/bookmarks/bookmarksSlice';
 import { selectRatingsIndex } from 'features/ratings/selectors';
 import { selectProfileDID } from 'features/profile/selectors';
+import { selectPublicBookmarkByDocID } from 'features/bookmarks/selectors';
 import { enrichPartialRating } from 'features/ratings/utils';
 import { flattenDoc } from 'app/utils/doc';
 
@@ -80,12 +85,12 @@ export const addRating = createAsyncThunk<
     thunkAPI.rejectWithValue(new Error('RatingsIndexDoc not loaded'));
   }
 
-  const createdRatingDocID = await createRatingDoc(
-    enrichPartialRating({
-      ...payload.ratingToAdd,
-      author: authorDID as string,
-    })
-  );
+  const enrichedRating = enrichPartialRating({
+    ...payload.ratingToAdd,
+    author: authorDID as string,
+  });
+
+  const createdRatingDocID = await createRatingDoc(enrichedRating);
 
   const updatedRatingsIndex = await addRatingDocToRatingsIndex(
     createdRatingDocID,
@@ -98,6 +103,27 @@ export const addRating = createAsyncThunk<
       ...updatedRatingsIndex,
     })
   );
+
+  if (payload.ratingsIndexKey === 'bookmarks') {
+    const bookmark = selectPublicBookmarkByDocID(
+      thunkAPI.getState(),
+      enrichedRating.ratedDocId
+    );
+
+    if (typeof bookmark !== 'undefined') {
+      thunkAPI.dispatch(
+        enrichedRating.rating === 1
+          ? upVotePublicBookmark({
+              docID: bookmark.docID,
+              upVotes: [...bookmark.upVotes, authorDID],
+            })
+          : downVotePublicBookmark({
+              docID: bookmark.docID,
+              downVotes: [...bookmark.downVotes, authorDID],
+            })
+      );
+    }
+  }
 });
 
 export default {

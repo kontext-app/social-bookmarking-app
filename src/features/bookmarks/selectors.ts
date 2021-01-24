@@ -13,6 +13,7 @@ import type {
   Bookmark,
   BookmarkFromRecommender,
 } from 'features/bookmarks/types';
+import { EntityId } from '@reduxjs/toolkit';
 
 const bookmarksIndexSelectors = bookmarksIndexAdapter.getSelectors(
   (state: State) => state.bookmarks.bookmarksIndex
@@ -89,8 +90,26 @@ export function selectBookmarksByDocIDs(
     .filter((bookmark) => docIDs.includes(bookmark.docID));
 }
 
+export function selectBookmarkByDocID(
+  state: State,
+  docID: string
+): Bookmark | undefined {
+  return bookmarksSelectors.selectById(state, docID);
+}
+
 export function selectRecentPublicBookmarks(
   state: State
 ): BookmarkFromRecommender[] {
   return publicBookmarksSelectors.selectAll(state);
+}
+
+export function selectRecentPublicBookmarkDocIDs(state: State): EntityId[] {
+  return publicBookmarksSelectors.selectIds(state);
+}
+
+export function selectPublicBookmarkByDocID(
+  state: State,
+  docID: string
+): BookmarkFromRecommender | undefined {
+  return publicBookmarksSelectors.selectById(state, docID);
 }
