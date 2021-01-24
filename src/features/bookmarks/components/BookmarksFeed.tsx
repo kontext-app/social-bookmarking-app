@@ -1,14 +1,13 @@
 import React from 'react';
 
-import { BookmarkPost } from './BookmarkPost';
+import { BookmarkPostContainer } from 'features/bookmarks/containers/BookmarkPost';
+import { PublicBookmarkPostContainer } from 'features/bookmarks/containers/PublicBookmarkPost';
 
-import type { Bookmark } from 'features/bookmarks/types';
+import { EntityId } from '@reduxjs/toolkit';
 
 type Props = {
-  bookmarks: Array<Partial<Bookmark>>;
+  bookmarkDocIDs: EntityId[];
   isPublic?: boolean;
-  onClickUpVote?: (bookmarkDocID: string) => void;
-  onClickDownVote?: (bookmarkDocID: string) => void;
 };
 
 export function BookmarksFeed(props: Props): JSX.Element {
@@ -17,15 +16,19 @@ export function BookmarksFeed(props: Props): JSX.Element {
       <div className="flex w-960 mx-auto">
         <div className="w-full">
           <div className="py-2">
-            {props.bookmarks.map((bookmark) => (
-              <BookmarkPost
-                key={bookmark.docID}
-                bookmark={bookmark}
-                isPublic={props.isPublic}
-                onClickDownVote={props.onClickDownVote}
-                onClickUpVote={props.onClickUpVote}
-              />
-            ))}
+            {props.bookmarkDocIDs.map((bookmarkDocID) =>
+              props.isPublic ? (
+                <PublicBookmarkPostContainer
+                  key={String(bookmarkDocID)}
+                  docID={String(bookmarkDocID)}
+                />
+              ) : (
+                <BookmarkPostContainer
+                  key={String(bookmarkDocID)}
+                  docID={String(bookmarkDocID)}
+                />
+              )
+            )}
           </div>
         </div>
       </div>

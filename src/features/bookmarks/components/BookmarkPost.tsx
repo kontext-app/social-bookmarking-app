@@ -18,6 +18,8 @@ type Props = {
   onClickUpVote?: (docID: string) => void;
   onClickDownVote?: (docID: string) => void;
   isPublic?: boolean;
+  didUpVote?: boolean;
+  didDownVote?: boolean;
 };
 
 export function BookmarkPost(props: Props): JSX.Element {
@@ -41,14 +43,20 @@ export function BookmarkPost(props: Props): JSX.Element {
       </div>
       {props.isPublic && (
         <div className="mr-8 my-auto flex flex-col text-center items-center">
-          <button className="text-xs" onClick={handleClickUpVote}>
+          <button
+            className={`text-xs ${props.didUpVote ? 'bg-green-100' : ''}`}
+            onClick={handleClickUpVote}
+          >
             <img src={upVote} alt="Favorites" className="flex-shrink-0" />
           </button>
           <span className="text-xs font-semibold my-1">
             {(props.bookmark as BookmarkFromRecommender).upVotes.length -
               (props.bookmark as BookmarkFromRecommender).downVotes.length}
           </span>
-          <button className="text-xs" onClick={handleClickDownVote}>
+          <button
+            className={`text-xs ${props.didDownVote ? 'bg-red-100' : ''}`}
+            onClick={handleClickDownVote}
+          >
             <img src={downVote} alt="Favorites" className="flex-shrink-0" />
           </button>
         </div>
@@ -77,9 +85,9 @@ export function BookmarkPost(props: Props): JSX.Element {
           <p className="font-normal mb-1">{props.bookmark.description}</p>
         </div>
         <div className="flex items-center mt-2">
-          {/*<div className="flex hover:bg-grey-lighter p-1 items-center mr-2">
+          {/* <div className="flex hover:bg-grey-lighter p-1 items-center mr-2">
             <img src={heart} alt="Favorites" className="flex-shrink-0" />
-          </div>*/}
+          </div> */}
           <div className="flex hover:bg-grey-lighter p-1 items-center cursor-pointer">
             <img src={comment} alt="Comments" className="h-3 flex-shrink-0" />
             <span className="ml-1 text-xs font-normal text-grey">
