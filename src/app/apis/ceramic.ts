@@ -8,6 +8,8 @@ import type {
   BookmarksIndexDocContent,
   BookmarkDocContent,
   BookmarksDoc,
+  RatingsIndexDocContent,
+  RatingDocContent,
 } from 'kontext-common';
 
 let idx: IDX;
@@ -19,6 +21,7 @@ function initializeCeramic(): void {
 }
 
 function initializeIDX(ceramic: CeramicApi): void {
+  // @ts-ignore
   idx = apis.idx.createIDX(ceramic);
 }
 
@@ -26,9 +29,11 @@ export async function authenticateWithSeed(seed: Uint8Array): Promise<void> {
   initializeCeramic();
 
   const didProvider = await apis.threeId.createThreeIdFromSeed({
+    // @ts-ignore
     ceramic,
     seed,
   });
+  // @ts-ignore
   await apis.threeId.authenticate({ ceramic, didProvider });
 
   initializeIDX(ceramic);
@@ -42,10 +47,12 @@ export async function authenticateWithEthereum(
 
   const didProvider = await apis.threeId.createThreeIdFromEthereumProvider({
     threeIdConnectHost: process.env.REACT_APP_THREE_ID_CONNECT_HOST,
+    // @ts-ignore
     ceramic,
     ethereumProvider,
     address,
   });
+  // @ts-ignore
   await apis.threeId.authenticate({ ceramic, didProvider });
 
   initializeIDX(ceramic);
@@ -122,6 +129,40 @@ export async function addBookmarkDocToBookmarksDoc(
     bookmarksDocID,
   });
 }
+
+//#region Ratings
+
+export async function hasRatingsIndex(did?: string): Promise<boolean> {
+  return apis.ratings.hasRatingsIndex(idx, did);
+}
+
+export async function setDefaultRatingsIndex(): Promise<string> {
+  return apis.ratings.setDefaultRatingsIndex(idx);
+}
+
+export async function getRatingsIndexDocID(
+  did?: string
+): Promise<string | null> {
+  return apis.ratings.getRatingsIndexDocID(idx, did);
+}
+
+export async function createRatingDoc(
+  ratingToCreate: RatingDocContent
+): Promise<string> {
+  return apis.ratings.createRatingDoc(idx, ratingToCreate);
+}
+
+export async function addRatingDocToRatingsIndex(
+  ratingDocID: string,
+  ratingsIndexKey: string
+): Promise<RatingsIndexDocContent> {
+  return apis.ratings.addRatingDocToRatingsIndex(idx, {
+    ratingDocID,
+    ratingsIndexKey,
+  });
+}
+
+//#endregion
 
 export function getSchemaNameByDocID(docID?: string): string | null {
   return utils.schema.getSchemaNameByDocID(docID);

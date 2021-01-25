@@ -38,4 +38,7 @@ export type BookmarkFromRecommender = {
   creationDate: string;
   description: string;
   url: string;
+  title: string;
+  upVotes: string[];
+  downVotes: string[];
 };

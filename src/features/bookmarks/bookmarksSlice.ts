@@ -115,6 +115,18 @@ export const bookmarksSlice = createSlice({
         changes: { bookmarks: action.payload.bookmarks },
       });
     },
+    upVotePublicBookmark: (state, action) => {
+      publicBookmarksAdapter.updateOne(state.publicBookmarks, {
+        id: action.payload.docID,
+        changes: { upVotes: action.payload.upVotes },
+      });
+    },
+    downVotePublicBookmark: (state, action) => {
+      publicBookmarksAdapter.updateOne(state.publicBookmarks, {
+        id: action.payload.docID,
+        changes: { downVotes: action.payload.downVotes },
+      });
+    },
   },
   extraReducers: (builder) => {
     addAsyncMatchers(builder, 'bookmarks');
@@ -129,6 +141,8 @@ export const {
   bookmarksReceived,
   publicBookmarksReceived,
   bookmarksCollectionUpdated,
+  upVotePublicBookmark,
+  downVotePublicBookmark,
 } = bookmarksSlice.actions;
 
 export default {
