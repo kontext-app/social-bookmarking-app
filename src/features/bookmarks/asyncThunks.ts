@@ -5,11 +5,13 @@ import {
   setDefaultBookmarksIndex,
   hasBookmarksIndex,
   addBookmarkDocToBookmarksDoc,
+  addManyBookmarkDocsToBookmarksDoc,
   getBookmarksIndexDocID,
   loadDocument,
   createBookmarkDoc,
   getSchemaNameByDocID,
   isIDXAuthenticated,
+  addEmptyBookmarksDocToIndexDoc,
 } from 'app/apis/ceramic';
 import { getRecentPublicBookmarks } from 'app/apis/recommender';
 import {
@@ -58,6 +60,23 @@ export const bootstrapBookmarks = createAsyncThunk<
   const bookmarksIndex = flattenDoc(bookmarksIndexDoc);
   thunkAPI.dispatch(bookmarksIndexReceived(bookmarksIndex));
   thunkAPI.dispatch(fetchCollectionsOfIndex(bookmarksIndex));
+});
+
+export const fetchBookmarksIndex = createAsyncThunk<
+  void,
+  void,
+  { state: State }
+>('bookmarks/fetchBookmarksIndex', async (_, thunkAPI) => {
+  const bookmarksIndexDocID = await getBookmarksIndexDocID();
+
+  if (!bookmarksIndexDocID) {
+    thunkAPI.rejectWithValue(new Error('Could not fetch BookmarksIndex'));
+  }
+
+  const bookmarksIndexDoc = await loadDocument(bookmarksIndexDocID as string);
+  // @ts-ignore
+  const bookmarksIndex = flattenDoc(bookmarksIndexDoc);
+  thunkAPI.dispatch(bookmarksIndexReceived(bookmarksIndex));
 });
 
 export const fetchCollectionsOfIndex = createAsyncThunk<
@@ -190,6 +209,56 @@ export const addBookmark = createAsyncThunk<
   }
 });
 
+export const addManyBookmarks = createAsyncThunk<
+  string[],
+  {
+    bookmarksToAdd: Partial<BookmarkDocContent>[];
+    bookmarksIndexKey: 'private' | 'unsorted' | string;
+  },
+  { state: State }
+>('bookmarks/addMany', async (payload, thunkAPI) => {
+  const authorDID = selectProfileDID(thunkAPI.getState());
+  const bookmarksIndex = selectBookmarksIndex(thunkAPI.getState());
+
+  if (!bookmarksIndex) {
+    thunkAPI.rejectWithValue(new Error('BookmarksIndexDoc not loaded'));
+  }
+
+  const bookmarksIndexKeyDocID = (bookmarksIndex as BookmarksIndex)[
+    payload.bookmarksIndexKey
+  ];
+
+  if (!bookmarksIndexKeyDocID) {
+    thunkAPI.rejectWithValue(new Error('Provided BookmarksIndex key invalid'));
+  }
+
+  const addedBookmarkDocIDs = await Promise.all(
+    payload.bookmarksToAdd.map((bookmarkToAdd) =>
+      createBookmarkDoc(
+        enrichPartialBookmark({
+          ...bookmarkToAdd,
+          author: authorDID as string,
+        })
+      )
+    )
+  );
+
+  const updatedBookmarksDoc = await addManyBookmarkDocsToBookmarksDoc(
+    addedBookmarkDocIDs,
+    bookmarksIndexKeyDocID
+  );
+
+  const updatedBookmarksCollection = {
+    docID: updatedBookmarksDoc.id.toUrl(),
+    indexKey: payload.bookmarksIndexKey,
+    schemaDocID: updatedBookmarksDoc.metadata.schema,
+    bookmarks: updatedBookmarksDoc.content,
+  };
+  thunkAPI.dispatch(bookmarksCollectionUpdated(updatedBookmarksCollection));
+  thunkAPI.dispatch(fetchBookmarksOfCollection(updatedBookmarksDoc.id.toUrl()));
+  return addedBookmarkDocIDs;
+});
+
 export const publicizeBookmark = createAsyncThunk<
   void,
   { bookmarkDocID: string },
@@ -225,6 +294,22 @@ export const fetchRecentBookmarksFromRecommender = createAsyncThunk<
   const recentPublicBookmarks = await getRecentPublicBookmarks();
 
   thunkAPI.dispatch(publicBookmarksReceived(recentPublicBookmarks));
+});
+
+export const addEmptyBookmarksDocToIndex = createAsyncThunk<
+  void,
+  { indexKey: string },
+  { state: State }
+>('bookmarks/addEmptyBookmarksDocToIndex', async (payload, thunkAPI) => {
+  const did = selectProfileDID(thunkAPI.getState());
+
+  if (!did) {
+    thunkAPI.rejectWithValue(new Error('DID not loaded'));
+  }
+
+  await addEmptyBookmarksDocToIndexDoc(did as string, payload.indexKey);
+
+  thunkAPI.dispatch(fetchBookmarksIndex());
 });
 
 export default {
