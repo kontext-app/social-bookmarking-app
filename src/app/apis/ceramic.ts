@@ -106,6 +106,13 @@ export async function setDefaultBookmarksIndex(): Promise<string> {
   return apis.bookmarks.setDefaultBookmarksIndex(idx);
 }
 
+export async function addEmptyBookmarksDocToIndexDoc(
+  did: string,
+  indexKey: string
+): Promise<string> {
+  return apis.bookmarks.addEmptyBookmarksDocToIndexDoc(idx, { did, indexKey });
+}
+
 export async function createEmptyBookmarksDoc(): Promise<string> {
   return apis.bookmarks.createEmptyBookmarksDoc(idx);
 }
@@ -126,6 +133,16 @@ export async function addBookmarkDocToBookmarksDoc(
 ): Promise<BookmarksDoc> {
   return apis.bookmarks.addBookmarkDocToBookmarksDoc(idx, {
     bookmarkDocID,
+    bookmarksDocID,
+  });
+}
+
+export async function addManyBookmarkDocsToBookmarksDoc(
+  bookmarkDocIDs: string[],
+  bookmarksDocID: string
+): Promise<BookmarksDoc> {
+  return apis.bookmarks.addManyBookmarkDocsToBookmarksDoc(idx, {
+    bookmarkDocIDs,
     bookmarksDocID,
   });
 }
@@ -160,6 +177,23 @@ export async function addRatingDocToRatingsIndex(
     ratingDocID,
     ratingsIndexKey,
   });
+}
+
+export async function addManyRatingDocsToRatingsIndex(
+  ratingDocIDs: string[],
+  ratingsIndexKey: string
+): Promise<RatingsIndexDocContent> {
+  return apis.ratings.addManyRatingDocsToRatingsIndex(idx, {
+    ratingDocIDs,
+    ratingsIndexKey,
+  });
+}
+
+export async function addEmptyRatingsIndexKey(
+  did: string,
+  indexKey: string
+): Promise<string> {
+  return apis.ratings.addEmptyRatingsIndexKey(idx, { did, indexKey });
 }
 
 //#endregion
