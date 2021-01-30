@@ -10,6 +10,8 @@ import { AddBookmarkPage } from 'features/bookmarks/pages/AddBookmarkPage';
 import { UnsortedBookmarksPage } from 'features/bookmarks/pages/UnsortedBookmarksPage';
 import { ProfilePage } from 'features/profile/ProfilePage';
 import { LogInPage } from 'features/profile/LogInPage';
+import { ImportRatingsPage } from 'features/import/ImportRatingsPage';
+import { IMDBRatingsPage } from 'features/import/IMDBRatingsPage';
 
 import { bootstrapApp } from 'app/asyncThunks';
 import { getAppBootstrapStatus } from 'app/selectors';
@@ -44,6 +46,8 @@ export function App(): JSX.Element {
         />
         <Route exact path="/profile" render={() => <ProfilePage />} />
         <Route exact path="/login" render={() => <LogInPage />} />
+        <Route exact path="/import" render={() => <ImportRatingsPage />} />
+        <Route exact path="/imdb" render={() => <IMDBRatingsPage />} />
       </Switch>
     </Router>
   );

@@ -8,7 +8,7 @@ import { selectProfileDID } from 'features/profile/selectors';
 import { selectPublicBookmarkByDocID } from 'features/bookmarks/selectors';
 
 import type { LoadingStatus } from 'kontext-common';
-import type { RatingsIndex } from 'features/ratings/types';
+import type { Rating, RatingsIndex } from 'features/ratings/types';
 
 const ratingsIndexSelector = ratingsIndexAdapter.getSelectors(
   (state: State) => state.ratings.ratingsIndex
@@ -97,5 +97,16 @@ export function selectDidDownVoteDocID(state: State, docID: string): boolean {
     Boolean(
       downVotes.find((downVoteRating) => downVoteRating.ratedDocId === docID)
     )
+  );
+}
+
+export function selectRatingsByRatedDocID(
+  state: State,
+  ratedDocID: string
+): Rating[] {
+  const ratingsOfCurrentUser = selectRatingsOfCurrentUser(state);
+
+  return ratingsOfCurrentUser.filter(
+    (rating) => rating.ratedDocId === ratedDocID
   );
 }
