@@ -83,6 +83,7 @@ export const bookmarksSlice = createSlice({
   initialState,
   reducers: {
     bookmarksIndexReceived: (state, action) => {
+      bookmarksIndexAdapter.removeAll(state.bookmarksIndex);
       bookmarksIndexAdapter.upsertOne(state.bookmarksIndex, action.payload);
     },
     anyCollectionsReceived: (state, action) => {
