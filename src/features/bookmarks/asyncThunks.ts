@@ -309,7 +309,7 @@ export const addEmptyBookmarksDocToIndex = createAsyncThunk<
 
   await addEmptyBookmarksDocToIndexDoc(did as string, payload.indexKey);
 
-  thunkAPI.dispatch(fetchBookmarksIndex());
+  await thunkAPI.dispatch(fetchBookmarksIndex());
 });
 
 export default {

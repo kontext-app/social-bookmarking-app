@@ -188,7 +188,7 @@ export const addIndexKeyToRatingsIndex = createAsyncThunk<
 
   await addEmptyRatingsIndexKey(did as string, payload.indexKey);
 
-  thunkAPI.dispatch(fetchRatingsFromIndexKey(payload.indexKey));
+  await thunkAPI.dispatch(fetchRatingsFromIndexKey(payload.indexKey));
 });
 
 export default {
