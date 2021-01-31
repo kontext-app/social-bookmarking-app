@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { SidebarLeft } from './SidebarLeft';
-import { SidebarRight } from './SidebarRight';
 
 import 'styles/custom.css';
 import type { ReactNode } from 'react';
@@ -10,7 +9,7 @@ type Props = {
   children?: ReactNode;
 };
 
-export function PageLayout(props: Props) {
+export function PageLayout(props: Props): JSX.Element {
   return (
     <div className="bg-gray-100 h-full flex flex-row container mx-auto">
       <SidebarLeft />
@@ -21,7 +20,6 @@ export function PageLayout(props: Props) {
           </div>
         </div>
       </div>
-      {/*<SidebarRight />*/}
     </div>
   );
 }

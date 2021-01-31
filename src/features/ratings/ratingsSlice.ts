@@ -47,6 +47,7 @@ export const ratingsSlice = createSlice({
   initialState,
   reducers: {
     ratingsIndexReceived: (state, action) => {
+      ratingsIndexAdapter.removeAll(state.ratingsIndex);
       ratingsIndexAdapter.upsertOne(state.ratingsIndex, action.payload);
     },
     ratingsReceived: (state, action) => {

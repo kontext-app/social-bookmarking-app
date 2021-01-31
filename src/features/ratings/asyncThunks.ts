@@ -8,6 +8,8 @@ import {
   setDefaultRatingsIndex,
   createRatingDoc,
   addRatingDocToRatingsIndex,
+  addManyRatingDocsToRatingsIndex,
+  addEmptyRatingsIndexKey,
 } from 'app/apis/ceramic';
 import {
   ratingsIndexReceived,
@@ -126,8 +128,72 @@ export const addRating = createAsyncThunk<
   }
 });
 
+export const addManyRatings = createAsyncThunk<
+  void,
+  {
+    ratingsToAdd: Partial<RatingDocContent>[];
+    ratingsIndexKey: 'bookmarks' | 'comments' | string;
+  },
+  { state: State }
+>('ratings/addMany', async (payload, thunkAPI) => {
+  const authorDID = selectProfileDID(thunkAPI.getState());
+  const ratingsIndex = selectRatingsIndex(thunkAPI.getState());
+
+  if (!ratingsIndex) {
+    thunkAPI.rejectWithValue(new Error('RatingsIndexDoc not loaded'));
+  }
+
+  if (!(ratingsIndex as RatingsIndex)[payload.ratingsIndexKey]) {
+    thunkAPI.rejectWithValue(
+      new Error(
+        `Index key '${payload.ratingsIndexKey}' does not exist in RatingsIndex`
+      )
+    );
+  }
+
+  const enrichedRatings = payload.ratingsToAdd.map((ratingToAdd) =>
+    enrichPartialRating({
+      ...ratingToAdd,
+      author: authorDID as string,
+    })
+  );
+
+  const createdRatingDocIDs = await Promise.all(
+    enrichedRatings.map((enrichedRating) => createRatingDoc(enrichedRating))
+  );
+
+  const updatedRatingsIndex = await addManyRatingDocsToRatingsIndex(
+    createdRatingDocIDs,
+    payload.ratingsIndexKey
+  );
+
+  thunkAPI.dispatch(
+    ratingsIndexReceived({
+      ...ratingsIndex,
+      ...updatedRatingsIndex,
+    })
+  );
+});
+
+export const addIndexKeyToRatingsIndex = createAsyncThunk<
+  void,
+  { indexKey: string },
+  { state: State }
+>('ratings/addIndexKeyToRatingsIndex', async (payload, thunkAPI) => {
+  const did = selectProfileDID(thunkAPI.getState());
+
+  if (!did) {
+    thunkAPI.rejectWithValue(new Error('DID not loaded'));
+  }
+
+  await addEmptyRatingsIndexKey(did as string, payload.indexKey);
+
+  await thunkAPI.dispatch(fetchRatingsFromIndexKey(payload.indexKey));
+});
+
 export default {
   bootstrapRatings,
   fetchRatingsFromIndexKey,
   addRating,
+  addManyRatings,
 };
