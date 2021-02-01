@@ -19,6 +19,7 @@ type Section = {
   iconSrc?: string;
   sectionData?: SectionItem[];
   linkTo?: string;
+  enabled?: boolean;
 };
 
 function SidebarLeftSection(props: Section) {
@@ -27,6 +28,7 @@ function SidebarLeftSection(props: Section) {
     iconSrc = '',
     sectionData = [],
     linkTo = '',
+    enabled = false,
   } = props;
 
   return (
@@ -49,6 +51,7 @@ function SidebarLeftSection(props: Section) {
           label={item.label}
           iconSrc={item.iconSrc}
           linkTo={item.linkTo}
+          enabled={item.enabled}
           numOfItems={item.numOfItems}
         />
       ))}
@@ -105,19 +108,22 @@ function getSidebarData(bookmarksIndex?: BookmarksIndex): Section[] {
       linkTo: '/explore',
       sectionData: [
         {
-          label: 'Recommended',
+          label: 'Recent',
           iconSrc: cloud,
-          linkTo: '/recommended',
+          linkTo: '/recent',
+          enabled: true,
         },
         {
           label: 'Popular',
           iconSrc: cloud,
           linkTo: '/popular',
+          enabled: false,
         },
         {
-          label: 'Recent',
+          label: 'Recommended',
           iconSrc: cloud,
-          linkTo: '/recent',
+          linkTo: '/recommended',
+          enabled: false,
         },
       ],
     },
@@ -138,11 +144,13 @@ function getSidebarData(bookmarksIndex?: BookmarksIndex): Section[] {
       iconSrc: inbox,
       linkTo: '/unsorted',
     },
+    /*
     {
       label: 'Public',
       iconSrc: inbox,
       linkTo: '/public',
     },
+    */
   ];
 
   if (bookmarksIndex[RatingsImportSource.IMDB]) {
@@ -172,12 +180,18 @@ type SectionItem = {
   iconSrc?: string;
   numOfItems?: number;
   linkTo?: string;
+  enabled?: boolean;
 };
 
 function SidebarLeftItem(props: SectionItem) {
-  const { label = '', iconSrc = '', numOfItems = 0, linkTo = '' } = props;
+  const { label = '', iconSrc = '', numOfItems = 0, linkTo = '', enabled = false } = props;
   return (
-    <Link to={linkTo} className="hidden md:flex">
+    <Link
+      to={linkTo}
+      className={`${
+      props.enabled == false && 'cursor-default opacity-25'
+      } hidden md:flex`}
+    >
       <div className="flex justify-between space-x-2 items-center px-4 py-2 text-sm rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
         <img src={iconSrc} alt="icon" className="flex-shrink-0" />
         <span className="flex-1 font-semibold text-gray-900">{label}</span>
