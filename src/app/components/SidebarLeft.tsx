@@ -10,6 +10,7 @@ import { RatingsImportSource } from 'app/constants';
 import cloud from 'assets/icons/cloud.svg';
 import inbox from 'assets/icons/inbox.svg';
 import heart from 'assets/icons/heart.svg';
+import plus from 'assets/icons/plus.svg';
 
 import type { BookmarksIndex } from 'features/bookmarks/types';
 
@@ -129,7 +130,7 @@ function getSidebarData(bookmarksIndex?: BookmarksIndex): Section[] {
   const bookmarksSectionData = [
     {
       label: 'Add bookmark',
-      iconSrc: inbox,
+      iconSrc: plus,
       linkTo: '/add-bookmark',
     },
     {

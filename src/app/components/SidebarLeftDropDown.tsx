@@ -35,10 +35,6 @@ const dropDownData = [
     label: 'Settings',
   },
   {
-    linkTo: '/import',
-    label: 'Import Bookmarks',
-  },
-  {
     linkTo: '/logout',
     label: 'Log out',
   },
