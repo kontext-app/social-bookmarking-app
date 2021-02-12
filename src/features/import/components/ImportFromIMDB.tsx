@@ -9,7 +9,7 @@ import { Button } from 'app/components/Button';
 
 import { selectBookmarksIndex } from 'features/bookmarks/selectors';
 import {
-  addEmptyBookmarksDocToIndex,
+  addEmptyBookmarksIndexKey,
   addManyBookmarks,
 } from 'features/bookmarks/asyncThunks';
 import { selectRatingsIndex } from 'features/ratings/selectors';
@@ -56,9 +56,15 @@ export function ImportFromIMDB(): JSX.Element {
     setIsImporting(true);
     try {
       if (!bookmarksIndex || !bookmarksIndex[RatingsImportSource.IMDB]) {
-        await dispatch(
-          addEmptyBookmarksDocToIndex({ indexKey: RatingsImportSource.IMDB })
+        const resultAction = await dispatch(
+          addEmptyBookmarksIndexKey({ indexKey: RatingsImportSource.IMDB })
         );
+
+        const unwrappedResult = await unwrapResult(resultAction as any);
+
+        if (typeof unwrappedResult === 'object' && unwrappedResult?.error) {
+          throw unwrappedResult.error;
+        }
       }
 
       const bookmarksToAdd = validIMDBRatings.map((rating) => ({
