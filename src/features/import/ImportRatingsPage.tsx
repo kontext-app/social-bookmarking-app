@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { CSVReader } from 'react-papaparse';
-import { camelCase } from 'lodash';
 
 import { PageLayout } from 'app/components/PageLayout';
 import { ImportFromIMDB } from 'features/import/components/ImportFromIMDB';
-import { Button } from 'app/components/Button';
 
 import { RatingsImportSource } from 'app/constants';
 

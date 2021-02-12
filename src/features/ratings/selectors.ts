@@ -2,7 +2,6 @@ import { State } from 'app/store';
 import {
   ratingsIndexAdapter,
   ratingsAdapter,
-  publicRatingsAdapter,
 } from 'features/ratings/ratingsSlice';
 import { selectProfileDID } from 'features/profile/selectors';
 import { selectRecommendedBookmarkByDocID } from 'features/bookmarks/selectors';
@@ -16,10 +15,6 @@ const ratingsIndexSelector = ratingsIndexAdapter.getSelectors(
 
 const ratingsSelector = ratingsAdapter.getSelectors(
   (state: State) => state.ratings.ratings
-);
-
-const publicRatingsSelector = publicRatingsAdapter.getSelectors(
-  (state: State) => state.ratings.publicRatings
 );
 
 export function selectRatingsLoadingStatus(state: State): LoadingStatus {

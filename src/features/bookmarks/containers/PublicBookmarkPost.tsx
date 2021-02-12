@@ -28,8 +28,6 @@ export function PublicBookmarkPostContainer(props: Props): JSX.Element | null {
     selectDidDownVoteDocID(state, props.docID)
   );
 
-  console.log({ didUpVote, didDownVote, bookmark });
-
   const handleClickUpVote = () => {
     if (didUpVote) {
       return;

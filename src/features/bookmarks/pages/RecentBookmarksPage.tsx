@@ -17,7 +17,7 @@ export function RecentBookmarksPage(): JSX.Element {
 
   useEffect(() => {
     dispatch(fetchRecentBookmarksFromRecommender());
-  }, []);
+  }, [dispatch]);
 
   return (
     <PageLayout>

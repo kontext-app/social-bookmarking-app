@@ -30,7 +30,6 @@ export const fetchBookmarksIndex = createAsyncThunk<
   const bookmarksIndexDoc = await ceramic.loadDocument(
     bookmarksIndexDocID as string
   );
-  console.log({ bookmarksIndexDoc });
   const bookmarksIndex = flattenDoc(bookmarksIndexDoc);
   thunkAPI.dispatch(bookmarksIndexReceived(bookmarksIndex));
 });

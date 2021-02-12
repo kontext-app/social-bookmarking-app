@@ -20,7 +20,7 @@ export function UnsortedBookmarksPage(): JSX.Element {
 
   useEffect(() => {
     dispatch(fetchBookmarksOfIndexKey({ indexKey: 'unsorted' }));
-  }, []);
+  }, [dispatch]);
 
   return (
     <PageLayout>

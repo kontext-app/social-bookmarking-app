@@ -7,7 +7,7 @@ import {
 import CeramicClient from '@ceramicnetwork/http-client';
 
 import type { IDX } from '@ceramicstudio/idx';
-import type { Doctype, CeramicApi, MultiQuery } from '@ceramicnetwork/common';
+import type { Doctype, CeramicApi } from '@ceramicnetwork/common';
 import type { EthereumProvider } from '3id-connect';
 import type {
   BasicProfileDocContent,

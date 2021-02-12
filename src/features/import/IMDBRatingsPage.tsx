@@ -30,13 +30,13 @@ export function IMDBRatingsPage(): JSX.Element | null {
         fetchBookmarksOfIndexKey({ indexKey: RatingsImportSource.IMDB })
       );
     }
-  }, [imdbBookmarkDocIDs]);
+  }, [dispatch, imdbBookmarkDocIDs]);
 
   useEffect(() => {
     if (ratingsIndex) {
       dispatch(fetchRatingsFromIndexKey(RatingsImportSource.IMDB));
     }
-  }, [ratingsIndex]);
+  }, [dispatch, ratingsIndex]);
 
   return (
     <PageLayout>
