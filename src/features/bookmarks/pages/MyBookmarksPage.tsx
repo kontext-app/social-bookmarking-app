@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PageLayout } from 'app/components/PageLayout';
 import { Button } from 'app/components/Button';
 
-import { bootstrapBookmarks } from 'features/bookmarks/asyncThunks';
+import { fetchBookmarksIndex } from 'features/bookmarks/asyncThunks';
 import { selectProfileDID } from 'features/profile/selectors';
 
 export function MyBookmarksPage(): JSX.Element {
@@ -13,7 +13,7 @@ export function MyBookmarksPage(): JSX.Element {
 
   const handleClick = () => {
     if (typeof did === 'string') {
-      dispatch(bootstrapBookmarks());
+      dispatch(fetchBookmarksIndex());
     }
   };
 

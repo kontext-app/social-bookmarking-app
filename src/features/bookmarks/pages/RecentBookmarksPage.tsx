@@ -5,14 +5,14 @@ import { PageLayout } from 'app/components/PageLayout';
 import { BookmarksFeed } from 'features/bookmarks/components/BookmarksFeed';
 
 import { fetchRecentBookmarksFromRecommender } from 'features/bookmarks/asyncThunks';
-import { selectRecentPublicBookmarkDocIDs } from 'features/bookmarks/selectors';
+import { selectRecentRecommendedBookmarkDocIDs } from 'features/bookmarks/selectors';
 
 import { State } from 'app/store';
 
 export function RecentBookmarksPage(): JSX.Element {
   const dispatch = useDispatch();
   const recentPublicBookmarkDocIDs = useSelector((state: State) =>
-    selectRecentPublicBookmarkDocIDs(state)
+    selectRecentRecommendedBookmarkDocIDs(state)
   );
 
   useEffect(() => {

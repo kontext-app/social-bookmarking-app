@@ -1,14 +1,12 @@
 import { State } from 'app/store';
 import {
   bookmarksIndexAdapter,
-  bookmarksCollectionsAdapter,
   bookmarksAdapter,
-  publicBookmarksAdapter,
+  recommendedBookmarksAdapter,
 } from 'features/bookmarks/bookmarksSlice';
 
 import type { LoadingStatus } from 'kontext-common';
 import type {
-  BookmarksCollection,
   BookmarksIndex,
   Bookmark,
   BookmarkFromRecommender,
@@ -19,16 +17,12 @@ const bookmarksIndexSelectors = bookmarksIndexAdapter.getSelectors(
   (state: State) => state.bookmarks.bookmarksIndex
 );
 
-const bookmarksCollectionsSelectors = bookmarksCollectionsAdapter.getSelectors(
-  (state: State) => state.bookmarks.bookmarksCollections
-);
-
 const bookmarksSelectors = bookmarksAdapter.getSelectors(
   (state: State) => state.bookmarks.bookmarks
 );
 
-const publicBookmarksSelectors = publicBookmarksAdapter.getSelectors(
-  (state: State) => state.bookmarks.publicBookmarks
+const recommendedBookmarksSelectors = recommendedBookmarksAdapter.getSelectors(
+  (state: State) => state.bookmarks.recommendedBookmarks
 );
 
 export function selectBookmarksLoadingStatus(state: State): LoadingStatus {
@@ -40,54 +34,22 @@ export function selectBookmarksIndex(state: State): BookmarksIndex | undefined {
   return bookmarksIndex;
 }
 
-export function selectBookmarksCollectionByDocID(
-  state: State,
-  docID: string
-): BookmarksCollection | undefined {
-  return bookmarksCollectionsSelectors.selectById(state, docID);
-}
-
-export function selectBookmarksCollectionByIndexKey(
+export function selectBookmarksOfIndexKey(
   state: State,
   indexKey: string
-): BookmarksCollection | undefined {
+): Array<Bookmark> {
   const bookmarksIndex = selectBookmarksIndex(state);
 
-  if (!bookmarksIndex) {
-    return;
-  }
-
-  const docID = bookmarksIndex[indexKey];
-  return selectBookmarksCollectionByDocID(state, docID);
-}
-
-export function selectBookmarksOfCollectionDocID(
-  state: State,
-  collectionDocID?: string
-): Array<Bookmark> {
-  if (!collectionDocID) {
+  if (!bookmarksIndex || !(bookmarksIndex as BookmarksIndex)[indexKey]) {
     return [];
   }
 
-  const bookmarksCollection = selectBookmarksCollectionByDocID(
-    state,
-    collectionDocID
+  const bookmarkDocIDsOfIndexKey = (bookmarksIndex as BookmarksIndex)[indexKey];
+
+  const allBookmarks = bookmarksSelectors.selectAll(state);
+  return allBookmarks.filter((bookmark) =>
+    bookmarkDocIDsOfIndexKey.includes(bookmark.docID)
   );
-
-  if (!bookmarksCollection) {
-    return [];
-  }
-
-  return selectBookmarksByDocIDs(state, bookmarksCollection.bookmarks);
-}
-
-export function selectBookmarksByDocIDs(
-  state: State,
-  docIDs: Array<string>
-): Array<Bookmark> {
-  return bookmarksSelectors
-    .selectAll(state)
-    .filter((bookmark) => docIDs.includes(bookmark.docID));
 }
 
 export function selectBookmarkByDocID(
@@ -97,19 +59,21 @@ export function selectBookmarkByDocID(
   return bookmarksSelectors.selectById(state, docID);
 }
 
-export function selectRecentPublicBookmarks(
+export function selectRecentRecommendedBookmarks(
   state: State
 ): BookmarkFromRecommender[] {
-  return publicBookmarksSelectors.selectAll(state);
+  return recommendedBookmarksSelectors.selectAll(state);
 }
 
-export function selectRecentPublicBookmarkDocIDs(state: State): EntityId[] {
-  return publicBookmarksSelectors.selectIds(state);
+export function selectRecentRecommendedBookmarkDocIDs(
+  state: State
+): EntityId[] {
+  return recommendedBookmarksSelectors.selectIds(state);
 }
 
-export function selectPublicBookmarkByDocID(
+export function selectRecommendedBookmarkByDocID(
   state: State,
   docID: string
 ): BookmarkFromRecommender | undefined {
-  return publicBookmarksSelectors.selectById(state, docID);
+  return recommendedBookmarksSelectors.selectById(state, docID);
 }
