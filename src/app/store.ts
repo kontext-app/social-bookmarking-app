@@ -34,7 +34,7 @@ const rootPersistConfig = {
   version: 1,
   key: 'root',
   storage,
-  blacklist: ['app', 'bookmarks', 'profile'],
+  blacklist: ['app', 'bookmarks', 'ratings'],
 };
 
 const rootReducer = combineReducers({
