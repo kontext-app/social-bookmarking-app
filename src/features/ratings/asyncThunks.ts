@@ -1,16 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import {
-  loadDocument,
-  hasRatingsIndex,
-  isIDXAuthenticated,
-  getRatingsIndexDocID,
-  setDefaultRatingsIndex,
-  createRatingDoc,
-  addRatingDocToRatingsIndex,
-  addManyRatingDocsToRatingsIndex,
-  addEmptyRatingsIndexKey,
-} from 'app/apis/ceramic';
+import * as ceramic from 'app/apis/ceramic';
 import {
   ratingsIndexReceived,
   ratingsReceived,
@@ -21,7 +11,7 @@ import {
 } from 'features/bookmarks/bookmarksSlice';
 import { selectRatingsIndex } from 'features/ratings/selectors';
 import { selectProfileDID } from 'features/profile/selectors';
-import { selectPublicBookmarkByDocID } from 'features/bookmarks/selectors';
+import { selectRecommendedBookmarkByDocID } from 'features/bookmarks/selectors';
 import { enrichPartialRating } from 'features/ratings/utils';
 import { flattenDoc } from 'app/utils/doc';
 
@@ -29,23 +19,18 @@ import type { RatingDocContent } from 'kontext-common';
 import type { State } from 'app/store';
 import type { RatingsIndex } from './types';
 
-export const bootstrapRatings = createAsyncThunk<void, void, { state: State }>(
-  'ratings/bootstrapRatings',
+export const fetchRatingsIndex = createAsyncThunk<void, void, { state: State }>(
+  'ratings/fetchRatingsIndex',
   async (payload, thunkAPI) => {
-    if (!isIDXAuthenticated()) {
-      return thunkAPI.rejectWithValue('IDX not authenticated');
-    }
-
-    const ratingsIndexDocID = (await hasRatingsIndex())
-      ? await getRatingsIndexDocID()
-      : await setDefaultRatingsIndex();
+    const ratingsIndexDocID = await ceramic.getRatingsIndexDocID();
 
     if (!ratingsIndexDocID) {
       thunkAPI.rejectWithValue(new Error('RatingsIndexDocID is null'));
     }
 
-    const ratingsIndexDoc = await loadDocument(ratingsIndexDocID as string);
-    // @ts-ignore
+    const ratingsIndexDoc = await ceramic.loadDocument(
+      ratingsIndexDocID as string
+    );
     const ratingsIndex = flattenDoc(ratingsIndexDoc);
     thunkAPI.dispatch(ratingsIndexReceived(ratingsIndex));
     thunkAPI.dispatch(fetchRatingsFromIndexKey('bookmarks'));
@@ -65,9 +50,8 @@ export const fetchRatingsFromIndexKey = createAsyncThunk<
 
   const ratingDocIDs = (ratingsIndex as RatingsIndex)[indexKey];
   const ratingDocs = await Promise.all(
-    ratingDocIDs.map((ratingDocID) => loadDocument(ratingDocID))
+    ratingDocIDs.map((ratingDocID) => ceramic.loadDocument(ratingDocID))
   );
-  // @ts-ignore
   const ratings = ratingDocs.map((ratingDoc) => flattenDoc(ratingDoc));
   thunkAPI.dispatch(ratingsReceived(ratings));
 });
@@ -92,9 +76,9 @@ export const addRating = createAsyncThunk<
     author: authorDID as string,
   });
 
-  const createdRatingDocID = await createRatingDoc(enrichedRating);
+  const createdRatingDocID = await ceramic.createRatingDoc(enrichedRating);
 
-  const updatedRatingsIndex = await addRatingDocToRatingsIndex(
+  const updatedRatingsIndex = await ceramic.addRatingDocToRatingsIndex(
     createdRatingDocID,
     payload.ratingsIndexKey
   );
@@ -107,7 +91,7 @@ export const addRating = createAsyncThunk<
   );
 
   if (payload.ratingsIndexKey === 'bookmarks') {
-    const bookmark = selectPublicBookmarkByDocID(
+    const bookmark = selectRecommendedBookmarkByDocID(
       thunkAPI.getState(),
       enrichedRating.ratedDocId
     );
@@ -159,10 +143,12 @@ export const addManyRatings = createAsyncThunk<
   );
 
   const createdRatingDocIDs = await Promise.all(
-    enrichedRatings.map((enrichedRating) => createRatingDoc(enrichedRating))
+    enrichedRatings.map((enrichedRating) =>
+      ceramic.createRatingDoc(enrichedRating)
+    )
   );
 
-  const updatedRatingsIndex = await addManyRatingDocsToRatingsIndex(
+  const updatedRatingsIndex = await ceramic.addManyRatingDocsToRatingsIndex(
     createdRatingDocIDs,
     payload.ratingsIndexKey
   );
@@ -186,13 +172,13 @@ export const addIndexKeyToRatingsIndex = createAsyncThunk<
     thunkAPI.rejectWithValue(new Error('DID not loaded'));
   }
 
-  await addEmptyRatingsIndexKey(did as string, payload.indexKey);
+  await ceramic.addEmptyRatingsIndexKey(did as string, payload.indexKey);
 
   await thunkAPI.dispatch(fetchRatingsFromIndexKey(payload.indexKey));
 });
 
 export default {
-  bootstrapRatings,
+  fetchRatingsIndex,
   fetchRatingsFromIndexKey,
   addRating,
   addManyRatings,

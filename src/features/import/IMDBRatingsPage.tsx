@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { PageLayout } from 'app/components/PageLayout';
 import { IMDBFeed } from 'features/import/components/IMDBFeed';
 
-import { selectBookmarksCollectionByIndexKey } from 'features/bookmarks/selectors';
-import { fetchBookmarksOfCollection } from 'features/bookmarks/asyncThunks';
+import { selectBookmarksIndex } from 'features/bookmarks/selectors';
+import { fetchBookmarksOfIndexKey } from 'features/bookmarks/asyncThunks';
 import { selectRatingsIndex } from 'features/ratings/selectors';
 import { fetchRatingsFromIndexKey } from 'features/ratings/asyncThunks';
 
@@ -15,27 +15,33 @@ import type { State } from 'app/store';
 
 export function IMDBRatingsPage(): JSX.Element | null {
   const dispatch = useDispatch();
-  const imdbBookmarksCollection = useSelector((state: State) =>
-    selectBookmarksCollectionByIndexKey(state, RatingsImportSource.IMDB)
+  const bookmarksIndex = useSelector((state: State) =>
+    selectBookmarksIndex(state)
   );
   const ratingsIndex = useSelector(selectRatingsIndex);
 
+  const imdbBookmarkDocIDs = bookmarksIndex
+    ? bookmarksIndex[RatingsImportSource.IMDB]
+    : [];
+
   useEffect(() => {
-    if (imdbBookmarksCollection) {
-      dispatch(fetchBookmarksOfCollection(imdbBookmarksCollection.docID));
+    if (imdbBookmarkDocIDs.length) {
+      dispatch(
+        fetchBookmarksOfIndexKey({ indexKey: RatingsImportSource.IMDB })
+      );
     }
-  }, [imdbBookmarksCollection]);
+  }, [dispatch, imdbBookmarkDocIDs]);
 
   useEffect(() => {
     if (ratingsIndex) {
       dispatch(fetchRatingsFromIndexKey(RatingsImportSource.IMDB));
     }
-  }, [ratingsIndex]);
+  }, [dispatch, ratingsIndex]);
 
   return (
     <PageLayout>
-      {imdbBookmarksCollection ? (
-        <IMDBFeed imdbBookmarkDocIDs={imdbBookmarksCollection.bookmarks} />
+      {imdbBookmarkDocIDs.length ? (
+        <IMDBFeed imdbBookmarkDocIDs={imdbBookmarkDocIDs} />
       ) : null}
     </PageLayout>
   );

@@ -1,170 +1,72 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { schemas } from 'kontext-common';
 
-import {
-  setDefaultBookmarksIndex,
-  hasBookmarksIndex,
-  addBookmarkDocToBookmarksDoc,
-  addManyBookmarkDocsToBookmarksDoc,
-  getBookmarksIndexDocID,
-  loadDocument,
-  createBookmarkDoc,
-  getSchemaNameByDocID,
-  isIDXAuthenticated,
-  addEmptyBookmarksDocToIndexDoc,
-} from 'app/apis/ceramic';
+import * as ceramic from 'app/apis/ceramic';
 import { getRecentPublicBookmarks } from 'app/apis/recommender';
-import {
-  selectBookmarksIndex,
-  selectBookmarksCollectionByDocID,
-} from 'features/bookmarks/selectors';
+import { selectBookmarksIndex } from 'features/bookmarks/selectors';
 import {
   bookmarksIndexReceived,
-  anyCollectionsReceived,
   bookmarksReceived,
-  bookmarksCollectionUpdated,
-  publicBookmarksReceived,
+  recommendedBookmarksReceived,
 } from 'features/bookmarks/bookmarksSlice';
 import { enrichPartialBookmark } from 'features/bookmarks/utils';
 import { selectProfileDID } from 'features/profile/selectors';
 import { flattenDoc } from 'app/utils/doc';
 
-import type {
-  BookmarksIndex,
-  BookmarksCollection,
-} from 'features/bookmarks/types';
+import type { BookmarksIndex } from 'features/bookmarks/types';
 import type { State } from 'app/store';
 import type { BookmarkDocContent } from 'kontext-common';
-
-export const bootstrapBookmarks = createAsyncThunk<
-  void,
-  void,
-  { state: State }
->('bookmarks/bootstrap', async (payload, thunkAPI) => {
-  if (!isIDXAuthenticated()) {
-    return thunkAPI.rejectWithValue('IDX not authenticated');
-  }
-
-  const hasUserBookmarksIndex = await hasBookmarksIndex();
-
-  const bookmarksIndexDocID = hasUserBookmarksIndex
-    ? await getBookmarksIndexDocID()
-    : await setDefaultBookmarksIndex();
-
-  if (!bookmarksIndexDocID) {
-    thunkAPI.rejectWithValue(new Error('BookmarksIndexDocID is null'));
-  }
-
-  const bookmarksIndexDoc = await loadDocument(bookmarksIndexDocID as string);
-  // @ts-ignore
-  const bookmarksIndex = flattenDoc(bookmarksIndexDoc);
-  thunkAPI.dispatch(bookmarksIndexReceived(bookmarksIndex));
-  thunkAPI.dispatch(fetchCollectionsOfIndex(bookmarksIndex));
-});
 
 export const fetchBookmarksIndex = createAsyncThunk<
   void,
   void,
   { state: State }
 >('bookmarks/fetchBookmarksIndex', async (_, thunkAPI) => {
-  const bookmarksIndexDocID = await getBookmarksIndexDocID();
+  const bookmarksIndexDocID = await ceramic.getBookmarksIndexDocID();
 
   if (!bookmarksIndexDocID) {
-    thunkAPI.rejectWithValue(new Error('Could not fetch BookmarksIndex'));
+    thunkAPI.rejectWithValue(new Error('BookmarksIndexDocID is null'));
   }
 
-  const bookmarksIndexDoc = await loadDocument(bookmarksIndexDocID as string);
-  // @ts-ignore
+  const bookmarksIndexDoc = await ceramic.loadDocument(
+    bookmarksIndexDocID as string
+  );
   const bookmarksIndex = flattenDoc(bookmarksIndexDoc);
   thunkAPI.dispatch(bookmarksIndexReceived(bookmarksIndex));
 });
 
-export const fetchCollectionsOfIndex = createAsyncThunk<
+export const fetchBookmarksOfIndexKey = createAsyncThunk<
   void,
-  BookmarksIndex | undefined | null,
+  { indexKey: string },
   { state: State }
->('bookmarks/fetchCollectionsOfIndex', async (bookmarksIndex, thunkAPI) => {
-  bookmarksIndex = bookmarksIndex || selectBookmarksIndex(thunkAPI.getState());
+>('bookmarks/fetchBookmarksOfIndexKey', async (payload, thunkAPI) => {
+  const bookmarksIndex = selectBookmarksIndex(thunkAPI.getState());
 
   if (!bookmarksIndex) {
-    thunkAPI.rejectWithValue(new Error('BookmarksIndexDoc not loaded'));
+    thunkAPI.rejectWithValue(new Error('BookmarksIndexDoc not set in state'));
   }
 
-  const collectionDocs = await Promise.all(
-    Object.values(bookmarksIndex as BookmarksIndex).map((collectionDocID) =>
-      loadDocument(collectionDocID)
-    )
-  );
+  const { indexKey } = payload;
 
-  const supportedCollectionDocs = collectionDocs.filter((collectionDoc) =>
-    [schemas.Bookmarks, schemas.BookmarksLists].includes(
-      collectionDoc.metadata.schema || ''
-    )
-  );
-
-  const collections = supportedCollectionDocs.map((collectionDoc) => {
-    const docID = collectionDoc.id.toUrl();
-    const schemaDocID = collectionDoc.metadata.schema;
-    const indexKey = Object.keys(bookmarksIndex as BookmarksIndex).find(
-      (key) => (bookmarksIndex as BookmarksIndex)[key] === docID
+  if (!(bookmarksIndex as BookmarksIndex)[indexKey]) {
+    thunkAPI.rejectWithValue(
+      new Error(`Index key ${indexKey} does not exist in BookmarksIndex`)
     );
+  }
 
-    const collection = {
-      docID,
-      indexKey,
-      schemaDocID,
-    };
+  const bookmarkDocIDsOfIndexKey = (bookmarksIndex as BookmarksIndex)[indexKey];
+  const bookmarkDocs = await Promise.all(
+    bookmarkDocIDsOfIndexKey.map(ceramic.loadDocument)
+  );
+  const flattenedBookmarkDocs = bookmarkDocs.map((doc) => flattenDoc(doc));
 
-    const schemaName = getSchemaNameByDocID(schemaDocID);
-
-    return schemaName === 'Bookmarks'
-      ? {
-          ...collection,
-          bookmarks: collectionDoc.content,
-        }
-      : {
-          ...collection,
-          bookmarksLists: collectionDoc.content,
-        };
-  });
-
-  thunkAPI.dispatch(anyCollectionsReceived(collections));
+  thunkAPI.dispatch(bookmarksReceived(flattenedBookmarkDocs));
 });
 
-export const fetchBookmarksOfCollection = createAsyncThunk<
-  void,
-  string,
-  { state: State }
->(
-  'bookmarks/fetchBookmarksOfCollection',
-  async (bookmarksCollectionDocID, thunkAPI) => {
-    const bookmarksCollection = selectBookmarksCollectionByDocID(
-      thunkAPI.getState(),
-      bookmarksCollectionDocID
-    );
-
-    if (!bookmarksCollection) {
-      thunkAPI.rejectWithValue(
-        new Error('No BookmarksCollection with given docID exists')
-      );
-    }
-
-    const bookmarkDocs = await Promise.all(
-      (bookmarksCollection as BookmarksCollection).bookmarks.map(
-        (bookmarkDocID) => loadDocument(bookmarkDocID)
-      )
-    );
-    // @ts-ignore
-    const bookmarks = bookmarkDocs.map((doc) => flattenDoc(doc));
-    thunkAPI.dispatch(bookmarksReceived(bookmarks));
-  }
-);
-
 export const addBookmark = createAsyncThunk<
-  void,
+  string,
   {
     bookmarkToAdd: Partial<BookmarkDocContent>;
-    bookmarksIndexKey: 'private' | 'unsorted';
+    bookmarksIndexKey: string;
     makePublic?: boolean;
   },
   { state: State }
@@ -176,44 +78,46 @@ export const addBookmark = createAsyncThunk<
     thunkAPI.rejectWithValue(new Error('BookmarksIndexDoc not loaded'));
   }
 
-  const bookmarksIndexKeyDocID = (bookmarksIndex as BookmarksIndex)[
-    payload.bookmarksIndexKey
-  ];
-
-  if (!bookmarksIndexKeyDocID) {
-    thunkAPI.rejectWithValue(new Error('Provided BookmarksIndex key invalid'));
+  if (!(bookmarksIndex as BookmarksIndex)[payload.bookmarksIndexKey]) {
+    thunkAPI.rejectWithValue(
+      new Error(
+        `Index key ${payload.bookmarksIndexKey} does not exist in BookmarksIndex`
+      )
+    );
   }
 
-  const addedBookmarkDocID = await createBookmarkDoc(
+  const createdBookmarkDocID = await ceramic.createBookmarkDoc(
     enrichPartialBookmark({
       ...payload.bookmarkToAdd,
       author: authorDID as string,
     })
   );
-
-  const updatedBookmarksDoc = await addBookmarkDocToBookmarksDoc(
-    addedBookmarkDocID,
-    bookmarksIndexKeyDocID
+  const updatedBookmarksIndexDocContent = await ceramic.addBookmarkDocToBookmarksIndex(
+    createdBookmarkDocID,
+    payload.bookmarksIndexKey
   );
 
-  const updatedBookmarksCollection = {
-    docID: updatedBookmarksDoc.id.toUrl(),
-    indexKey: payload.bookmarksIndexKey,
-    schemaDocID: updatedBookmarksDoc.metadata.schema,
-    bookmarks: updatedBookmarksDoc.content,
-  };
-  thunkAPI.dispatch(bookmarksCollectionUpdated(updatedBookmarksCollection));
+  thunkAPI.dispatch(
+    bookmarksIndexReceived({
+      ...bookmarksIndex,
+      ...updatedBookmarksIndexDocContent,
+    })
+  );
 
   if (payload.makePublic) {
-    thunkAPI.dispatch(publicizeBookmark({ bookmarkDocID: addedBookmarkDocID }));
+    thunkAPI.dispatch(
+      publicizeBookmark({ bookmarkDocID: createdBookmarkDocID })
+    );
   }
+
+  return createdBookmarkDocID;
 });
 
 export const addManyBookmarks = createAsyncThunk<
   string[],
   {
     bookmarksToAdd: Partial<BookmarkDocContent>[];
-    bookmarksIndexKey: 'private' | 'unsorted' | string;
+    bookmarksIndexKey: string;
   },
   { state: State }
 >('bookmarks/addMany', async (payload, thunkAPI) => {
@@ -224,17 +128,17 @@ export const addManyBookmarks = createAsyncThunk<
     thunkAPI.rejectWithValue(new Error('BookmarksIndexDoc not loaded'));
   }
 
-  const bookmarksIndexKeyDocID = (bookmarksIndex as BookmarksIndex)[
-    payload.bookmarksIndexKey
-  ];
-
-  if (!bookmarksIndexKeyDocID) {
-    thunkAPI.rejectWithValue(new Error('Provided BookmarksIndex key invalid'));
+  if (!(bookmarksIndex as BookmarksIndex)[payload.bookmarksIndexKey]) {
+    thunkAPI.rejectWithValue(
+      new Error(
+        `Index key ${payload.bookmarksIndexKey} does not exist in BookmarksIndex`
+      )
+    );
   }
 
-  const addedBookmarkDocIDs = await Promise.all(
+  const createdBookmarkDocIDs = await Promise.all(
     payload.bookmarksToAdd.map((bookmarkToAdd) =>
-      createBookmarkDoc(
+      ceramic.createBookmarkDoc(
         enrichPartialBookmark({
           ...bookmarkToAdd,
           author: authorDID as string,
@@ -243,20 +147,19 @@ export const addManyBookmarks = createAsyncThunk<
     )
   );
 
-  const updatedBookmarksDoc = await addManyBookmarkDocsToBookmarksDoc(
-    addedBookmarkDocIDs,
-    bookmarksIndexKeyDocID
+  const updatedBookmarksIndexDocContent = await ceramic.addManyBookmarkDocsToBookmarksIndex(
+    createdBookmarkDocIDs,
+    payload.bookmarksIndexKey
   );
 
-  const updatedBookmarksCollection = {
-    docID: updatedBookmarksDoc.id.toUrl(),
-    indexKey: payload.bookmarksIndexKey,
-    schemaDocID: updatedBookmarksDoc.metadata.schema,
-    bookmarks: updatedBookmarksDoc.content,
-  };
-  thunkAPI.dispatch(bookmarksCollectionUpdated(updatedBookmarksCollection));
-  thunkAPI.dispatch(fetchBookmarksOfCollection(updatedBookmarksDoc.id.toUrl()));
-  return addedBookmarkDocIDs;
+  thunkAPI.dispatch(
+    bookmarksIndexReceived({
+      ...bookmarksIndex,
+      ...updatedBookmarksIndexDocContent,
+    })
+  );
+
+  return createdBookmarkDocIDs;
 });
 
 export const publicizeBookmark = createAsyncThunk<
@@ -270,20 +173,17 @@ export const publicizeBookmark = createAsyncThunk<
     thunkAPI.rejectWithValue(new Error('BookmarksIndexDoc not loaded'));
   }
 
-  const publicBookmarksDocID = (bookmarksIndex as BookmarksIndex).public;
-
-  const updatedPublicBookmarksDoc = await addBookmarkDocToBookmarksDoc(
+  const updatedBookmarksIndexDocContent = await ceramic.addBookmarkDocToBookmarksIndex(
     payload.bookmarkDocID,
-    publicBookmarksDocID
+    'public'
   );
 
-  const updatedBookmarksCollection = {
-    docID: updatedPublicBookmarksDoc.id.toUrl(),
-    indexKey: 'public',
-    schemaDocID: updatedPublicBookmarksDoc.metadata.schema,
-    bookmarks: updatedPublicBookmarksDoc.content,
-  };
-  thunkAPI.dispatch(bookmarksCollectionUpdated(updatedBookmarksCollection));
+  thunkAPI.dispatch(
+    bookmarksIndexReceived({
+      ...bookmarksIndex,
+      ...updatedBookmarksIndexDocContent,
+    })
+  );
 });
 
 export const fetchRecentBookmarksFromRecommender = createAsyncThunk<
@@ -293,29 +193,29 @@ export const fetchRecentBookmarksFromRecommender = createAsyncThunk<
 >('bookmarks/fetchRecentBookmarksFromRecommender', async (_, thunkAPI) => {
   const recentPublicBookmarks = await getRecentPublicBookmarks();
 
-  thunkAPI.dispatch(publicBookmarksReceived(recentPublicBookmarks));
+  thunkAPI.dispatch(recommendedBookmarksReceived(recentPublicBookmarks));
 });
 
-export const addEmptyBookmarksDocToIndex = createAsyncThunk<
+export const addEmptyBookmarksIndexKey = createAsyncThunk<
   void,
   { indexKey: string },
   { state: State }
->('bookmarks/addEmptyBookmarksDocToIndex', async (payload, thunkAPI) => {
+>('bookmarks/addEmptyBookmarksIndexKey', async (payload, thunkAPI) => {
   const did = selectProfileDID(thunkAPI.getState());
 
   if (!did) {
     thunkAPI.rejectWithValue(new Error('DID not loaded'));
   }
 
-  await addEmptyBookmarksDocToIndexDoc(did as string, payload.indexKey);
+  await ceramic.addEmptyBookmarksIndexKey(did as string, payload.indexKey);
 
   await thunkAPI.dispatch(fetchBookmarksIndex());
 });
 
 export default {
-  bootstrapBookmarks,
-  fetchCollectionsOfIndex,
-  fetchBookmarksOfCollection,
+  fetchBookmarksIndex,
+  fetchBookmarksOfIndexKey,
   addBookmark,
   publicizeBookmark,
+  addEmptyBookmarksIndexKey,
 };

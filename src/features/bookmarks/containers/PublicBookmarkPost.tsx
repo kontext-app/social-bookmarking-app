@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { BookmarkPost } from 'features/bookmarks/components/BookmarkPost';
 
-import { selectPublicBookmarkByDocID } from 'features/bookmarks/selectors';
+import { selectRecommendedBookmarkByDocID } from 'features/bookmarks/selectors';
 import {
   selectDidUpVoteDocID,
   selectDidDownVoteDocID,
@@ -18,7 +18,7 @@ type Props = {
 export function PublicBookmarkPostContainer(props: Props): JSX.Element | null {
   const dispatch = useDispatch();
   const bookmark = useSelector((state: State) =>
-    selectPublicBookmarkByDocID(state, props.docID)
+    selectRecommendedBookmarkByDocID(state, props.docID)
   );
 
   const didUpVote = useSelector((state: State) =>
@@ -27,8 +27,6 @@ export function PublicBookmarkPostContainer(props: Props): JSX.Element | null {
   const didDownVote = useSelector((state: State) =>
     selectDidDownVoteDocID(state, props.docID)
   );
-
-  console.log({ didUpVote, didDownVote, bookmark });
 
   const handleClickUpVote = () => {
     if (didUpVote) {

@@ -2,10 +2,9 @@ import { State } from 'app/store';
 import {
   ratingsIndexAdapter,
   ratingsAdapter,
-  publicRatingsAdapter,
 } from 'features/ratings/ratingsSlice';
 import { selectProfileDID } from 'features/profile/selectors';
-import { selectPublicBookmarkByDocID } from 'features/bookmarks/selectors';
+import { selectRecommendedBookmarkByDocID } from 'features/bookmarks/selectors';
 
 import type { LoadingStatus } from 'kontext-common';
 import type { Rating, RatingsIndex } from 'features/ratings/types';
@@ -16,10 +15,6 @@ const ratingsIndexSelector = ratingsIndexAdapter.getSelectors(
 
 const ratingsSelector = ratingsAdapter.getSelectors(
   (state: State) => state.ratings.ratings
-);
-
-const publicRatingsSelector = publicRatingsAdapter.getSelectors(
-  (state: State) => state.ratings.publicRatings
 );
 
 export function selectRatingsLoadingStatus(state: State): LoadingStatus {
@@ -70,7 +65,7 @@ export function selectDownVotesOfCurrentUser(state: State) {
 
 export function selectDidUpVoteDocID(state: State, docID: string): boolean {
   const currentProfileDID = selectProfileDID(state);
-  const bookmark = selectPublicBookmarkByDocID(state, docID);
+  const bookmark = selectRecommendedBookmarkByDocID(state, docID);
   const upVotes = selectUpVotesOfCurrentUser(state);
 
   if (!currentProfileDID || !bookmark || upVotes.length === 0) {
@@ -85,7 +80,7 @@ export function selectDidUpVoteDocID(state: State, docID: string): boolean {
 
 export function selectDidDownVoteDocID(state: State, docID: string): boolean {
   const currentProfileDID = selectProfileDID(state);
-  const bookmark = selectPublicBookmarkByDocID(state, docID);
+  const bookmark = selectRecommendedBookmarkByDocID(state, docID);
   const downVotes = selectDownVotesOfCurrentUser(state);
 
   if (!currentProfileDID || !bookmark || downVotes.length === 0) {

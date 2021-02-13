@@ -19,8 +19,6 @@ export function IMDBPostContainer(props: Props): JSX.Element | null {
     selectRatingsByRatedDocID(state, props.docID)
   );
 
-  console.log({ imdbBookmark, imdbRating, docID: props.docID });
-
   if (!imdbRating || !imdbBookmark) {
     return null;
   }

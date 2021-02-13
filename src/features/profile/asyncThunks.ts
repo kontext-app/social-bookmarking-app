@@ -8,11 +8,13 @@ import {
   getDID,
   getBasicProfileDocContent,
   setBasicProfileDocContent,
+  hasDefaultKontextIDX,
+  setDefaultKontextIDX,
 } from 'app/apis/ceramic';
 import { connectWithWeb3 } from 'app/apis/web3';
 import { subscribeDID } from 'app/apis/recommender';
-import { bootstrapBookmarks } from 'features/bookmarks/asyncThunks';
-import { bootstrapRatings } from 'features/ratings/asyncThunks';
+import { fetchBookmarksIndex } from 'features/bookmarks/asyncThunks';
+import { fetchRatingsIndex } from 'features/ratings/asyncThunks';
 import { selectProfileDID } from 'features/profile/selectors';
 import { enrichPartialProfile } from 'features/profile/utils';
 
@@ -23,14 +25,18 @@ export const logInWithEthereum = createAsyncThunk<
   string | null,
   void,
   { state: State }
->('profile/logInWithEthereum', async (payload, thunkAPI) => {
+>('profile/logInWithEthereum', async (_, thunkAPI) => {
   if (!isIDXAuthenticated()) {
     const { provider, addresses } = await connectWithWeb3();
     await authenticateWithEthereum(provider, addresses[0]);
   }
 
-  thunkAPI.dispatch(bootstrapBookmarks());
-  thunkAPI.dispatch(bootstrapRatings());
+  if (!(await hasDefaultKontextIDX())) {
+    await setDefaultKontextIDX();
+  }
+
+  thunkAPI.dispatch(fetchBookmarksIndex());
+  thunkAPI.dispatch(fetchRatingsIndex());
   thunkAPI.dispatch(subscribeToRecommender());
 
   return getDID();
@@ -45,7 +51,12 @@ export const logInWithSeed = createAsyncThunk<
     await authenticateWithSeed(ethersUtils.arrayify(payload));
   }
 
-  thunkAPI.dispatch(bootstrapBookmarks());
+  if (!(await hasDefaultKontextIDX())) {
+    await setDefaultKontextIDX();
+  }
+
+  thunkAPI.dispatch(fetchBookmarksIndex());
+  thunkAPI.dispatch(fetchRatingsIndex());
   thunkAPI.dispatch(subscribeToRecommender());
 
   return getDID();

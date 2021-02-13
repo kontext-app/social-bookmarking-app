@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { enums } from 'kontext-common';
 
@@ -85,117 +84,113 @@ export function AddBookmarkPage(): JSX.Element {
 
   return (
     <PageLayout>
+      <div className="flex flex-wrap -mx-5 overflow-hidden">
+        <div className="my-5 px-5 w-1/4 overflow-hidden sm:w-1/3 md:w-1/2 lg:w-1/4 xl:w-1/4">
+          <h1 className="pb-4">Add a bookmark</h1>
+          <InputWithPlaceholder
+            placeholder="url"
+            value={bookmark.url}
+            loading={isLoading}
+            onChange={handleUrlChange}
+          />
+          <InputWithPlaceholder
+            placeholder="title"
+            value={bookmark.title}
+            loading={isLoading}
+            onChange={handleTitleChange}
+          />
+          <InputWithPlaceholder
+            placeholder="description"
+            value={bookmark.description}
+            loading={isLoading}
+            onChange={handleDescriptionChange}
+          />
+          <div className="flex pb-4 pl-3">
+            <SwitchWithLabel
+              label="Make bookmark public?"
+              enabled={makePublic}
+              onChange={setMakePublic}
+            />
+          </div>
+          <Button
+            disabled={!areBookmarkInputValuesValid}
+            loading={isLoading}
+            onClick={handleClickAdd}
+          >
+            Add
+          </Button>
+        </div>
 
-    <div className="flex flex-wrap -mx-5 overflow-hidden">
+        <ImportSourceBox
+          enabled={true}
+          logo={imdbLogo}
+          title="Import your rated movies from IMDB"
+          link="/import"
+        />
 
-      <div className="my-5 px-5 w-1/4 overflow-hidden sm:w-1/3 md:w-1/2 lg:w-1/4 xl:w-1/4">
-      <h1 className="pb-4">Add a bookmark</h1>
-      <InputWithPlaceholder
-        placeholder="url"
-        value={bookmark.url}
-        loading={isLoading}
-        onChange={handleUrlChange}
-      />
-      <InputWithPlaceholder
-        placeholder="title"
-        value={bookmark.title}
-        loading={isLoading}
-        onChange={handleTitleChange}
-      />
-      <InputWithPlaceholder
-        placeholder="description"
-        value={bookmark.description}
-        loading={isLoading}
-        onChange={handleDescriptionChange}
-      />
-      <div className="flex pb-4 pl-3">
-        <SwitchWithLabel
-          label="Make bookmark public?"
-          enabled={makePublic}
-          onChange={setMakePublic}
+        <ImportSourceBox
+          enabled={false}
+          logo={netflixLogo}
+          title="Netflix coming soon"
+          link="/"
+        />
+
+        <ImportSourceBox
+          enabled={false}
+          logo={doubanLogo}
+          title="Douban coming soon"
+          link="/"
+        />
+
+        <ImportSourceBox
+          enabled={false}
+          logo={letterboxdLogo}
+          title="Letterboxd coming soon"
+          link="/"
+        />
+
+        <ImportSourceBox
+          enabled={false}
+          logo={goodreadsLogo}
+          title="Goodreads coming soon"
+          link="/"
+        />
+
+        <ImportSourceBox
+          enabled={false}
+          logo={googlemapsLogo}
+          title="Google Maps coming soon"
+          link="/"
+        />
+
+        <ImportSourceBox
+          enabled={false}
+          logo={yelpLogo}
+          title="Yelp coming soon"
+          link="/"
+        />
+
+        <ImportSourceBox
+          enabled={false}
+          logo={twitterLogo}
+          title="Twitter coming soon"
+          link="/"
+        />
+
+        <ImportSourceBox
+          enabled={false}
+          logo={spotifyLogo}
+          title="Spotify coming soon"
+          link="/"
+        />
+
+        <ImportSourceBox
+          enabled={false}
+          logo={youtubeLogo}
+          title="Youtube coming soon"
+          link="/"
         />
       </div>
-      <Button
-        disabled={!areBookmarkInputValuesValid}
-        loading={isLoading}
-        onClick={handleClickAdd}
-      >
-        Add
-      </Button>
-      </div>
-
-      <ImportSourceBox
-        enabled={true}
-        logo={imdbLogo}
-        title="Import your rated movies from IMDB"
-        link="/import"
-      />
-
-      <ImportSourceBox
-        enabled={false}
-        logo={netflixLogo}
-        title="Netflix coming soon"
-        link="/"
-      />
-
-      <ImportSourceBox
-        enabled={false}
-        logo={doubanLogo}
-        title="Douban coming soon"
-        link="/"
-      />
-
-      <ImportSourceBox
-        enabled={false}
-        logo={letterboxdLogo}
-        title="Letterboxd coming soon"
-        link="/"
-      />
-
-      <ImportSourceBox
-        enabled={false}
-        logo={goodreadsLogo}
-        title="Goodreads coming soon"
-        link="/"
-      />
-
-      <ImportSourceBox
-        enabled={false}
-        logo={googlemapsLogo}
-        title="Google Maps coming soon"
-        link="/"
-      />
-
-      <ImportSourceBox
-        enabled={false}
-        logo={yelpLogo}
-        title="Yelp coming soon"
-        link="/"
-      />
-
-      <ImportSourceBox
-        enabled={false}
-        logo={twitterLogo}
-        title="Twitter coming soon"
-        link="/"
-      />
-
-      <ImportSourceBox
-        enabled={false}
-        logo={spotifyLogo}
-        title="Spotify coming soon"
-        link="/"
-      />
-
-      <ImportSourceBox
-        enabled={false}
-        logo={youtubeLogo}
-        title="Youtube coming soon"
-        link="/"
-      />
-
-    </div>
-
     </PageLayout>
   );
 }

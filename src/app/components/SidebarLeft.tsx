@@ -28,7 +28,6 @@ function SidebarLeftSection(props: Section) {
     iconSrc = '',
     sectionData = [],
     linkTo = '',
-    enabled = false,
   } = props;
 
   return (
@@ -184,13 +183,17 @@ type SectionItem = {
 };
 
 function SidebarLeftItem(props: SectionItem) {
-  const { label = '', iconSrc = '', numOfItems = 0, linkTo = '', enabled = false } = props;
+  const {
+    label = '',
+    iconSrc = '',
+    // numOfItems = 0,
+    linkTo = '',
+    enabled = false,
+  } = props;
   return (
     <Link
       to={linkTo}
-      className={`${
-      props.enabled == false && 'cursor-default opacity-25'
-      } hidden md:flex`}
+      className={`${!enabled && 'cursor-default opacity-25'} hidden md:flex`}
     >
       <div className="flex justify-between space-x-2 items-center px-4 py-2 text-sm rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
         <img src={iconSrc} alt="icon" className="flex-shrink-0" />

@@ -1,4 +1,10 @@
-import { apis, utils } from 'kontext-common';
+import {
+  apis,
+  ListDocContent,
+  ListsIndexDocContent,
+  utils,
+} from 'kontext-common';
+import CeramicClient from '@ceramicnetwork/http-client';
 
 import type { IDX } from '@ceramicstudio/idx';
 import type { Doctype, CeramicApi } from '@ceramicnetwork/common';
@@ -7,33 +13,22 @@ import type {
   BasicProfileDocContent,
   BookmarksIndexDocContent,
   BookmarkDocContent,
-  BookmarksDoc,
   RatingsIndexDocContent,
   RatingDocContent,
 } from 'kontext-common';
 
 let idx: IDX;
-let ceramic: CeramicApi;
+let ceramic: CeramicClient;
 
-function initializeCeramic(): void {
-  // @ts-ignore
-  ceramic = apis.ceramic.createCeramic(process.env.REACT_APP_CERAMIC_API_HOST);
-}
-
-function initializeIDX(ceramic: CeramicApi): void {
-  // @ts-ignore
-  idx = apis.idx.createIDX(ceramic);
-}
+//#region threeId
 
 export async function authenticateWithSeed(seed: Uint8Array): Promise<void> {
   initializeCeramic();
 
   const didProvider = await apis.threeId.createThreeIdFromSeed({
-    // @ts-ignore
     ceramic,
     seed,
   });
-  // @ts-ignore
   await apis.threeId.authenticate({ ceramic, didProvider });
 
   initializeIDX(ceramic);
@@ -47,15 +42,21 @@ export async function authenticateWithEthereum(
 
   const didProvider = await apis.threeId.createThreeIdFromEthereumProvider({
     threeIdConnectHost: process.env.REACT_APP_THREE_ID_CONNECT_HOST,
-    // @ts-ignore
     ceramic,
     ethereumProvider,
     address,
   });
-  // @ts-ignore
   await apis.threeId.authenticate({ ceramic, didProvider });
 
   initializeIDX(ceramic);
+}
+
+//#endregion
+
+//#region idx
+
+function initializeIDX(ceramic: CeramicApi): void {
+  idx = apis.idx.createIDX(ceramic);
 }
 
 export function isIDXAuthenticated(): boolean {
@@ -70,9 +71,33 @@ export function getDID(): string {
   return idx.id;
 }
 
-export async function loadDocument(docID: string): Promise<Doctype> {
-  return idx.ceramic.loadDocument(docID, {});
+export function hasDefaultKontextIDX(): Promise<boolean> {
+  return apis.idx.hasDefaultKontextIDX(idx);
 }
+
+export function setDefaultKontextIDX(): Promise<{
+  bookmarksIndexDocID: string;
+  listsIndexDocID: string;
+  ratingsIndexDocID: string;
+}> {
+  return apis.idx.setDefaultKontextIDX(idx);
+}
+
+//#endregion
+
+//#region ceramic
+
+function initializeCeramic(): void {
+  ceramic = apis.ceramic.createCeramic(process.env.REACT_APP_CERAMIC_API_HOST);
+}
+
+export async function loadDocument(docID: string): Promise<Doctype> {
+  return ceramic.loadDocument(docID);
+}
+
+//#endregion
+
+//#region profile
 
 export async function getBasicProfileDocContent(
   did?: string
@@ -86,14 +111,14 @@ export async function setBasicProfileDocContent(
   return apis.profile.setBasicProfileDocContent(idx, basicProfileDocContent);
 }
 
+//#endregion
+
+//#region bookmarks
+
 export async function getBookmarksIndexDocID(
   did?: string
 ): Promise<string | null> {
   return apis.bookmarks.getBookmarksIndexDocID(idx, did);
-}
-
-export async function hasBookmarksIndex(did?: string): Promise<boolean> {
-  return apis.bookmarks.hasBookmarksIndex(idx, did);
 }
 
 export async function getBookmarksIndexDocContent(
@@ -102,23 +127,11 @@ export async function getBookmarksIndexDocContent(
   return apis.bookmarks.getBookmarksIndexDocContent(idx, did);
 }
 
-export async function setDefaultBookmarksIndex(): Promise<string> {
-  return apis.bookmarks.setDefaultBookmarksIndex(idx);
-}
-
-export async function addEmptyBookmarksDocToIndexDoc(
+export async function addEmptyBookmarksIndexKey(
   did: string,
   indexKey: string
 ): Promise<string> {
-  return apis.bookmarks.addEmptyBookmarksDocToIndexDoc(idx, { did, indexKey });
-}
-
-export async function createEmptyBookmarksDoc(): Promise<string> {
-  return apis.bookmarks.createEmptyBookmarksDoc(idx);
-}
-
-export async function createEmptyBookmarksListsDoc(): Promise<string> {
-  return apis.bookmarks.createEmptyBookmarksListsDoc(idx);
+  return apis.bookmarks.addEmptyBookmarksIndexKey(idx, { did, indexKey });
 }
 
 export async function createBookmarkDoc(
@@ -127,35 +140,64 @@ export async function createBookmarkDoc(
   return apis.bookmarks.createBookmarkDoc(idx, bookmarkToAdd);
 }
 
-export async function addBookmarkDocToBookmarksDoc(
+export async function addBookmarkDocToBookmarksIndex(
   bookmarkDocID: string,
-  bookmarksDocID: string
-): Promise<BookmarksDoc> {
-  return apis.bookmarks.addBookmarkDocToBookmarksDoc(idx, {
+  bookmarksIndexKey: string
+): Promise<BookmarksIndexDocContent> {
+  return apis.bookmarks.addBookmarkDocToBookmarksIndex(idx, {
     bookmarkDocID,
-    bookmarksDocID,
+    bookmarksIndexKey,
   });
 }
 
-export async function addManyBookmarkDocsToBookmarksDoc(
+export async function addManyBookmarkDocsToBookmarksIndex(
   bookmarkDocIDs: string[],
-  bookmarksDocID: string
-): Promise<BookmarksDoc> {
-  return apis.bookmarks.addManyBookmarkDocsToBookmarksDoc(idx, {
+  bookmarksIndexKey: string
+): Promise<BookmarksIndexDocContent> {
+  return apis.bookmarks.addManyBookmarkDocsToBookmarksIndex(idx, {
     bookmarkDocIDs,
-    bookmarksDocID,
+    bookmarksIndexKey,
   });
 }
 
-//#region Ratings
+//#endregion
 
-export async function hasRatingsIndex(did?: string): Promise<boolean> {
-  return apis.ratings.hasRatingsIndex(idx, did);
+//#region lists
+
+export async function getListsIndexDocID(did?: string): Promise<string | null> {
+  return apis.lists.getListsIndexDocID(idx, did);
 }
 
-export async function setDefaultRatingsIndex(): Promise<string> {
-  return apis.ratings.setDefaultRatingsIndex(idx);
+export async function getListsIndexDocContent(
+  did?: string
+): Promise<ListsIndexDocContent | null> {
+  return apis.lists.getListsIndexDocContent(idx, did);
 }
+
+export async function addEmptyListsIndexKey(
+  did: string,
+  indexKey: string
+): Promise<string> {
+  return apis.lists.addEmptyListsIndexKey(idx, { did, indexKey });
+}
+
+export async function createListDoc(
+  listToCreate: ListDocContent
+): Promise<string> {
+  return apis.lists.createListDoc(idx, listToCreate);
+}
+
+export async function addListDocToListsIndex(
+  listDocID: string,
+  listsIndexKey: string
+): Promise<ListsIndexDocContent> {
+  return apis.lists.addListDocToListsIndex(idx, {
+    listDocID,
+    listsIndexKey,
+  });
+}
+
+//#region ratings
 
 export async function getRatingsIndexDocID(
   did?: string
