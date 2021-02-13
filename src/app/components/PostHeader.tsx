@@ -6,7 +6,7 @@ type Props = {
   url: string;
 };
 
-export function BookmarkPostHeader(props: Props): JSX.Element {
+export function PostHeader(props: Props): JSX.Element {
   const favicon =
     'https://s2.googleusercontent.com/s2/favicons?domain=' + props.url;
   /* might need a fallback for icons googleusercontent does not have */

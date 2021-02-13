@@ -9,7 +9,7 @@ type Props = {
   author: string;
 };
 
-export function BookmarkPostFooter(props: Props): JSX.Element {
+export function PostFooter(props: Props): JSX.Element {
   return (
     <div className="flex items-center mt-2">
       <div className="flex hover:bg-grey-lighter p-1 items-center cursor-pointer">

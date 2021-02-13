@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { BookmarkPostHeader } from 'features/bookmarks/components/BookmarkPostHeader';
-import { BookmarkPostBody } from 'features/bookmarks/components/BookmarkPostBody';
-import { BookmarkPostFooter } from 'features/bookmarks/components/BookmarkPostFooter';
+import { PostHeader } from 'app/components/PostHeader';
+import { PostWrapper } from 'app/components/PostWrapper';
+import { PostBody } from 'app/components/PostBody';
+import { PostFooter } from 'app/components/PostFooter';
 import { UpAndDownVote } from 'app/components/UpAndDownVote';
 
 import type { BookmarkFromRecommender } from 'features/bookmarks/types';
@@ -17,7 +18,7 @@ type Props = {
 
 export function RecommendedBookmarkPost(props: Props): JSX.Element {
   return (
-    <div className="px-16 flex border border-grey-light-alt hover:border-grey rounded bg-white hover:bg-gray-100">
+    <PostWrapper>
       <UpAndDownVote
         docID={props.recommendedBookmark.docID}
         score={
@@ -30,16 +31,16 @@ export function RecommendedBookmarkPost(props: Props): JSX.Element {
         didCurrentUserDownVote={props.didCurrentUserDownVote}
       />
       <div className="flex flex-col">
-        <BookmarkPostHeader
+        <PostHeader
           url={props.recommendedBookmark.url}
           creationDateISO={props.recommendedBookmark.creationDate}
         />
-        <BookmarkPostBody
+        <PostBody
           title={props.recommendedBookmark.title}
           description={props.recommendedBookmark.description}
         />
-        <BookmarkPostFooter author={props.recommendedBookmark.author} />
+        <PostFooter author={props.recommendedBookmark.author} />
       </div>
-    </div>
+    </PostWrapper>
   );
 }

@@ -5,7 +5,7 @@ type Props = {
   description: string;
 };
 
-export function BookmarkPostBody(props: Props): JSX.Element {
+export function PostBody(props: Props): JSX.Element {
   return (
     <div className="flex flex-col items-start">
       <div>
