@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { BookmarkPost } from 'features/bookmarks/components/BookmarkPost';
+import { RecommendedBookmarkPost } from 'features/bookmarks/components/RecommendedBookmarkPost';
 
 import { selectRecommendedBookmarkByDocID } from 'features/bookmarks/selectors';
 import {
@@ -15,7 +15,9 @@ type Props = {
   docID: string;
 };
 
-export function PublicBookmarkPostContainer(props: Props): JSX.Element | null {
+export function RecommendedBookmarkPostContainer(
+  props: Props
+): JSX.Element | null {
   const dispatch = useDispatch();
   const bookmark = useSelector((state: State) =>
     selectRecommendedBookmarkByDocID(state, props.docID)
@@ -69,13 +71,12 @@ export function PublicBookmarkPostContainer(props: Props): JSX.Element | null {
   }
 
   return (
-    <BookmarkPost
-      bookmark={bookmark}
+    <RecommendedBookmarkPost
+      recommendedBookmark={bookmark}
       onClickDownVote={handleClickDownVote}
       onClickUpVote={handleClickUpVote}
-      didDownVote={didDownVote}
-      didUpVote={didUpVote}
-      isPublic
+      didCurrentUserDownVote={didDownVote}
+      didCurrentUserUpVote={didUpVote}
     />
   );
 }

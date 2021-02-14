@@ -2,21 +2,21 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { PageLayout } from 'app/components/PageLayout';
-import { BookmarksFeed } from 'features/bookmarks/components/BookmarksFeed';
+import { BookmarksFeedContainer } from 'features/bookmarks/containers/BookmarksFeed';
 
 import { fetchBookmarksOfIndexKey } from 'features/bookmarks/asyncThunks';
-import { selectBookmarksOfIndexKey } from 'features/bookmarks/selectors';
+import { selectBookmarksIndex } from 'features/bookmarks/selectors';
 
 import { State } from 'app/store';
 
-import type { Bookmark } from 'features/bookmarks/types';
+import type { BookmarksIndex } from 'features/bookmarks/types';
 
 export function UnsortedBookmarksPage(): JSX.Element {
   const dispatch = useDispatch();
-  const unsortedBookmarksCollection =
-    useSelector<State, Bookmark[]>((state) =>
-      selectBookmarksOfIndexKey(state, 'unsorted')
-    ) || [];
+  const bookmarksIndex = useSelector<State, BookmarksIndex | undefined>(
+    (state) => selectBookmarksIndex(state)
+  ) || { unsorted: [] };
+  const unsortedBookmarkDocIDs = bookmarksIndex.unsorted;
 
   useEffect(() => {
     dispatch(fetchBookmarksOfIndexKey({ indexKey: 'unsorted' }));
@@ -24,11 +24,7 @@ export function UnsortedBookmarksPage(): JSX.Element {
 
   return (
     <PageLayout>
-      <BookmarksFeed
-        bookmarkDocIDs={unsortedBookmarksCollection.map(
-          (bookmark) => bookmark.docID
-        )}
-      />
+      <BookmarksFeedContainer bookmarkDocIDs={unsortedBookmarkDocIDs} />
     </PageLayout>
   );
 }
