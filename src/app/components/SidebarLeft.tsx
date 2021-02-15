@@ -36,6 +36,7 @@ export function SidebarLeft(props: Props): JSX.Element {
               sectionLabel="Log In"
               iconSrc={heart}
               linkTo="/login"
+              enabled={true}
             />
           )}
           {props.sections.map((section, i) => (
