@@ -4,7 +4,7 @@ import { enums } from 'kontext-common';
 
 import { PageLayout } from 'app/components/PageLayout';
 import { Button } from 'app/components/Button';
-import { InputWithPlaceholder } from 'app/components/InputWithPlaceholder';
+import { Input } from 'app/components/Input';
 import { SwitchWithLabel } from 'app/components/SwitchWithLabel';
 import { ImportSourceBox } from 'app/components/ImportSourceBox';
 
@@ -87,19 +87,19 @@ export function AddBookmarkPage(): JSX.Element {
       <div className="flex flex-wrap -mx-5 overflow-hidden">
         <div className="my-5 px-5 w-1/4 overflow-hidden sm:w-1/3 md:w-1/2 lg:w-1/4 xl:w-1/4">
           <h1 className="pb-4">Add a bookmark</h1>
-          <InputWithPlaceholder
+          <Input
             placeholder="url"
             value={bookmark.url}
             loading={isLoading}
             onChange={handleUrlChange}
           />
-          <InputWithPlaceholder
+          <Input
             placeholder="title"
             value={bookmark.title}
             loading={isLoading}
             onChange={handleTitleChange}
           />
-          <InputWithPlaceholder
+          <Input
             placeholder="description"
             value={bookmark.description}
             loading={isLoading}

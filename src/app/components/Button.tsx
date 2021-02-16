@@ -5,7 +5,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   disabled?: boolean;
 }
 
-export function Button(props: Props) {
+export function Button(props: Props): JSX.Element {
   const { className = '', loading, disabled, children, ...restProps } = props;
   return (
     <button
