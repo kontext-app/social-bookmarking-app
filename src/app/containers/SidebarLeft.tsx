@@ -113,7 +113,7 @@ function getSectionsOfAuthenticatedProfile(
         {
           label: 'Inbox',
           iconSrc: inbox,
-          linkTo: '/unsorted',
+          linkTo: '/lists/unsorted',
           enabled: true,
         },
       ],

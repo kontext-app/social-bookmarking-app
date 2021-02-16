@@ -7,6 +7,7 @@ import share from 'assets/icons/share.svg';
 
 type Props = {
   author: string;
+  hideSaves?: boolean;
 };
 
 export function PostFooter(props: Props): JSX.Element {
@@ -21,11 +22,15 @@ export function PostFooter(props: Props): JSX.Element {
         <img src={share} alt="Share" className="h-3 flex-shrink-0" />
         <span className="ml-1 text-xs font-normal text-grey">120 shares</span>
       </div>
-      <span className="mx-2">·</span>
-      <div className="flex hover:bg-grey-lighter p-1 items-center ml-2 cursor-pointer">
-        <img src={save} alt="Save" className="h-3 flex-shrink-0" />
-        <span className="ml-1 text-xs font-normal text-grey">3 saves</span>
-      </div>
+      {!props.hideSaves && (
+        <>
+          <span className="mx-2">·</span>
+          <div className="flex hover:bg-grey-lighter p-1 items-center ml-2 cursor-pointer">
+            <img src={save} alt="Save" className="h-3 flex-shrink-0" />
+            <span className="ml-1 text-xs font-normal text-grey">3 saves</span>
+          </div>
+        </>
+      )}
       <div className="flex hover:bg-grey-lighter p-1 items-center ml-2 rotate-90 cursor-pointer">
         <svg
           className="w-3 fill-current text-grey"
