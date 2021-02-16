@@ -9,3 +9,29 @@ body,
 #root {
   height: 100%;
 }
+
+#main {
+  display: grid;
+  overflow: hidden;
+  grid-template-columns: auto;
+  grid-template-rows: 1fr 6rem;
+}
+
+#nav {
+  grid-row: 2;
+}
+
+#page {
+  grid-row: 1;
+}
+
+@media (min-width: 768px) {
+  #main {
+    grid-template-columns: 15rem auto;
+    grid-template-rows: none;
+  }
+
+  #nav {
+    grid-row: 1;
+  }
+}

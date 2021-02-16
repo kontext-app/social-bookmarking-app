@@ -99,6 +99,25 @@ function getSectionsOfAuthenticatedProfile(
       sectionData: bookmarksSectionData,
       enabled: true,
     },
+    {
+      sectionLabel: 'My Lists',
+      iconSrc: cloud,
+      linkTo: '/my-lists',
+      sectionData: [
+        {
+          label: 'Add list',
+          iconSrc: plus,
+          linkTo: '/add-list',
+          enabled: true,
+        },
+        {
+          label: 'Inbox',
+          iconSrc: inbox,
+          linkTo: '/unsorted',
+          enabled: true,
+        },
+      ],
+    },
     ...sectionsOfUnauthenticatedProfile,
   ];
 
