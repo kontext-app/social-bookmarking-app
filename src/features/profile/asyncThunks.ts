@@ -15,6 +15,7 @@ import { connectWithWeb3 } from 'app/apis/web3';
 import { subscribeDID } from 'app/apis/recommender';
 import { fetchBookmarksIndex } from 'features/bookmarks/asyncThunks';
 import { fetchRatingsIndex } from 'features/ratings/asyncThunks';
+import { fetchListsIndex } from 'features/lists/asyncThunks';
 import { selectProfileDID } from 'features/profile/selectors';
 import { enrichPartialProfile } from 'features/profile/utils';
 
@@ -37,6 +38,7 @@ export const logInWithEthereum = createAsyncThunk<
 
   thunkAPI.dispatch(fetchBookmarksIndex());
   thunkAPI.dispatch(fetchRatingsIndex());
+  thunkAPI.dispatch(fetchListsIndex());
   thunkAPI.dispatch(subscribeToRecommender());
 
   return getDID();
@@ -58,6 +60,7 @@ export const logInWithSeed = createAsyncThunk<
   thunkAPI.dispatch(fetchBookmarksIndex());
   thunkAPI.dispatch(fetchRatingsIndex());
   thunkAPI.dispatch(subscribeToRecommender());
+  thunkAPI.dispatch(fetchListsIndex());
 
   return getDID();
 });
