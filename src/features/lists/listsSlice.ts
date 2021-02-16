@@ -2,6 +2,7 @@ import {
   createSlice,
   createEntityAdapter,
   EntityState,
+  PayloadAction,
 } from '@reduxjs/toolkit';
 import { enums } from 'kontext-common';
 
@@ -40,11 +41,11 @@ export const listsSlice = createSlice({
   name: 'lists',
   initialState,
   reducers: {
-    listsIndexReceived: (state, action) => {
+    listsIndexReceived: (state, action: PayloadAction<ListsIndex>) => {
       listsIndexAdapter.removeAll(state.listsIndex);
       listsIndexAdapter.upsertOne(state.listsIndex, action.payload);
     },
-    listsReceived: (state, action) => {
+    listsReceived: (state, action: PayloadAction<List[]>) => {
       listsAdapter.upsertMany(state.lists, action.payload);
     },
   },

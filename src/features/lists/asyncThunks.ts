@@ -1,13 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import * as ceramic from 'app/apis/ceramic';
-import { selectListsIndex } from 'features/lists/selectors';
+import { selectListsIndex, selectListByDocID } from 'features/lists/selectors';
 import { listsIndexReceived, listsReceived } from 'features/lists/listsSlice';
 import { enrichPartialList } from 'features/lists/utils';
 import { selectProfileDID } from 'features/profile/selectors';
 import { flattenDoc } from 'app/utils/doc';
 
-import type { ListsIndex } from 'features/lists/types';
+import type { ListsIndex, List } from 'features/lists/types';
 import type { State } from 'app/store';
 import type { ListDocContent } from 'kontext-common';
 
@@ -90,12 +90,49 @@ export const addList = createAsyncThunk<
 
   thunkAPI.dispatch(
     listsIndexReceived({
-      ...listsIndex,
+      ...(listsIndex as ListsIndex),
       ...updatedListsIndexDocContent,
     })
   );
 
   return createdListDocID;
+});
+
+export const addBookmarkToList = createAsyncThunk<
+  void,
+  {
+    bookmarkDocID: string;
+    listDocID: string;
+  },
+  {
+    state: State;
+  }
+>('lists/addBookmarkToList', async (payload, thunkAPI) => {
+  if (!ceramic.isDocIDBookmark(payload.bookmarkDocID)) {
+    thunkAPI.rejectWithValue(new Error('Provided docID is not a Bookmark doc'));
+  }
+
+  const list = selectListByDocID(thunkAPI.getState(), payload.listDocID);
+
+  if (!list) {
+    thunkAPI.rejectWithValue(
+      new Error('List with provided docID does not exist')
+    );
+  }
+
+  const updatedListDocContent = await ceramic.addItemToListDoc(
+    payload.bookmarkDocID,
+    payload.listDocID
+  );
+
+  thunkAPI.dispatch(
+    listsReceived([
+      {
+        ...(list as List),
+        ...updatedListDocContent,
+      },
+    ])
+  );
 });
 
 export default {

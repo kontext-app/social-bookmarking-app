@@ -3,6 +3,7 @@ import {
   ListDocContent,
   ListsIndexDocContent,
   utils,
+  constants,
 } from 'kontext-common';
 import CeramicClient from '@ceramicnetwork/http-client';
 
@@ -160,6 +161,15 @@ export async function addManyBookmarkDocsToBookmarksIndex(
   });
 }
 
+export async function isDocIDBookmark(docID: string): Promise<boolean> {
+  const doc = await loadDocument(docID);
+
+  return (
+    doc.metadata.schema?.replace('ceramic://', '') ===
+    constants.schemas.Bookmark.replace('ceramic://', '')
+  );
+}
+
 //#endregion
 
 //#region lists
@@ -194,6 +204,16 @@ export async function addListDocToListsIndex(
   return apis.lists.addListDocToListsIndex(idx, {
     listDocID,
     listsIndexKey,
+  });
+}
+
+export async function addItemToListDoc(
+  itemDocID: string,
+  listDocID: string
+): Promise<ListDocContent> {
+  return apis.lists.addItemToListDoc(idx, {
+    itemDocID,
+    listDocID,
   });
 }
 
