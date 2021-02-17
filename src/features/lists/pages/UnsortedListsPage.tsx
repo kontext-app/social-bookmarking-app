@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { enums } from 'kontext-common';
 
 import { PageLayout } from 'app/components/PageLayout';
 import { ListsFeedContainer } from 'features/lists/containers/ListsFeed';
@@ -11,16 +12,20 @@ import { State } from 'app/store';
 
 import type { ListsIndex } from 'features/lists/types';
 
+const { DefaultListsIndexKeys } = enums;
+
 export function UnsortedListsPage(): JSX.Element {
   const dispatch = useDispatch();
   const listsIndex = useSelector<State, ListsIndex | undefined>((state) =>
     selectListsIndex(state)
-  ) || { unsorted: [] };
-  const unsortedListDocIDs = listsIndex.unsorted;
+  ) || { [DefaultListsIndexKeys.UNSORTED]: [] };
+  const unsortedListDocIDs = listsIndex[DefaultListsIndexKeys.UNSORTED];
 
   useEffect(() => {
-    dispatch(fetchListsOfIndexKey({ indexKey: 'unsorted' }));
-  }, [dispatch]);
+    dispatch(
+      fetchListsOfIndexKey({ indexKey: DefaultListsIndexKeys.UNSORTED })
+    );
+  }, [unsortedListDocIDs, dispatch]);
 
   return (
     <PageLayout>

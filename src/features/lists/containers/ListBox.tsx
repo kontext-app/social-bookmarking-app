@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import { ListBox } from 'features/lists/components/ListBox';
 
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export function ListBoxContainer(props: Props): JSX.Element | null {
+  const history = useHistory();
   const list = useSelector((state: State) =>
     selectListByDocID(state, props.listDocID)
   );
@@ -25,6 +27,9 @@ export function ListBoxContainer(props: Props): JSX.Element | null {
       {...list}
       numOfItems={list.items.length}
       creationDateISO={list.creationDate}
+      onClick={() =>
+        history.push(`/list/${props.listDocID.replace('ceramic://', '')}`)
+      }
     />
   );
 }

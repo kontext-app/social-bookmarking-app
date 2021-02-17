@@ -10,3 +10,7 @@ export function flattenDoc<T>(
     schemaDocID: metadata.schema,
   };
 }
+
+export function prefixCeramicDocID(docID: string): string {
+  return `ceramic://${docID.replace('ceramic://', '')}`;
+}

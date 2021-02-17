@@ -15,6 +15,7 @@ import { ImportRatingsPage } from 'features/import/ImportRatingsPage';
 import { IMDBRatingsPage } from 'features/import/IMDBRatingsPage';
 import { AddListPage } from 'features/lists/pages/AddListPage';
 import { UnsortedListsPage } from 'features/lists/pages/UnsortedListsPage';
+import { ListDetailsPage } from 'features/lists/pages/ListDetailsPage';
 
 import { bootstrapApp } from 'app/asyncThunks';
 import { getAppBootstrapStatus } from 'app/selectors';
@@ -71,6 +72,7 @@ export function App(): JSX.Element {
             path="/lists/unsorted"
             render={() => <UnsortedListsPage />}
           />
+          <Route path="/list/:id" render={() => <ListDetailsPage />} />
         </Switch>
       </div>
     </Router>

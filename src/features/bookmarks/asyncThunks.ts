@@ -62,6 +62,27 @@ export const fetchBookmarksOfIndexKey = createAsyncThunk<
   thunkAPI.dispatch(bookmarksReceived(flattenedBookmarkDocs));
 });
 
+export const fetchBookmarksByDocIDs = createAsyncThunk<
+  void,
+  { docIDs: string[] },
+  { state: State }
+>('bookmarks/fetchBookmarksByDocIDs', async (payload, thunkAPI) => {
+  const { docIDs } = payload;
+
+  const areDocIDsBookmarks = await Promise.all(
+    docIDs.map((docID) => ceramic.isDocIDBookmark(docID))
+  );
+
+  if (!areDocIDsBookmarks.every((isDocIDBookmark) => isDocIDBookmark)) {
+    thunkAPI.rejectWithValue(new Error(`DocIDs are not Bookmark`));
+  }
+
+  const bookmarkDocs = await Promise.all(docIDs.map(ceramic.loadDocument));
+  const flattenedBookmarkDocs = bookmarkDocs.map((doc) => flattenDoc(doc));
+
+  thunkAPI.dispatch(bookmarksReceived(flattenedBookmarkDocs));
+});
+
 export const addBookmark = createAsyncThunk<
   string,
   {
