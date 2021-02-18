@@ -99,6 +99,27 @@ export const addList = createAsyncThunk<
   return createdListDocID;
 });
 
+export const fetchListsByDocIDs = createAsyncThunk<
+  void,
+  { docIDs: string[] },
+  { state: State }
+>('lists/fetchListsByDocIDs', async (payload, thunkAPI) => {
+  const { docIDs } = payload;
+
+  const areDocIDsLists = await Promise.all(
+    docIDs.map((docID) => ceramic.isDocIDList(docID))
+  );
+
+  if (!areDocIDsLists.every((isDocIDList) => isDocIDList)) {
+    thunkAPI.rejectWithValue(new Error(`DocIDs are not Lists`));
+  }
+
+  const listDocs = await Promise.all(docIDs.map(ceramic.loadDocument));
+  const flattenedListDocs = listDocs.map((doc) => flattenDoc(doc));
+
+  thunkAPI.dispatch(listsReceived(flattenedListDocs));
+});
+
 export const addBookmarkToList = createAsyncThunk<
   void,
   {

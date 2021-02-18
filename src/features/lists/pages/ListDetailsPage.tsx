@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { DateTime } from 'luxon';
+import { toast } from 'react-toastify';
 
 import { PageLayout } from 'app/components/PageLayout';
 import { Button } from 'app/components/Button';
@@ -10,6 +11,7 @@ import { BookmarksFeedContainer } from 'features/bookmarks/containers/BookmarksF
 import { AddBookmarkToListModal } from '../containers/AddBookmarkToListModal';
 
 import { selectListByDocID } from '../selectors';
+import { fetchListsByDocIDs } from '../asyncThunks';
 import { fetchBookmarksByDocIDs } from 'features/bookmarks/asyncThunks';
 
 import { State } from 'app/store';
@@ -25,8 +27,10 @@ export function ListDetailsPage(): JSX.Element | null {
   React.useEffect(() => {
     if (list) {
       dispatch(fetchBookmarksByDocIDs({ docIDs: list.items }));
+    } else {
+      dispatch(fetchListsByDocIDs({ docIDs: [docID] }));
     }
-  }, [list]);
+  }, [list, dispatch, docID]);
 
   if (!list) {
     return null;
@@ -52,7 +56,14 @@ export function ListDetailsPage(): JSX.Element | null {
         <Button onClick={() => setIsModalOpen(true)}>
           Add bookmark to list
         </Button>
-        <Button>Share list</Button>
+        <Button
+          onClick={async () => {
+            await navigator.clipboard.writeText(window.location.href);
+            toast.success('Copied to clipboard');
+          }}
+        >
+          Copy list URL
+        </Button>
       </div>
       <BookmarksFeedContainer bookmarkDocIDs={list.items} />
     </PageLayout>
