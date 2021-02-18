@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { enums } from 'kontext-common';
+import { ToastContainer } from 'react-toastify';
 
 import { SidebarLeftContainer } from 'app/containers/SidebarLeft';
 import { PopularBookmarksPage } from 'features/bookmarks/pages/PopularBookmarksPage';
@@ -38,6 +39,7 @@ export function App(): JSX.Element {
   return (
     <Router>
       <div id="main" className="bg-gray-100 h-full">
+        <ToastContainer />
         <SidebarLeftContainer />
         <Switch>
           <Route exact path="/" render={() => <MyBookmarksPage />} />

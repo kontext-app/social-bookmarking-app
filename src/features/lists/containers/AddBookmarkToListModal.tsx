@@ -1,6 +1,6 @@
 import ReactModal from 'react-modal';
 import React, { useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Input } from 'app/components/Input';
@@ -59,7 +59,6 @@ export function AddBookmarkToListModal(props: Props): JSX.Element {
       isOpen={props.isOpen}
       onRequestClose={props.onRequestClose}
     >
-      <ToastContainer />
       <div className="container m-auto flex flex-col">
         <div className="text-lg text-center">Add bookmark to list</div>
         <Input
