@@ -16,7 +16,7 @@ export function PostHeader(props: Props): JSX.Element {
       <div className="mr-2 my-2">
         <img src={favicon} alt="icon" className="h-4 flex-shrink-0" />
       </div>
-      <div className="text-xs text-grey-lighter flex items-center">
+      <div className="text-xs text-grey-lighter flex items-center hover:underline">
         <a href={props.url}>{props.url}</a>
       </div>
       <span className="mx-2">·</span>

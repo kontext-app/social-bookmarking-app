@@ -28,7 +28,7 @@ export function UnsortedListsPage(): JSX.Element {
   }, [unsortedListDocIDs, dispatch]);
 
   return (
-    <PageLayout>
+    <PageLayout title="Lists Inbox">
       <ListsFeedContainer listDocIDs={unsortedListDocIDs} />
     </PageLayout>
   );
