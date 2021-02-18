@@ -16,9 +16,7 @@ export function PageLayout(props: Props): JSX.Element {
         props.customClassName || ''
       }`}
     >
-      {props.title && (
-        <div className="text-lg px-16 pt-8 pb-6">{props.title}</div>
-      )}
+      {props.title && <div className="text-lg pt-8 pb-6">{props.title}</div>}
       {props.children}
     </div>
   );

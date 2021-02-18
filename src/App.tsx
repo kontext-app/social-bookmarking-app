@@ -7,7 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import { SidebarLeftContainer } from 'app/containers/SidebarLeft';
 import { PopularBookmarksPage } from 'features/bookmarks/pages/PopularBookmarksPage';
 import { RecentBookmarksPage } from 'features/bookmarks/pages/RecentBookmarksPage';
-import { MyBookmarksPage } from 'features/bookmarks/pages/MyBookmarksPage';
+// import { MyBookmarksPage } from 'features/bookmarks/pages/MyBookmarksPage';
 import { AddBookmarkPage } from 'features/bookmarks/pages/AddBookmarkPage';
 import { UnsortedBookmarksPage } from 'features/bookmarks/pages/UnsortedBookmarksPage';
 import { ProfilePage } from 'features/profile/ProfilePage';

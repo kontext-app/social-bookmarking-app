@@ -29,9 +29,14 @@ export function LogInPage(): JSX.Element {
 
   return (
     <PageLayout title="Log in">
-      <Button onClick={handleClickLogIn} loading={loadingStatus === 'pending'}>
-        Log in with Web3
-      </Button>
+      <div>
+        <Button
+          onClick={handleClickLogIn}
+          loading={loadingStatus === 'pending'}
+        >
+          Log in with Web3
+        </Button>
+      </div>
     </PageLayout>
   );
 }
