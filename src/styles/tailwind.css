@@ -22050,6 +22050,12 @@ body,
   }
 }
 
+.dot-menu-arrow {
+  --tw-bg-opacity: 1;
+  border-color: transparent transparent
+    rgba(160, 174, 192, var(--tw-bg-opacity)) transparent;
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RecommendedBookmarkPost } from 'features/bookmarks/components/RecommendedBookmarkPost';
 
 import { selectRecommendedBookmarkByDocID } from 'features/bookmarks/selectors';
+import { useDotMenuItems } from 'features/bookmarks/hooks';
 import {
   selectDidUpVoteDocID,
   selectDidDownVoteDocID,
@@ -22,6 +23,7 @@ export function RecommendedBookmarkPostContainer(
   const bookmark = useSelector((state: State) =>
     selectRecommendedBookmarkByDocID(state, props.docID)
   );
+  const dotMenuItems = useDotMenuItems(props.docID);
 
   const didUpVote = useSelector((state: State) =>
     selectDidUpVoteDocID(state, props.docID)
@@ -77,6 +79,7 @@ export function RecommendedBookmarkPostContainer(
       onClickUpVote={handleClickUpVote}
       didCurrentUserDownVote={didDownVote}
       didCurrentUserUpVote={didUpVote}
+      dotMenuItems={dotMenuItems}
     />
   );
 }

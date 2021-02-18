@@ -4,6 +4,8 @@ import { DateTime } from 'luxon';
 import { PostBody } from 'app/components/PostBody';
 import { PostFooter } from 'app/components/PostFooter';
 
+import type { MainMenuItem } from 'app/components/DotMenu';
+
 type Props = {
   title: string;
   description: string;
@@ -11,6 +13,7 @@ type Props = {
   author: string;
   creationDateISO: string;
   onClick: () => any;
+  dotMenuItems: MainMenuItem[];
 };
 
 export function ListBox(props: Props): JSX.Element {
@@ -26,7 +29,11 @@ export function ListBox(props: Props): JSX.Element {
         {DateTime.fromISO(props.creationDateISO).toRelativeCalendar()}
       </div>
       <PostBody title={props.title} description={props.description} />
-      <PostFooter hideSaves author={props.author} />
+      <PostFooter
+        hideSaves
+        author={props.author}
+        dotMenuItems={props.dotMenuItems}
+      />
     </div>
   );
 }

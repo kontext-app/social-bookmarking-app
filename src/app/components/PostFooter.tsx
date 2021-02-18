@@ -1,45 +1,34 @@
 import React from 'react';
 
+import { PostFooterLink } from './PostFooterLink';
+import { DotMenu } from './DotMenu';
+
 import comment from 'assets/icons/speech-bubble.svg';
 import save from 'assets/icons/save.svg';
 import userpicPlaceholder from 'assets/icons/userpicPlaceholder.jpg';
 import share from 'assets/icons/share.svg';
 
+import type { MainMenuItem } from 'app/components/DotMenu';
+
 type Props = {
   author: string;
   hideSaves?: boolean;
+  dotMenuItems: MainMenuItem[];
 };
 
 export function PostFooter(props: Props): JSX.Element {
   return (
     <div className="flex items-center mt-2">
-      <div className="flex hover:bg-grey-lighter p-1 items-center cursor-pointer">
-        <img src={comment} alt="Comments" className="h-3 flex-shrink-0" />
-        <span className="ml-1 text-xs font-normal text-grey">3k comments</span>
-      </div>
+      <PostFooterLink iconSrc={comment} label="3k comments" />
       <span className="mx-2">·</span>
-      <div className="flex hover:bg-grey-lighter p-1 items-center ml-2 cursor-pointer">
-        <img src={share} alt="Share" className="h-3 flex-shrink-0" />
-        <span className="ml-1 text-xs font-normal text-grey">120 shares</span>
-      </div>
+      <PostFooterLink iconSrc={share} label="120 shares" />
       {!props.hideSaves && (
         <>
           <span className="mx-2">·</span>
-          <div className="flex hover:bg-grey-lighter p-1 items-center ml-2 cursor-pointer">
-            <img src={save} alt="Save" className="h-3 flex-shrink-0" />
-            <span className="ml-1 text-xs font-normal text-grey">3 saves</span>
-          </div>
+          <PostFooterLink iconSrc={save} label="3 saves" />
         </>
       )}
-      <div className="flex hover:bg-grey-lighter p-1 items-center ml-2 rotate-90 cursor-pointer">
-        <svg
-          className="w-3 fill-current text-grey"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-        >
-          <path d="M10 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-6a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 12a2 2 0 1 1 0-4 2 2 0 0 1 0 4z" />
-        </svg>
-      </div>
+      <DotMenu menuItems={props.dotMenuItems} />
       <div className="flex hover:bg-grey-lighter p-1 items-center ml-2 truncate text-xs font-normal text-grey cursor-pointer">
         <img
           src={userpicPlaceholder}

@@ -35,3 +35,9 @@ body,
     grid-row: 1;
   }
 }
+
+.dot-menu-arrow {
+  --tw-bg-opacity: 1;
+  border-color: transparent transparent
+    rgba(160, 174, 192, var(--tw-bg-opacity)) transparent;
+}

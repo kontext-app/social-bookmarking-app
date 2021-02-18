@@ -233,6 +233,24 @@ export const addEmptyBookmarksIndexKey = createAsyncThunk<
   await thunkAPI.dispatch(fetchBookmarksIndex());
 });
 
+export const addBookmarkToIndexKey = createAsyncThunk<
+  void,
+  { indexKey: string; bookmarkDocID: string },
+  { state: State }
+>('bookmarks/addBookmarkToIndexKey', async (payload, thunkAPI) => {
+  if (!(await ceramic.isDocIDBookmark(payload.bookmarkDocID))) {
+    thunkAPI.rejectWithValue(
+      new Error('Provided bookmark DocID is not a bookmark')
+    );
+  }
+
+  await ceramic.addBookmarkDocToBookmarksIndex(
+    payload.bookmarkDocID,
+    payload.indexKey
+  );
+  await thunkAPI.dispatch(fetchBookmarksIndex());
+});
+
 export default {
   fetchBookmarksIndex,
   fetchBookmarksOfIndexKey,

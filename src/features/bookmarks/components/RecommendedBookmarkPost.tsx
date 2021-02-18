@@ -7,6 +7,7 @@ import { PostFooter } from 'app/components/PostFooter';
 import { UpAndDownVote } from 'app/components/UpAndDownVote';
 
 import type { BookmarkFromRecommender } from 'features/bookmarks/types';
+import type { MainMenuItem } from 'app/components/DotMenu';
 
 type Props = {
   recommendedBookmark: BookmarkFromRecommender;
@@ -14,6 +15,7 @@ type Props = {
   onClickDownVote: () => void;
   didCurrentUserUpVote: boolean;
   didCurrentUserDownVote: boolean;
+  dotMenuItems: MainMenuItem[];
 };
 
 export function RecommendedBookmarkPost(props: Props): JSX.Element {
@@ -39,7 +41,10 @@ export function RecommendedBookmarkPost(props: Props): JSX.Element {
           title={props.recommendedBookmark.title}
           description={props.recommendedBookmark.description}
         />
-        <PostFooter author={props.recommendedBookmark.author} />
+        <PostFooter
+          author={props.recommendedBookmark.author}
+          dotMenuItems={props.dotMenuItems}
+        />
       </div>
     </PostWrapper>
   );

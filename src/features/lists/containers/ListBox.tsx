@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import { ListBox } from 'features/lists/components/ListBox';
 
+import { useDotMenuItems } from 'features/lists/hooks';
 import { selectListByDocID } from 'features/lists/selectors';
 
 import { State } from 'app/store';
@@ -17,6 +18,7 @@ export function ListBoxContainer(props: Props): JSX.Element | null {
   const list = useSelector((state: State) =>
     selectListByDocID(state, props.listDocID)
   );
+  const dotMenuItems = useDotMenuItems();
 
   if (!list) {
     return null;
@@ -30,6 +32,7 @@ export function ListBoxContainer(props: Props): JSX.Element | null {
       onClick={() =>
         history.push(`/list/${props.listDocID.replace('ceramic://', '')}`)
       }
+      dotMenuItems={dotMenuItems}
     />
   );
 }

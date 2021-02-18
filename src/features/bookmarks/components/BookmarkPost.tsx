@@ -6,9 +6,11 @@ import { PostBody } from 'app/components/PostBody';
 import { PostFooter } from 'app/components/PostFooter';
 
 import type { Bookmark } from 'features/bookmarks/types';
+import type { MainMenuItem } from 'app/components/DotMenu';
 
 type Props = {
   bookmark: Bookmark;
+  dotMenuItems: MainMenuItem[];
 };
 
 export function BookmarkPost(props: Props): JSX.Element {
@@ -22,7 +24,10 @@ export function BookmarkPost(props: Props): JSX.Element {
         title={props.bookmark.title}
         description={props.bookmark.description}
       />
-      <PostFooter author={props.bookmark.author} />
+      <PostFooter
+        author={props.bookmark.author}
+        dotMenuItems={props.dotMenuItems}
+      />
     </PostWrapper>
   );
 }

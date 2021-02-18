@@ -22,7 +22,8 @@ export const fetchListsIndex = createAsyncThunk<void, void, { state: State }>(
 
     const listsIndexDoc = await ceramic.loadDocument(listsIndexDocID as string);
     const listsIndex = flattenDoc(listsIndexDoc);
-    thunkAPI.dispatch(listsIndexReceived(listsIndex));
+    await thunkAPI.dispatch(listsIndexReceived(listsIndex));
+    thunkAPI.dispatch(fetchListsOfIndexKey({ indexKey: 'unsorted' }));
   }
 );
 
