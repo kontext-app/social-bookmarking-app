@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { enums } from 'kontext-common';
 import { useHistory } from 'react-router-dom';
+import { Plus } from 'react-feather';
 
 import { PageLayout } from 'app/components/PageLayout';
 import { Input } from 'app/components/Input';
@@ -58,7 +59,7 @@ export function AddListPage(): JSX.Element {
           disabled={Boolean(errors?.name || errors?.description)}
           loading={listsLoadingStatus === enums.LoadingStatus.PENDING}
         >
-          Create list
+          <Plus className="mr-1" /> Create list
         </Button>
       </form>
     </PageLayout>
