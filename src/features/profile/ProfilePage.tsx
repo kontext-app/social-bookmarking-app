@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { enums } from 'kontext-common';
 
 import { PageLayout } from 'app/components/PageLayout';
-import { InputWithLabel } from 'app/components/InputWithLabel';
+import { Input } from 'app/components/Input';
 import { Button } from 'app/components/Button';
 
 import {
@@ -83,14 +83,14 @@ export function ProfilePage(): JSX.Element {
       {isAuthenticated && (
         <div className="p-3">
           <h3 className="mb-3">Hello{name ? `, ${name} ` : ' '}👋</h3>
-          <InputWithLabel label="Your DID" value={did || ''} disabled />
-          <InputWithLabel
+          <Input label="Your DID" value={did || ''} disabled />
+          <Input
             label="Your Name"
             value={name}
             onChange={(event) => handleChangeText('name', event.target.value)}
             disabled={isLoading}
           />
-          <InputWithLabel
+          <Input
             label="Description"
             value={description}
             onChange={(event) =>
@@ -98,7 +98,7 @@ export function ProfilePage(): JSX.Element {
             }
             disabled={isLoading}
           />
-          <InputWithLabel
+          <Input
             label="Image URL"
             value={image}
             onChange={(event) => handleChangeText('image', event.target.value)}

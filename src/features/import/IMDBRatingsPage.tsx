@@ -40,6 +40,9 @@ export function IMDBRatingsPage(): JSX.Element | null {
 
   return (
     <PageLayout>
+      <div className="text-lg px-16 pt-8 pb-6 bg-white">
+        Your imported IMDb ratings
+      </div>
       {imdbBookmarkDocIDs.length ? (
         <IMDBFeed imdbBookmarkDocIDs={imdbBookmarkDocIDs} />
       ) : null}

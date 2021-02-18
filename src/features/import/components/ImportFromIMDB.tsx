@@ -3,7 +3,7 @@ import { CSVReader } from 'react-papaparse';
 import { camelCase } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import { Button } from 'app/components/Button';
 
@@ -117,7 +117,6 @@ export function ImportFromIMDB(): JSX.Element {
 
   return (
     <div className="p-2">
-      <ToastContainer />
       <CSVReader
         onDrop={handleOnDrop}
         onError={handleOnError}
