@@ -37,19 +37,19 @@ function getSectionsOfUnauthenticatedProfile() {
         {
           label: 'Recent',
           iconSrc: cloud,
-          linkTo: '/recent',
+          linkTo: '/bookmarks/recent',
           enabled: true,
         },
         {
           label: 'Popular',
           iconSrc: cloud,
-          linkTo: '/popular',
+          linkTo: '/bookmarks/popular',
           enabled: false,
         },
         {
           label: 'Recommended',
           iconSrc: cloud,
-          linkTo: '/recommended',
+          linkTo: '/bookmarks/recommended',
           enabled: false,
         },
       ],
@@ -71,13 +71,13 @@ function getSectionsOfAuthenticatedProfile(
     {
       label: 'Add bookmark',
       iconSrc: plus,
-      linkTo: '/add-bookmark',
+      linkTo: '/bookmark/add',
       enabled: true,
     },
     {
       label: 'Inbox',
       iconSrc: inbox,
-      linkTo: '/unsorted',
+      linkTo: '/bookmarks/unsorted',
       enabled: true,
     },
   ];
@@ -95,19 +95,20 @@ function getSectionsOfAuthenticatedProfile(
     {
       sectionLabel: 'My Bookmarks',
       iconSrc: cloud,
-      linkTo: '/my-bookmarks',
+      linkTo: '/bookmarks/unsorted',
       sectionData: bookmarksSectionData,
       enabled: true,
     },
     {
       sectionLabel: 'My Lists',
       iconSrc: cloud,
-      linkTo: '/my-lists',
+      linkTo: '/lists/unsorted',
+      enabled: true,
       sectionData: [
         {
           label: 'Add list',
           iconSrc: plus,
-          linkTo: '/add-list',
+          linkTo: '/list/add',
           enabled: true,
         },
         {

@@ -42,33 +42,43 @@ export function App(): JSX.Element {
         <ToastContainer />
         <SidebarLeftContainer />
         <Switch>
-          <Route exact path="/" render={() => <MyBookmarksPage />} />
           <Route
             exact
-            path="/my-bookmarks"
-            render={() => <MyBookmarksPage />}
+            path="/"
+            // TODO: Replace with correct page
+            render={() => <RecentBookmarksPage />}
           />
           <Route
             exact
-            path="/popular"
+            path="/bookmarks/my"
+            // TODO: Replace with correct page
+            render={() => <UnsortedBookmarksPage />}
+          />
+          <Route
+            exact
+            path="/bookmarks/popular"
             render={() => <PopularBookmarksPage />}
           />
-          <Route exact path="/recent" render={() => <RecentBookmarksPage />} />
           <Route
             exact
-            path="/add-bookmark"
+            path="/bookmarks/recent"
+            render={() => <RecentBookmarksPage />}
+          />
+          <Route
+            exact
+            path="/bookmark/add"
             render={() => <AddBookmarkPage />}
           />
           <Route
             exact
-            path="/unsorted"
+            path="/bookmarks/unsorted"
             render={() => <UnsortedBookmarksPage />}
           />
-          <Route exact path="/profile" render={() => <ProfilePage />} />
+          <Route exact path="/profile/my" render={() => <ProfilePage />} />
           <Route exact path="/login" render={() => <LogInPage />} />
           <Route exact path="/import" render={() => <ImportRatingsPage />} />
           <Route exact path="/imdb" render={() => <IMDBRatingsPage />} />
-          <Route exact path="/add-list" render={() => <AddListPage />} />
+          <Route exact path="/list/add" render={() => <AddListPage />} />
           <Route
             exact
             path="/lists/unsorted"

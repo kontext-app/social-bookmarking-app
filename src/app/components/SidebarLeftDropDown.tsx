@@ -9,7 +9,7 @@ import user_icon from 'assets/icons/user_placeholder.svg';
 
 const dropDownData = [
   {
-    linkTo: '/profile',
+    linkTo: '/profile/my',
     label: 'Profile',
   },
   {
