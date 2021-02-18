@@ -79,7 +79,7 @@ export function ProfilePage(): JSX.Element {
     profileLoadingStatus === enums.LoadingStatus.PENDING;
 
   return (
-    <PageLayout>
+    <PageLayout title="Your Profile">
       {isAuthenticated && (
         <div className="p-3">
           <h3 className="mb-3">Hello{name ? `, ${name} ` : ' '}👋</h3>

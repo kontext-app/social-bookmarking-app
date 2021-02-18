@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 type Props = {
   children?: ReactNode;
   customClassName?: string;
+  title?: string;
 };
 
 export function PageLayout(props: Props): JSX.Element {
@@ -15,6 +16,9 @@ export function PageLayout(props: Props): JSX.Element {
         props.customClassName || ''
       }`}
     >
+      {props.title && (
+        <div className="text-lg px-16 pt-8 pb-6">{props.title}</div>
+      )}
       {props.children}
     </div>
   );
