@@ -21,6 +21,11 @@ import type {
 let idx: IDX;
 let ceramic: CeramicClient;
 
+export function initializeCeramicAndIDX(): void {
+  initializeCeramic();
+  initializeIDX(ceramic);
+}
+
 //#region threeId
 
 export async function authenticateWithSeed(seed: Uint8Array): Promise<void> {
@@ -215,6 +220,15 @@ export async function addItemToListDoc(
     itemDocID,
     listDocID,
   });
+}
+
+export async function isDocIDList(docID: string): Promise<boolean> {
+  const doc = await loadDocument(docID);
+
+  return (
+    doc.metadata.schema?.replace('ceramic://', '') ===
+    constants.schemas.List.replace('ceramic://', '')
+  );
 }
 
 //#region ratings

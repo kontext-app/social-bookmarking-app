@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { enums } from 'kontext-common';
 
 import { getSeed } from 'app/apis/storage';
+import { initializeCeramicAndIDX } from 'app/apis/ceramic';
 import {
   selectProfileDID,
   selectProfileAuthenticationMethod,
@@ -32,6 +33,8 @@ export const bootstrapApp = createAsyncThunk<void, void, { state: State }>(
           thunkAPI.dispatch(logout());
         }
       }
+    } else {
+      initializeCeramicAndIDX();
     }
   }
 );
