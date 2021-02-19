@@ -44,6 +44,8 @@ export function SidebarLeft(props: Props): JSX.Element {
             sectionLabel={section.sectionLabel}
             sectionData={section.sectionData}
             iconSrc={section.iconSrc}
+            enabled={section.enabled}
+            linkTo={section.linkTo}
           />
         ))}
       </div>

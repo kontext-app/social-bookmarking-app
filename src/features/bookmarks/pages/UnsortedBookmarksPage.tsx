@@ -31,8 +31,7 @@ export function UnsortedBookmarksPage(): JSX.Element {
   }, [unsortedBookmarkDocIDs, dispatch]);
 
   return (
-    <PageLayout>
-      <div className="text-lg px-16 pt-8 pb-6 bg-white">Inbox</div>
+    <PageLayout title="Bookmarks Inbox">
       <BookmarksFeedContainer bookmarkDocIDs={unsortedBookmarkDocIDs} />
     </PageLayout>
   );

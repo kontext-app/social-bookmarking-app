@@ -18,6 +18,7 @@
     "postcss-cli": "^7",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-feather": "^2.0.9",
     "react-hook-form": "^6.15.1",
     "react-modal": "^3.12.1",
     "react-papaparse": "^3.11.1",

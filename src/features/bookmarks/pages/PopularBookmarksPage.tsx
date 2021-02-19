@@ -1,9 +1,7 @@
 import React from 'react';
 
-export function PopularBookmarksPage() {
-  return (
-    <div className="container mx-auto">
-      <div className="text-xl">Popular bookmarks</div>
-    </div>
-  );
+import { PageLayout } from 'app/components/PageLayout';
+
+export function PopularBookmarksPage(): JSX.Element {
+  return <PageLayout title="Popular Bookmarks"></PageLayout>;
 }

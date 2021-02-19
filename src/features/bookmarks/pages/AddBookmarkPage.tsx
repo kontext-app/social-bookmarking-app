@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { enums } from 'kontext-common';
+import { Plus } from 'react-feather';
 
 import { PageLayout } from 'app/components/PageLayout';
 import { Button } from 'app/components/Button';
@@ -117,6 +118,7 @@ export function AddBookmarkPage(): JSX.Element {
             loading={isLoading}
             onClick={handleClickAdd}
           >
+            <Plus className="mr-1" />
             Add
           </Button>
         </div>

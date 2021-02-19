@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { enums } from 'kontext-common';
 import { useHistory } from 'react-router-dom';
+import { Plus } from 'react-feather';
 
 import { PageLayout } from 'app/components/PageLayout';
 import { Input } from 'app/components/Input';
@@ -11,7 +12,6 @@ import { Button } from 'app/components/Button';
 import { selectListsLoadingStatus } from 'features/lists/selectors';
 import { addList } from 'features/lists/asyncThunks';
 
-import type {} from 'kontext-common';
 import type { AppDispatch } from 'app/store';
 
 type FormInputs = {
@@ -38,8 +38,7 @@ export function AddListPage(): JSX.Element {
   };
 
   return (
-    <PageLayout>
-      <h1 className="pb-4">Add a list</h1>
+    <PageLayout title="Create a List">
       <form onSubmit={handleSubmit(submit)}>
         <Input
           label="Name"
@@ -60,7 +59,7 @@ export function AddListPage(): JSX.Element {
           disabled={Boolean(errors?.name || errors?.description)}
           loading={listsLoadingStatus === enums.LoadingStatus.PENDING}
         >
-          Create list
+          <Plus className="mr-1" /> Create list
         </Button>
       </form>
     </PageLayout>

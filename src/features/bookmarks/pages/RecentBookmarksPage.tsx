@@ -20,10 +20,7 @@ export function RecentBookmarksPage(): JSX.Element {
   }, [dispatch]);
 
   return (
-    <PageLayout>
-      <div className="text-lg px-16 pt-8 pb-6 bg-white">
-        Most recent public bookmarks
-      </div>
+    <PageLayout title="Most recent public bookmarks">
       <RecommendedBookmarksFeedContainer
         bookmarkDocIDs={recentRecommendedBookmarkDocIDs}
       />

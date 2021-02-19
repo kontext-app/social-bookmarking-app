@@ -11,7 +11,7 @@ import {
   selectProfileIsAuthenticated,
 } from './selectors';
 
-export function LogInPage() {
+export function LogInPage(): JSX.Element {
   const dispatch = useDispatch();
   const loadingStatus = useSelector(selectProfileLoadingStatus);
   const isAuthenticated = useSelector(selectProfileIsAuthenticated);
@@ -28,10 +28,15 @@ export function LogInPage() {
   }, [history, isAuthenticated]);
 
   return (
-    <PageLayout>
-      <Button onClick={handleClickLogIn} loading={loadingStatus === 'pending'}>
-        Log in with Web3
-      </Button>
+    <PageLayout title="Log in">
+      <div>
+        <Button
+          onClick={handleClickLogIn}
+          loading={loadingStatus === 'pending'}
+        >
+          Log in with Web3
+        </Button>
+      </div>
     </PageLayout>
   );
 }
