@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { RecommendedBookmarkPostContainer } from 'features/bookmarks/containers/RecommendedBookmarkPost';
+import { CuratedBookmarkPostContainer } from 'features/bookmarks/containers/CuratedBookmarkPost';
 
 import { EntityId } from '@reduxjs/toolkit';
 
@@ -8,11 +8,11 @@ type Props = {
   bookmarkDocIDs: EntityId[];
 };
 
-export function RecommendedBookmarksFeedContainer(props: Props): JSX.Element {
+export function CuratedBookmarksFeedContainer(props: Props): JSX.Element {
   return (
     <>
       {props.bookmarkDocIDs.map((bookmarkDocID) => (
-        <RecommendedBookmarkPostContainer
+        <CuratedBookmarkPostContainer
           key={bookmarkDocID}
           docID={String(bookmarkDocID)}
         />

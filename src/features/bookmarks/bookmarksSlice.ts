@@ -7,17 +7,12 @@ import { enums } from 'kontext-common';
 
 import { addAsyncMatchers } from 'app/utils/slice';
 
-import {
-  BookmarksIndex,
-  Bookmark,
-  BookmarkFromRecommender,
-} from 'features/bookmarks/types';
+import { BookmarksIndex, Bookmark } from 'features/bookmarks/types';
 import type { LoadingStatus } from 'kontext-common';
 
 export type BookmarksSliceState = {
   bookmarksIndex: EntityState<BookmarksIndex>;
   bookmarks: EntityState<Bookmark>;
-  recommendedBookmarks: EntityState<BookmarkFromRecommender>;
   loadingStatus: LoadingStatus;
   error: null | Error;
   lastUpdated: null | number;
@@ -33,18 +28,9 @@ export const bookmarksAdapter = createEntityAdapter<Bookmark>({
     Date.parse(b.creationDate) - Date.parse(a.creationDate),
 });
 
-export const recommendedBookmarksAdapter = createEntityAdapter<BookmarkFromRecommender>(
-  {
-    selectId: (bookmark) => bookmark.docID,
-    sortComparer: (a, b) =>
-      Date.parse(b.creationDate) - Date.parse(a.creationDate),
-  }
-);
-
 const initialState: BookmarksSliceState = {
   bookmarksIndex: bookmarksIndexAdapter.getInitialState(),
   bookmarks: bookmarksAdapter.getInitialState(),
-  recommendedBookmarks: recommendedBookmarksAdapter.getInitialState(),
   loadingStatus: enums.LoadingStatus.IDLE,
   error: null,
   lastUpdated: null,
@@ -61,24 +47,24 @@ export const bookmarksSlice = createSlice({
     bookmarksReceived: (state, action) => {
       bookmarksAdapter.upsertMany(state.bookmarks, action.payload);
     },
-    recommendedBookmarksReceived: (state, action) => {
-      recommendedBookmarksAdapter.upsertMany(
-        state.recommendedBookmarks,
-        action.payload
-      );
-    },
-    upVotePublicBookmark: (state, action) => {
-      recommendedBookmarksAdapter.updateOne(state.recommendedBookmarks, {
-        id: action.payload.docID,
-        changes: { upVotes: action.payload.upVotes },
-      });
-    },
-    downVotePublicBookmark: (state, action) => {
-      recommendedBookmarksAdapter.updateOne(state.recommendedBookmarks, {
-        id: action.payload.docID,
-        changes: { downVotes: action.payload.downVotes },
-      });
-    },
+    // recommendedBookmarksReceived: (state, action) => {
+    //   recommendedBookmarksAdapter.upsertMany(
+    //     state.recommendedBookmarks,
+    //     action.payload
+    //   );
+    // },
+    // upVotePublicBookmark: (state, action) => {
+    //   recommendedBookmarksAdapter.updateOne(state.recommendedBookmarks, {
+    //     id: action.payload.docID,
+    //     changes: { upVotes: action.payload.upVotes },
+    //   });
+    // },
+    // downVotePublicBookmark: (state, action) => {
+    //   recommendedBookmarksAdapter.updateOne(state.recommendedBookmarks, {
+    //     id: action.payload.docID,
+    //     changes: { downVotes: action.payload.downVotes },
+    //   });
+    // },
   },
   extraReducers: (builder) => {
     addAsyncMatchers(builder, 'bookmarks');
@@ -90,9 +76,9 @@ export const bookmarksReducer = bookmarksSlice.reducer;
 export const {
   bookmarksIndexReceived,
   bookmarksReceived,
-  recommendedBookmarksReceived,
-  upVotePublicBookmark,
-  downVotePublicBookmark,
+  // recommendedBookmarksReceived,
+  // upVotePublicBookmark,
+  // downVotePublicBookmark,
 } = bookmarksSlice.actions;
 
 export default {

@@ -1,9 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { RecommendedBookmarkPost } from 'features/bookmarks/components/RecommendedBookmarkPost';
+import { CuratedBookmarkPost } from 'features/bookmarks/components/CuratedBookmarkPost';
 
-import { selectRecommendedBookmarkByDocID } from 'features/bookmarks/selectors';
+import { selectBookmarkByDocID } from 'features/bookmarks/selectors';
+import { selectAggregatedBookmarkRatingByRatedDocID } from 'features/aggregatedRatings/selectors';
 import { useDotMenuItems } from 'features/bookmarks/hooks';
 import {
   selectDidUpVoteDocID,
@@ -16,12 +17,10 @@ type Props = {
   docID: string;
 };
 
-export function RecommendedBookmarkPostContainer(
-  props: Props
-): JSX.Element | null {
+export function CuratedBookmarkPostContainer(props: Props): JSX.Element | null {
   const dispatch = useDispatch();
   const bookmark = useSelector((state: State) =>
-    selectRecommendedBookmarkByDocID(state, props.docID)
+    selectBookmarkByDocID(state, props.docID)
   );
   const dotMenuItems = useDotMenuItems(props.docID);
 
@@ -31,12 +30,14 @@ export function RecommendedBookmarkPostContainer(
   const didDownVote = useSelector((state: State) =>
     selectDidDownVoteDocID(state, props.docID)
   );
+  const aggregatedRating = useSelector((state: State) =>
+    selectAggregatedBookmarkRatingByRatedDocID(state, props.docID)
+  );
 
   const handleClickUpVote = () => {
     if (didUpVote) {
       return;
     }
-
     dispatch(
       addRating({
         ratingToAdd: {
@@ -54,7 +55,6 @@ export function RecommendedBookmarkPostContainer(
     if (didDownVote) {
       return;
     }
-
     dispatch(
       addRating({
         ratingToAdd: {
@@ -73,8 +73,9 @@ export function RecommendedBookmarkPostContainer(
   }
 
   return (
-    <RecommendedBookmarkPost
-      recommendedBookmark={bookmark}
+    <CuratedBookmarkPost
+      bookmark={bookmark}
+      score={aggregatedRating?.aggregatedRating || 0}
       onClickDownVote={handleClickDownVote}
       onClickUpVote={handleClickUpVote}
       didCurrentUserDownVote={didDownVote}

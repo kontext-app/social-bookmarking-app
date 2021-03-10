@@ -2,16 +2,10 @@ import { State } from 'app/store';
 import {
   bookmarksIndexAdapter,
   bookmarksAdapter,
-  recommendedBookmarksAdapter,
 } from 'features/bookmarks/bookmarksSlice';
 
 import type { LoadingStatus } from 'kontext-common';
-import type {
-  BookmarksIndex,
-  Bookmark,
-  BookmarkFromRecommender,
-} from 'features/bookmarks/types';
-import { EntityId } from '@reduxjs/toolkit';
+import type { BookmarksIndex, Bookmark } from 'features/bookmarks/types';
 
 const bookmarksIndexSelectors = bookmarksIndexAdapter.getSelectors(
   (state: State) => state.bookmarks.bookmarksIndex
@@ -19,10 +13,6 @@ const bookmarksIndexSelectors = bookmarksIndexAdapter.getSelectors(
 
 const bookmarksSelectors = bookmarksAdapter.getSelectors(
   (state: State) => state.bookmarks.bookmarks
-);
-
-const recommendedBookmarksSelectors = recommendedBookmarksAdapter.getSelectors(
-  (state: State) => state.bookmarks.recommendedBookmarks
 );
 
 export function selectBookmarksLoadingStatus(state: State): LoadingStatus {
@@ -57,23 +47,4 @@ export function selectBookmarkByDocID(
   docID: string
 ): Bookmark | undefined {
   return bookmarksSelectors.selectById(state, docID);
-}
-
-export function selectRecentRecommendedBookmarks(
-  state: State
-): BookmarkFromRecommender[] {
-  return recommendedBookmarksSelectors.selectAll(state);
-}
-
-export function selectRecentRecommendedBookmarkDocIDs(
-  state: State
-): EntityId[] {
-  return recommendedBookmarksSelectors.selectIds(state);
-}
-
-export function selectRecommendedBookmarkByDocID(
-  state: State,
-  docID: string
-): BookmarkFromRecommender | undefined {
-  return recommendedBookmarksSelectors.selectById(state, docID);
 }
