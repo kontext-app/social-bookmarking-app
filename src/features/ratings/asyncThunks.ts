@@ -5,13 +5,8 @@ import {
   ratingsIndexReceived,
   ratingsReceived,
 } from 'features/ratings/ratingsSlice';
-import {
-  upVotePublicBookmark,
-  downVotePublicBookmark,
-} from 'features/bookmarks/bookmarksSlice';
 import { selectRatingsIndex } from 'features/ratings/selectors';
 import { selectProfileDID } from 'features/profile/selectors';
-import { selectRecommendedBookmarkByDocID } from 'features/bookmarks/selectors';
 import { enrichPartialRating } from 'features/ratings/utils';
 import { flattenDoc } from 'app/utils/doc';
 
@@ -56,6 +51,18 @@ export const fetchRatingsFromIndexKey = createAsyncThunk<
   thunkAPI.dispatch(ratingsReceived(ratings));
 });
 
+export const fetchRatingByDocID = createAsyncThunk<
+  void,
+  string,
+  { state: State }
+>('ratings/fetchRatingByDocID', async (ratingDocID, thunkAPI) => {
+  const ratingDoc = await ceramic.loadDocument(ratingDocID);
+
+  const rating = flattenDoc(ratingDoc);
+
+  thunkAPI.dispatch(ratingsReceived([rating]));
+});
+
 export const addRating = createAsyncThunk<
   void,
   {
@@ -77,6 +84,7 @@ export const addRating = createAsyncThunk<
   });
 
   const createdRatingDocID = await ceramic.createRatingDoc(enrichedRating);
+  thunkAPI.dispatch(fetchRatingByDocID(createdRatingDocID));
 
   const updatedRatingsIndex = await ceramic.addRatingDocToRatingsIndex(
     createdRatingDocID,
@@ -89,27 +97,6 @@ export const addRating = createAsyncThunk<
       ...updatedRatingsIndex,
     })
   );
-
-  if (payload.ratingsIndexKey === 'bookmarks') {
-    const bookmark = selectRecommendedBookmarkByDocID(
-      thunkAPI.getState(),
-      enrichedRating.ratedDocId
-    );
-
-    if (typeof bookmark !== 'undefined') {
-      thunkAPI.dispatch(
-        enrichedRating.rating === 1
-          ? upVotePublicBookmark({
-              docID: bookmark.docID,
-              upVotes: [...bookmark.upVotes, authorDID],
-            })
-          : downVotePublicBookmark({
-              docID: bookmark.docID,
-              downVotes: [...bookmark.downVotes, authorDID],
-            })
-      );
-    }
-  }
 });
 
 export const addManyRatings = createAsyncThunk<

@@ -2,27 +2,29 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { PageLayout } from 'app/components/PageLayout';
-import { RecommendedBookmarksFeedContainer } from 'features/bookmarks/containers/RecommendedBookmarksFeed';
+import { CuratedBookmarksFeedContainer } from 'features/bookmarks/containers/CuratedBookmarksFeed';
 
-import { fetchRecentBookmarksFromRecommender } from 'features/bookmarks/asyncThunks';
-import { selectRecentRecommendedBookmarkDocIDs } from 'features/bookmarks/selectors';
+import { fetchRecentCuratedBookmarks } from 'features/bookmarks/asyncThunks';
+import { selectRecentCuratedBookmarkDocIDs } from 'features/curatedDocs/selectors';
 
 import { State } from 'app/store';
 
 export function RecentBookmarksPage(): JSX.Element {
   const dispatch = useDispatch();
-  const recentRecommendedBookmarkDocIDs = useSelector((state: State) =>
-    selectRecentRecommendedBookmarkDocIDs(state)
+  const recentCuratedBookmarkDocIDs = useSelector((state: State) =>
+    selectRecentCuratedBookmarkDocIDs(state)
   );
 
+  console.log(recentCuratedBookmarkDocIDs);
+
   useEffect(() => {
-    dispatch(fetchRecentBookmarksFromRecommender());
+    dispatch(fetchRecentCuratedBookmarks());
   }, [dispatch]);
 
   return (
     <PageLayout title="Most recent public bookmarks">
-      <RecommendedBookmarksFeedContainer
-        bookmarkDocIDs={recentRecommendedBookmarkDocIDs}
+      <CuratedBookmarksFeedContainer
+        bookmarkDocIDs={recentCuratedBookmarkDocIDs}
       />
     </PageLayout>
   );

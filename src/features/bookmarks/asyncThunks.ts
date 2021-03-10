@@ -1,15 +1,19 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 
 import * as ceramic from 'app/apis/ceramic';
-import { getRecentPublicBookmarks } from 'app/apis/recommender';
+
 import { selectBookmarksIndex } from 'features/bookmarks/selectors';
 import {
   bookmarksIndexReceived,
   bookmarksReceived,
-  recommendedBookmarksReceived,
 } from 'features/bookmarks/bookmarksSlice';
 import { enrichPartialBookmark } from 'features/bookmarks/utils';
+
 import { selectProfileDID } from 'features/profile/selectors';
+
+import { fetchCuratedBookmarksDoc } from 'features/curatedDocs/asyncThunks';
+import { fetchAggregatedBookmarkRatings } from 'features/aggregatedRatings/asyncThunks';
+
 import { flattenDoc } from 'app/utils/doc';
 
 import type { BookmarksIndex } from 'features/bookmarks/types';
@@ -207,14 +211,19 @@ export const publicizeBookmark = createAsyncThunk<
   );
 });
 
-export const fetchRecentBookmarksFromRecommender = createAsyncThunk<
+export const fetchRecentCuratedBookmarks = createAsyncThunk<
   void,
   void,
   { state: State }
->('bookmarks/fetchRecentBookmarksFromRecommender', async (_, thunkAPI) => {
-  const recentPublicBookmarks = await getRecentPublicBookmarks();
-
-  thunkAPI.dispatch(recommendedBookmarksReceived(recentPublicBookmarks));
+>('bookmarks/fetchRecentCuratedBookmarks', async (_, thunkAPI) => {
+  const action = await thunkAPI.dispatch(fetchCuratedBookmarksDoc());
+  const curatedBookmarks = unwrapResult(action);
+  console.log(curatedBookmarks);
+  const recentCuratedBookmarkDocIDs = curatedBookmarks.recent;
+  await thunkAPI.dispatch(
+    fetchBookmarksByDocIDs({ docIDs: recentCuratedBookmarkDocIDs })
+  );
+  await thunkAPI.dispatch(fetchAggregatedBookmarkRatings());
 });
 
 export const addEmptyBookmarksIndexKey = createAsyncThunk<

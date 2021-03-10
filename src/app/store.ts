@@ -16,12 +16,16 @@ import { bookmarksReducer } from 'features/bookmarks/bookmarksSlice';
 import { listsReducer } from 'features/lists/listsSlice';
 import { ratingsReducer } from 'features/ratings/ratingsSlice';
 import { profileReducer } from 'features/profile/profileSlice';
+import { aggregatedRatingsReducer } from 'features/aggregatedRatings/aggregatedRatingsSlice';
+import { curatedDocsReducer } from 'features/curatedDocs/curatedDocsSlice';
 
 import type { AppSliceState } from 'app/appSlice';
 import type { ProfileSliceState } from 'features/profile/profileSlice';
 import type { BookmarksSliceState } from 'features/bookmarks/bookmarksSlice';
 import type { RatingsSliceState } from 'features/ratings/ratingsSlice';
 import type { ListsSliceState } from 'features/lists/listsSlice';
+import type { CuratedDocsSliceState } from 'features/curatedDocs/curatedDocsSlice';
+import type { AggregatedRatingsSlice } from 'features/aggregatedRatings/aggregatedRatingsSlice';
 
 export type State = {
   app: AppSliceState;
@@ -29,13 +33,22 @@ export type State = {
   profile: ProfileSliceState;
   ratings: RatingsSliceState;
   lists: ListsSliceState;
+  curatedDocs: CuratedDocsSliceState;
+  aggregatedRatings: AggregatedRatingsSlice;
 };
 
 const rootPersistConfig = {
   version: 1,
   key: 'root',
   storage,
-  blacklist: ['app', 'bookmarks', 'ratings', 'lists'],
+  blacklist: [
+    'app',
+    'bookmarks',
+    'ratings',
+    'lists',
+    'curatedDocs',
+    'aggregatedRatings',
+  ],
 };
 
 const rootReducer = combineReducers({
@@ -43,6 +56,8 @@ const rootReducer = combineReducers({
   bookmarks: bookmarksReducer,
   lists: listsReducer,
   ratings: ratingsReducer,
+  curatedDocs: curatedDocsReducer,
+  aggregatedRatings: aggregatedRatingsReducer,
   profile: persistReducer(
     {
       key: 'profile',
