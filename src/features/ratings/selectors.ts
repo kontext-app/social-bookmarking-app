@@ -4,7 +4,6 @@ import {
   ratingsAdapter,
 } from 'features/ratings/ratingsSlice';
 import { selectProfileDID } from 'features/profile/selectors';
-import { selectRecommendedBookmarkByDocID } from 'features/bookmarks/selectors';
 
 import type { LoadingStatus } from 'kontext-common';
 import type { Rating, RatingsIndex } from 'features/ratings/types';
@@ -30,7 +29,7 @@ export function selectRatingsIndex(state: State): RatingsIndex | null {
   return ratingsIndex;
 }
 
-export function selectRatingsOfCurrentUser(state: State) {
+export function selectRatingsOfCurrentUser(state: State): Rating[] {
   const currentProfileDID = selectProfileDID(state);
   const ratings = ratingsSelector.selectAll(state);
 
@@ -41,7 +40,7 @@ export function selectRatingsOfCurrentUser(state: State) {
   return ratings.filter((rating) => rating.author === currentProfileDID);
 }
 
-export function selectUpVotesOfCurrentUser(state: State) {
+export function selectUpVotesOfCurrentUser(state: State): Rating[] {
   const ratings = selectRatingsOfCurrentUser(state);
 
   return ratings.filter(
@@ -52,7 +51,7 @@ export function selectUpVotesOfCurrentUser(state: State) {
   );
 }
 
-export function selectDownVotesOfCurrentUser(state: State) {
+export function selectDownVotesOfCurrentUser(state: State): Rating[] {
   const ratings = selectRatingsOfCurrentUser(state);
 
   return ratings.filter(
@@ -65,33 +64,27 @@ export function selectDownVotesOfCurrentUser(state: State) {
 
 export function selectDidUpVoteDocID(state: State, docID: string): boolean {
   const currentProfileDID = selectProfileDID(state);
-  const bookmark = selectRecommendedBookmarkByDocID(state, docID);
   const upVotes = selectUpVotesOfCurrentUser(state);
 
-  if (!currentProfileDID || !bookmark || upVotes.length === 0) {
+  if (!currentProfileDID || upVotes.length === 0) {
     return false;
   }
 
-  return (
-    bookmark.upVotes.includes(currentProfileDID) ||
-    Boolean(upVotes.find((upVoteRating) => upVoteRating.ratedDocId === docID))
+  return Boolean(
+    upVotes.find((upVoteRating) => upVoteRating.ratedDocId === docID)
   );
 }
 
 export function selectDidDownVoteDocID(state: State, docID: string): boolean {
   const currentProfileDID = selectProfileDID(state);
-  const bookmark = selectRecommendedBookmarkByDocID(state, docID);
   const downVotes = selectDownVotesOfCurrentUser(state);
 
-  if (!currentProfileDID || !bookmark || downVotes.length === 0) {
+  if (!currentProfileDID || downVotes.length === 0) {
     return false;
   }
 
-  return (
-    bookmark.downVotes.includes(currentProfileDID) ||
-    Boolean(
-      downVotes.find((downVoteRating) => downVoteRating.ratedDocId === docID)
-    )
+  return Boolean(
+    downVotes.find((downVoteRating) => downVoteRating.ratedDocId === docID)
   );
 }
 

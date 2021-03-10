@@ -13,7 +13,6 @@ import type { Rating, RatingsIndex } from 'features/ratings/types';
 export type RatingsSliceState = {
   ratingsIndex: EntityState<RatingsIndex>;
   ratings: EntityState<Rating>;
-  publicRatings: EntityState<Rating>;
   loadingStatus: LoadingStatus;
   error: null | Error;
 };
@@ -37,7 +36,6 @@ export const publicRatingsAdapter = createEntityAdapter<Rating>({
 const initialState: RatingsSliceState = {
   ratingsIndex: ratingsIndexAdapter.getInitialState(),
   ratings: ratingsAdapter.getInitialState(),
-  publicRatings: publicRatingsAdapter.getInitialState(),
   loadingStatus: enums.LoadingStatus.IDLE,
   error: null,
 };
@@ -53,9 +51,6 @@ export const ratingsSlice = createSlice({
     ratingsReceived: (state, action) => {
       ratingsAdapter.upsertMany(state.ratings, action.payload);
     },
-    publicRatingsReceived: (state, action) => {
-      publicRatingsAdapter.upsertMany(state.publicRatings, action.payload);
-    },
   },
   extraReducers: (builder) => {
     addAsyncMatchers(builder, 'ratings');
@@ -64,11 +59,7 @@ export const ratingsSlice = createSlice({
 
 export const ratingsReducer = ratingsSlice.reducer;
 
-export const {
-  ratingsIndexReceived,
-  ratingsReceived,
-  publicRatingsReceived,
-} = ratingsSlice.actions;
+export const { ratingsIndexReceived, ratingsReceived } = ratingsSlice.actions;
 
 export default {
   ratingsSlice,
