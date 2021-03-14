@@ -12,7 +12,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(
   (props: Props, ref) => {
     const {
       containerClassName = '',
-      inputClassName = '',
+      className = '',
       loading = false,
       label,
       id,
@@ -20,7 +20,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(
     } = props;
 
     return (
-      <div className={`mb-2  ${containerClassName}`}>
+      <div className={`${containerClassName}`}>
         {label && (
           <label
             className="flex text-gray-700 text-sm font-bold mb-2"
@@ -30,7 +30,11 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(
           </label>
         )}
         <input
-          className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${inputClassName}`}
+          className={`
+            shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight
+            focus:outline-none focus:shadow-outline focus:ring-2 ring-blue
+            ${className}
+          `}
           id={id}
           type="text"
           disabled={loading}

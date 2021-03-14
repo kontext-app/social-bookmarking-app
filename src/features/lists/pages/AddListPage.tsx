@@ -39,7 +39,7 @@ export function AddListPage(): JSX.Element {
 
   return (
     <PageLayout title="Create a List">
-      <form onSubmit={handleSubmit(submit)}>
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit(submit)}>
         <Input
           label="Name"
           name="name"
@@ -58,6 +58,7 @@ export function AddListPage(): JSX.Element {
           type="submit"
           disabled={Boolean(errors?.name || errors?.description)}
           loading={listsLoadingStatus === enums.LoadingStatus.PENDING}
+          className="max-w-xs"
         >
           <Plus className="mr-1" /> Create list
         </Button>

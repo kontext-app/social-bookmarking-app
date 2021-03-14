@@ -218,7 +218,6 @@ export const fetchRecentCuratedBookmarks = createAsyncThunk<
 >('bookmarks/fetchRecentCuratedBookmarks', async (_, thunkAPI) => {
   const action = await thunkAPI.dispatch(fetchCuratedBookmarksDoc());
   const curatedBookmarks = unwrapResult(action);
-  console.log(curatedBookmarks);
   const recentCuratedBookmarkDocIDs = curatedBookmarks.recent;
   await thunkAPI.dispatch(
     fetchBookmarksByDocIDs({ docIDs: recentCuratedBookmarkDocIDs })

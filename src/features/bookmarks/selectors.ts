@@ -15,6 +15,10 @@ const bookmarksSelectors = bookmarksAdapter.getSelectors(
   (state: State) => state.bookmarks.bookmarks
 );
 
+export function selectBookmarksSearchInput(state: State): string {
+  return state.bookmarks.searchInput;
+}
+
 export function selectBookmarksLoadingStatus(state: State): LoadingStatus {
   return state.bookmarks.loadingStatus;
 }

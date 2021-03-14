@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { CuratedBookmarkPost } from 'features/bookmarks/components/CuratedBookmarkPost';
 
-import { selectBookmarkByDocID } from 'features/bookmarks/selectors';
+import {
+  selectBookmarkByDocID,
+  selectBookmarksSearchInput,
+} from 'features/bookmarks/selectors';
 import { selectAggregatedBookmarkRatingByRatedDocID } from 'features/aggregatedRatings/selectors';
 import { useDotMenuItems } from 'features/bookmarks/hooks';
 import {
@@ -12,6 +15,8 @@ import {
 } from 'features/ratings/selectors';
 import { addRating } from 'features/ratings/asyncThunks';
 import { State } from 'app/store';
+
+import type { Bookmark } from 'features/bookmarks/types';
 
 type Props = {
   docID: string;
@@ -22,6 +27,7 @@ export function CuratedBookmarkPostContainer(props: Props): JSX.Element | null {
   const bookmark = useSelector((state: State) =>
     selectBookmarkByDocID(state, props.docID)
   );
+  const bookmarksSearchInput = useSelector(selectBookmarksSearchInput);
   const dotMenuItems = useDotMenuItems(props.docID);
 
   const didUpVote = useSelector((state: State) =>
@@ -68,7 +74,7 @@ export function CuratedBookmarkPostContainer(props: Props): JSX.Element | null {
     );
   };
 
-  if (!bookmark) {
+  if (!bookmark || !showBookmarkPost(bookmark, bookmarksSearchInput)) {
     return null;
   }
 
@@ -83,4 +89,16 @@ export function CuratedBookmarkPostContainer(props: Props): JSX.Element | null {
       dotMenuItems={dotMenuItems}
     />
   );
+}
+
+function showBookmarkPost(bookmark: Bookmark, searchInput: string) {
+  const searchableKeys = ['author', 'description', 'docID', 'title', 'url'];
+
+  for (const searchableKey of searchableKeys) {
+    if ((bookmark as any)[searchableKey].includes(searchInput)) {
+      return true;
+    }
+  }
+
+  return false;
 }

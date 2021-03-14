@@ -81,7 +81,7 @@ export function ProfilePage(): JSX.Element {
   return (
     <PageLayout title="Your Profile">
       {isAuthenticated && (
-        <div className="p-3">
+        <div className="p-3 flex flex-col gap-4">
           <h3 className="mb-3">Hello{name ? `, ${name} ` : ' '}👋</h3>
           <Input label="Your DID" value={did || ''} disabled />
           <Input
@@ -105,7 +105,7 @@ export function ProfilePage(): JSX.Element {
             disabled={isLoading}
           />
           <Button
-            className="mt-3"
+            className="mt-3 max-w-xs"
             onClick={handleClickSave}
             loading={isLoading}
           >
