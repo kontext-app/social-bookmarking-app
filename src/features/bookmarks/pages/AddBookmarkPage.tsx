@@ -86,7 +86,7 @@ export function AddBookmarkPage(): JSX.Element {
   return (
     <PageLayout>
       <div className="flex flex-wrap -mx-5 overflow-hidden">
-        <div className="my-5 px-5 w-1/4 overflow-hidden sm:w-1/3 md:w-1/2 lg:w-1/4 xl:w-1/4">
+        <div className="my-5 px-5 w-1/4 overflow-hidden sm:w-1/3 md:w-1/2 lg:w-1/4 xl:w-1/4 flex flex-col gap-2">
           <h1 className="pb-4">Add a bookmark</h1>
           <Input
             placeholder="url"

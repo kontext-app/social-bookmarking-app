@@ -16,6 +16,7 @@ export type BookmarksSliceState = {
   loadingStatus: LoadingStatus;
   error: null | Error;
   lastUpdated: null | number;
+  searchInput: string;
 };
 
 export const bookmarksIndexAdapter = createEntityAdapter<BookmarksIndex>({
@@ -34,6 +35,7 @@ const initialState: BookmarksSliceState = {
   loadingStatus: enums.LoadingStatus.IDLE,
   error: null,
   lastUpdated: null,
+  searchInput: '',
 };
 
 export const bookmarksSlice = createSlice({
@@ -47,24 +49,12 @@ export const bookmarksSlice = createSlice({
     bookmarksReceived: (state, action) => {
       bookmarksAdapter.upsertMany(state.bookmarks, action.payload);
     },
-    // recommendedBookmarksReceived: (state, action) => {
-    //   recommendedBookmarksAdapter.upsertMany(
-    //     state.recommendedBookmarks,
-    //     action.payload
-    //   );
-    // },
-    // upVotePublicBookmark: (state, action) => {
-    //   recommendedBookmarksAdapter.updateOne(state.recommendedBookmarks, {
-    //     id: action.payload.docID,
-    //     changes: { upVotes: action.payload.upVotes },
-    //   });
-    // },
-    // downVotePublicBookmark: (state, action) => {
-    //   recommendedBookmarksAdapter.updateOne(state.recommendedBookmarks, {
-    //     id: action.payload.docID,
-    //     changes: { downVotes: action.payload.downVotes },
-    //   });
-    // },
+    searchInputSet: (state, action) => {
+      state.searchInput = action.payload;
+    },
+    searchInputClear: (state) => {
+      state.searchInput = '';
+    },
   },
   extraReducers: (builder) => {
     addAsyncMatchers(builder, 'bookmarks');
@@ -76,9 +66,8 @@ export const bookmarksReducer = bookmarksSlice.reducer;
 export const {
   bookmarksIndexReceived,
   bookmarksReceived,
-  // recommendedBookmarksReceived,
-  // upVotePublicBookmark,
-  // downVotePublicBookmark,
+  searchInputClear,
+  searchInputSet,
 } = bookmarksSlice.actions;
 
 export default {
