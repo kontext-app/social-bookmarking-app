@@ -8,9 +8,12 @@ module.exports = {
   ],
   plugins: ['react', '@typescript-eslint', 'prettier'],
   rules: {
-    'prettier/prettier': ['error', {
-    	'endOfLine':'auto'
-    }],
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
     '@typescript-eslint/ban-ts-comment': 'off',
   },
   settings: {

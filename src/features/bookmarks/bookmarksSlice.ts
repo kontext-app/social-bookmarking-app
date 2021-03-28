@@ -10,6 +10,8 @@ import { addAsyncMatchers } from 'app/utils/slice';
 import { BookmarksIndex, Bookmark } from 'features/bookmarks/types';
 import type { LoadingStatus } from 'kontext-common';
 
+const BATCH_SIZE_FEED = 5;
+
 export type BookmarksSliceState = {
   bookmarksIndex: EntityState<BookmarksIndex>;
   bookmarks: EntityState<Bookmark>;
@@ -17,6 +19,7 @@ export type BookmarksSliceState = {
   error: null | Error;
   lastUpdated: null | number;
   searchInput: string;
+  feedEndIndex: number;
 };
 
 export const bookmarksIndexAdapter = createEntityAdapter<BookmarksIndex>({
@@ -36,6 +39,7 @@ const initialState: BookmarksSliceState = {
   error: null,
   lastUpdated: null,
   searchInput: '',
+  feedEndIndex: BATCH_SIZE_FEED,
 };
 
 export const bookmarksSlice = createSlice({
@@ -55,6 +59,12 @@ export const bookmarksSlice = createSlice({
     searchInputClear: (state) => {
       state.searchInput = '';
     },
+    increaseFeedEndIndex: (state) => {
+      state.feedEndIndex += BATCH_SIZE_FEED;
+    },
+    resetFeedEndIndex: (state) => {
+      state.feedEndIndex = BATCH_SIZE_FEED;
+    },
   },
   extraReducers: (builder) => {
     addAsyncMatchers(builder, 'bookmarks');
@@ -68,6 +78,8 @@ export const {
   bookmarksReceived,
   searchInputClear,
   searchInputSet,
+  increaseFeedEndIndex,
+  resetFeedEndIndex,
 } = bookmarksSlice.actions;
 
 export default {

@@ -38,7 +38,7 @@ export function App(): JSX.Element {
 
   return (
     <Router>
-      <div id="main" className="bg-gray-100 h-full">
+      <div id="main" className="bg-gray-100 h-full container mx-auto">
         <ToastContainer />
         <SidebarLeftContainer />
         <Switch>

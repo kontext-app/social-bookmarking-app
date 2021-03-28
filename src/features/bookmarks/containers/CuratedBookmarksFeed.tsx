@@ -11,9 +11,10 @@ type Props = {
 export function CuratedBookmarksFeedContainer(props: Props): JSX.Element {
   return (
     <>
-      {props.bookmarkDocIDs.map((bookmarkDocID) => (
+      {props.bookmarkDocIDs.map((bookmarkDocID, i) => (
         <CuratedBookmarkPostContainer
           key={bookmarkDocID}
+          index={i}
           docID={String(bookmarkDocID)}
         />
       ))}
