@@ -16,7 +16,7 @@ import { fetchAggregatedBookmarkRatings } from 'features/aggregatedRatings/async
 
 import { flattenDoc } from 'app/utils/doc';
 
-import type { BookmarksIndex } from 'features/bookmarks/types';
+import type { Bookmark, BookmarksIndex } from 'features/bookmarks/types';
 import type { State } from 'app/store';
 import type { BookmarkDocContent } from 'kontext-common';
 
@@ -67,7 +67,7 @@ export const fetchBookmarksOfIndexKey = createAsyncThunk<
 });
 
 export const fetchBookmarksByDocIDs = createAsyncThunk<
-  void,
+  Bookmark[],
   { docIDs: string[] },
   { state: State }
 >('bookmarks/fetchBookmarksByDocIDs', async (payload, thunkAPI) => {
@@ -85,6 +85,8 @@ export const fetchBookmarksByDocIDs = createAsyncThunk<
   const flattenedBookmarkDocs = bookmarkDocs.map((doc) => flattenDoc(doc));
 
   thunkAPI.dispatch(bookmarksReceived(flattenedBookmarkDocs));
+
+  return flattenedBookmarkDocs;
 });
 
 export const addBookmark = createAsyncThunk<

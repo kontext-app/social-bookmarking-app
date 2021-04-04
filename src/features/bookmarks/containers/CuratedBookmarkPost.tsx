@@ -1,8 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { enums } from 'kontext-common';
 
 import { CuratedBookmarkPost } from 'features/bookmarks/components/CuratedBookmarkPost';
+import { BookmarkPostLoader } from 'features/bookmarks/components/BookmarkPostLoader';
 
+import { fetchBookmarksByDocIDs } from 'features/bookmarks/asyncThunks';
 import {
   selectBookmarkByDocID,
   selectBookmarksSearchInput,
@@ -17,13 +20,20 @@ import { addRating } from 'features/ratings/asyncThunks';
 import { State } from 'app/store';
 
 import type { Bookmark } from 'features/bookmarks/types';
+import type { LoadingStatus } from 'kontext-common';
+import type { AppDispatch } from 'app/store';
 
 type Props = {
   docID: string;
+  index: number;
 };
 
 export function CuratedBookmarkPostContainer(props: Props): JSX.Element | null {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
+  const [loadingStatus, setLoadingStatus] = useState<LoadingStatus>(
+    enums.LoadingStatus.IDLE
+  );
+
   const bookmark = useSelector((state: State) =>
     selectBookmarkByDocID(state, props.docID)
   );
@@ -39,6 +49,23 @@ export function CuratedBookmarkPostContainer(props: Props): JSX.Element | null {
   const aggregatedRating = useSelector((state: State) =>
     selectAggregatedBookmarkRatingByRatedDocID(state, props.docID)
   );
+  const feedEndIndex = useSelector(
+    (state: State) => state.bookmarks.feedEndIndex
+  );
+
+  useEffect(() => {
+    if (
+      props.index <= feedEndIndex &&
+      loadingStatus === enums.LoadingStatus.IDLE
+    ) {
+      setLoadingStatus(enums.LoadingStatus.PENDING);
+      dispatch(fetchBookmarksByDocIDs({ docIDs: [props.docID] }))
+        .then(() => {
+          setLoadingStatus(enums.LoadingStatus.FULFILLED);
+        })
+        .catch(() => setLoadingStatus(enums.LoadingStatus.REJECTED));
+    }
+  }, [props.index, feedEndIndex, props.docID]);
 
   const handleClickUpVote = () => {
     if (didUpVote) {
@@ -73,6 +100,18 @@ export function CuratedBookmarkPostContainer(props: Props): JSX.Element | null {
       })
     );
   };
+
+  if (loadingStatus === enums.LoadingStatus.IDLE) {
+    return null;
+  }
+
+  if (loadingStatus === enums.LoadingStatus.PENDING) {
+    return <BookmarkPostLoader />;
+  }
+
+  if (loadingStatus === enums.LoadingStatus.REJECTED) {
+    return null;
+  }
 
   if (!bookmark || !showBookmarkPost(bookmark, bookmarksSearchInput)) {
     return null;
